@@ -1,9 +1,6 @@
 package com.glebzapara.test_project.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -12,9 +9,13 @@ import lombok.Data;
 public class Subject {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subjects_id_seq")
     @Column(name = "id")
     private Integer id;
 
     @Column(name = "name_subject")
     private String name_subject;
+
+    @Column(name = "course")
+    private short course;
 }
