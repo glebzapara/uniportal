@@ -1,11 +1,15 @@
 package com.glebzapara.test_project.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "subjects")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Subject {
 
     @Id
@@ -13,9 +17,15 @@ public class Subject {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name_subject")
-    private String name_subject;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "faculty")
+    private Integer faculty;
 
     @Column(name = "course")
-    private short course;
+    private Short course;
+
+    @Column(name = "speciality")
+    private String speciality;
 }

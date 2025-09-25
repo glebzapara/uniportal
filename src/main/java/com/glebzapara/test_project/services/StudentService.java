@@ -1,6 +1,7 @@
 package com.glebzapara.test_project.services;
 
 import com.glebzapara.test_project.models.Student;
+import com.glebzapara.test_project.models.Subject;
 import com.glebzapara.test_project.repositories.StudentRepository;
 import com.glebzapara.test_project.util.PhoneNumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,12 @@ public class StudentService {
         return studentRepository.findById(id)
                 .map(Student::getFaculty)
                 .orElseThrow(() -> new Exception("Faculty cannot be null"));
+    }
+
+    public Short getStudentCourseById(Integer id) throws Exception {
+        return studentRepository.findById(id)
+                .map(Student::getCourse)
+                .orElseThrow(() -> new Exception("Name cannot be null"));
     }
 
     public String getStudentSpecialityById(Integer id) throws Exception {

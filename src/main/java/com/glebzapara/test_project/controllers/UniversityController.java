@@ -3,8 +3,8 @@ package com.glebzapara.test_project.controllers;
 import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.models.Teacher;
 import com.glebzapara.test_project.services.StudentService;
+import com.glebzapara.test_project.services.SubjectService;
 import com.glebzapara.test_project.services.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +17,14 @@ import java.util.Base64;
 public class UniversityController {
     StudentService studentService;
     TeacherService teacherService;
+    SubjectService subjectService;
 
-    @Autowired
-    public UniversityController(StudentService studentService, TeacherService teacherService) {
+    public UniversityController(StudentService studentService,
+                                TeacherService teacherService,
+                                SubjectService subjectService) {
         this.studentService = studentService;
         this.teacherService = teacherService;
+        this.subjectService = subjectService;
     }
 
     @GetMapping
@@ -62,6 +65,13 @@ public class UniversityController {
         model.addAttribute("studentFaculty", studentService.getStudentFacultyById(id));
 
         return "studentFaculty";
+    }
+
+    @GetMapping("/students/{id}/course")
+    public String getStudentCourse(@PathVariable Integer id, Model model) throws Exception {
+        model.addAttribute("studentsCourse", studentService.getStudentCourseById(id));
+
+        return "studentsCourse";
     }
 
     @GetMapping("/students/{id}/speciality")
@@ -123,6 +133,34 @@ public class UniversityController {
         getStudentImage(id, model);
 
         return "studentProfile";
+    }
+
+    @GetMapping("/subjects/{id}/name")
+    public String getSubjectName(@PathVariable Integer id, Model model) throws Exception {
+        model.addAttribute("subjectName", subjectService.getSubjectNameById(id));
+
+        return "subjectName";
+    }
+
+    @GetMapping("/subjects/{id}/faculty")
+    public String getSubjectFaculty(@PathVariable Integer id, Model model) throws Exception {
+        model.addAttribute("subjectFaculty", subjectService.getSubjectFacultyById(id));
+
+        return "subjectFaculty";
+    }
+
+    @GetMapping("/subjects/{id}/course")
+    public String getSubjectCourse(@PathVariable Integer id, Model model) throws Exception {
+        model.addAttribute("subjectCourse", subjectService.getSubjectCourseById(id));
+
+        return "subjectCourse";
+    }
+
+    @GetMapping("/subjects/{id}/speciality")
+    public String getSubjectSpeciality(@PathVariable Integer id, Model model) throws Exception {
+        model.addAttribute("subjectSpeciality", subjectService.getSubjectSpecialityById(id));
+
+        return "subjectSpeciality";
     }
 
     @GetMapping("/teachers/{id}/name")

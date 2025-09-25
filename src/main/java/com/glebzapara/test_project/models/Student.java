@@ -32,6 +32,9 @@ public class Student {
     @Column(name = "faculty")
     private Integer faculty;
 
+    @Column(name = "course")
+    private Short course;
+
     @Column(name = "speciality")
     private String speciality;
 
