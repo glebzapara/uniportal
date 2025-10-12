@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Subject</title>
+</head>
+<body>
+<h2>Create New Subject</h2>
+<form th:action="@{/subjects}" th:object="${subjectForm}" method="post">
+    <label for="name">Subject name:</label>
+    <input type="text" th:field="*{name}" id="name">
+
+    <label for="faculty">Faculty:</label>
+    <input type="number" th:field="*{faculty}" id="faculty" min="1" max="8">
+
+    <label for="course">Course:</label>
+    <input type="number" th:field="*{course}" id="course" min="1" max="6">
+
+    <label for="speciality">Speciality:</label>
+    <input type="text" th:field="*{speciality}" id="speciality">
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
