@@ -1,46 +1,79 @@
 package com.glebzapara.test_project.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "students")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = "password")
 @NoArgsConstructor
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "students_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "surname")
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "email")
+    @NotNull
+    @Email
+    @Size(max = 255)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password")
+    @NotNull
+    @Size(min = 8, max = 255)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "faculty")
+    @NotNull
+    @Min(1)
+    @Max(8)
+    @Column(name = "faculty", nullable = false)
     private Integer faculty;
 
-    @Column(name = "speciality")
+    @NotNull
+    @Min(1)
+    @Max(6)
+    @Column(name = "course", nullable = false)
+    private Short course;
+
+    @NotNull
+    @Pattern(regexp = "[A-Z]+[1-8]")
+    @Column(name = "speciality", nullable = false, length = 2)
     private String speciality;
 
-    @Column(name = "country")
+    @NotNull
+    @Pattern(regexp = "^[A-Z]{2,3}$")
+    @Column(name = "country", nullable = false, length = 3)
     private String country;
 
-    @Column(name = "phone_number")
+    @NotNull
+    @Pattern(regexp = "^\\+[0-9]{9,15}$")
+    @Column(name = "phone_number", nullable = false, length = 16)
     private String phoneNumber;
 
+    @Size(max = 255)
     @Column(name = "image")
     private String image;
+
+    @NotNull
+    @Size(max = 10)
+    @Column(name = "role", nullable = false, length = 10)
+    private String role;
 }

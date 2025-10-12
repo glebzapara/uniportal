@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<h1>Выберите роль</h1>
+
+<form th:action="@{/role-select}" method="get">
+    <label>
+        <input type="radio" name="role" value="ADMIN">I'm admin
+    </label>
+    <label>
+        <input type="radio" name="role" value="STUDENT">I'm student
+    </label>
+    <label>
+        <input type="radio" name="role" value="TEACHER">I'm teacher
+    </label>
+    <button type="submit">Submit</button>
+</form>
+
+<div class="link">
+    Уже зарегистрированы? <a th:href="@{/login}">Войти</a>
+</div>
+</body>
+</html>

@@ -4,10 +4,8 @@ import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.models.Teacher;
 import com.glebzapara.test_project.repositories.TeacherRepository;
 import com.glebzapara.test_project.util.PhoneNumberUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,17 +13,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class TeacherService {
     TeacherRepository teacherRepository;
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public TeacherService(TeacherRepository teacherRepository) {
+    public TeacherService(TeacherRepository teacherRepository,
+                          PasswordEncoder passwordEncoder) {
         this.teacherRepository = teacherRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Teacher> findAllTeachers() {
@@ -85,7 +84,6 @@ public class TeacherService {
         return Files.readAllBytes(path);
     }
 
-
     public void saveTeacherImage(Integer id, MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             return;
@@ -115,7 +113,6 @@ public class TeacherService {
         });
     }
 
-
     public void registerTeacher(Teacher teacher) throws Exception {
         if (teacher.getName() == null || teacher.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");
@@ -133,6 +130,7 @@ public class TeacherService {
             throw new Exception("Phone number cannot be null or empty");
         }
 
+        teacher.setPassword(passwordEncoder.encode(teacher.getPassword()));
         teacher.setPhoneNumber(PhoneNumberUtil.addCountryCode(teacher.getCountry(), teacher.getPhoneNumber()));
 
         teacherRepository.save(teacher);

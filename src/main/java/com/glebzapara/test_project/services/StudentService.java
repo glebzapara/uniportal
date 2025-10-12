@@ -4,9 +4,8 @@ import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.repositories.StudentRepository;
 import com.glebzapara.test_project.util.PhoneNumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,10 +17,11 @@ import java.util.*;
 @Service
 public class StudentService {
     StudentRepository studentRepository;
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Student> findAllStudents() {
@@ -60,6 +60,12 @@ public class StudentService {
         return studentRepository.findById(id)
                 .map(Student::getFaculty)
                 .orElseThrow(() -> new Exception("Faculty cannot be null"));
+    }
+
+    public Short getStudentCourseById(Integer id) throws Exception {
+        return studentRepository.findById(id)
+                .map(Student::getCourse)
+                .orElseThrow(() -> new Exception("Name cannot be null"));
     }
 
     public String getStudentSpecialityById(Integer id) throws Exception {
@@ -139,6 +145,9 @@ public class StudentService {
         if (student.getFaculty() == null || student.getFaculty() < 1 || student.getFaculty() > 8) {
             throw new Exception("Faculty must be between 1 and 8");
         }
+        if (student.getCourse() == null || student.getCourse() < 1 || student.getCourse() > 6) {
+            throw new Exception("Course must be between 1 and 6");
+        }
         if (student.getSpeciality() == null || student.getSpeciality().trim().isEmpty()) {
             throw new Exception("Speciality cannot be null or empty");
         }
@@ -146,6 +155,7 @@ public class StudentService {
             throw new Exception("Phone number cannot be null or empty");
         }
 
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
         student.setPhoneNumber(PhoneNumberUtil.addCountryCode(student.getCountry(), student.getPhoneNumber()));
 
         studentRepository.save(student);
