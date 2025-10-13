@@ -1,5 +1,6 @@
 package com.glebzapara.test_project.models;
 
+import com.glebzapara.test_project.models.enums.DayOfWeek;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "lessons")
@@ -24,25 +25,30 @@ public class Lesson {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "students_id", nullable = false)
-    private Student student;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "subjects_id", nullable = false)
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "day_of_week", nullable = false)
+    private DayOfWeek dayOfWeek;
+
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "teachers_id", nullable = false)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
     @NotNull
-    @Column(name = "lesson_date", nullable = false)
-    private LocalDate lessonDate;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
+
+    @NotNull
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
 
     @Min(0)
     @Max(3)
-    @Column(name = "score")
+    @Column(name = "score", nullable = false)
     private Short score;
+
 }
