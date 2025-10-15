@@ -41,22 +41,9 @@ public class Student {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @NotNull
-    @Min(1)
-    @Max(8)
-    @Column(name = "faculty", nullable = false)
-    private Integer faculty;
-
-    @NotNull
-    @Min(1)
-    @Max(6)
-    @Column(name = "course", nullable = false)
-    private Short course;
-
-    @NotNull
-    @Pattern(regexp = "[A-Z]+[1-8]")
-    @Column(name = "speciality", nullable = false, length = 2)
-    private String speciality;
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
 
     @NotNull
     @Pattern(regexp = "^[A-Z]{2,3}$")
