@@ -2,17 +2,13 @@ package com.glebzapara.test_project.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "teachers")
-@Getter
-@Setter
-@ToString(exclude = "password")
+@Data
 @NoArgsConstructor
+@ToString(exclude = "password")
 public class Teacher {
 
     @Id

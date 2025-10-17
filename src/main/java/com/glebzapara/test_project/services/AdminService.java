@@ -1,10 +1,8 @@
 package com.glebzapara.test_project.services;
 
 import com.glebzapara.test_project.models.Admin;
-import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.repositories.AdminRepository;
 import com.glebzapara.test_project.util.PhoneNumberUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -2,41 +2,37 @@ package com.glebzapara.test_project.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "subjects")
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "name", nullable = false)
     private String name;
 
     @NotNull
     @Min(1)
     @Max(6)
-    @Column(name = "course", nullable = false)
     private Short course;
 
     @NotNull
-    @Column(name = "faculty", nullable = false)
+    @Min(1)
+    @Max(8)
     private Integer faculty;
 
     @NotNull
-    @Size(max = 2)
-    @Column(name = "speciality", nullable = false, length = 2)
+    @Pattern(regexp = "[A-Z]+[1-8]")
     private String speciality;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 }

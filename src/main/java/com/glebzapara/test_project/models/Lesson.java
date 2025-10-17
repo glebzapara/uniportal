@@ -3,18 +3,13 @@ package com.glebzapara.test_project.models;
 import com.glebzapara.test_project.models.enums.DayOfWeek;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "lessons")
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 public class Lesson {
 
