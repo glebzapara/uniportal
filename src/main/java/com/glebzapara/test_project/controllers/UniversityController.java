@@ -239,11 +239,12 @@ public class UniversityController {
     @PostMapping("/students")
     public String createStudent(@ModelAttribute("studentForm") Student student,
                                 @RequestParam("file") MultipartFile file,
+                                @PathVariable Integer id,
                                 HttpSession httpSession) throws Exception {
         String role = (String) httpSession.getAttribute("role");
         student.setRole(role);
 
-        studentService.registerStudent(student);
+        studentService.registerStudent(student, id);
 
         if (file != null && !file.isEmpty()) {
             studentService.saveStudentImage(student.getId(), file);

@@ -129,7 +129,9 @@ public class StudentService {
     }
 
 
-    public void registerStudent(Student student) throws Exception {
+    public void registerStudent(Student student, Integer studentId) throws Exception {
+        Group studentGroup = getStudentGroup(studentId);
+
         if (student.getName() == null || student.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");
         }
@@ -141,6 +143,19 @@ public class StudentService {
         }
         if (student.getPassword() == null || student.getPassword().trim().isEmpty()) {
             throw new Exception("Password cannot be null or empty");
+        }
+        if (studentGroup.getFaculty() == null
+                || studentGroup.getFaculty() < 1
+                || studentGroup.getFaculty() > 8) {
+            throw new Exception("Faculty must be between 1 and 8");
+        }
+        if (studentGroup.getCourse() == null
+                || studentGroup.getCourse() < 1
+                || studentGroup.getCourse() > 6) {
+            throw new Exception("Course must be between 1 and 6");
+        }
+        if (studentGroup.getSpeciality() == null || studentGroup.getSpeciality().trim().isEmpty()) {
+            throw new Exception("Speciality cannot be null or empty");
         }
         if (student.getPhoneNumber() == null || student.getPhoneNumber().trim().isEmpty()) {
             throw new Exception("Phone number cannot be null or empty");
