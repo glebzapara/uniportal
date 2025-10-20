@@ -2,6 +2,7 @@ package com.glebzapara.test_project.services;
 
 import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.models.Group;
+import com.glebzapara.test_project.repositories.GroupRepository;
 import com.glebzapara.test_project.repositories.StudentRepository;
 import com.glebzapara.test_project.util.PhoneNumberUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,10 +18,14 @@ import java.util.*;
 @Service
 public class StudentService {
     StudentRepository studentRepository;
+    GroupRepository groupRepository;
     private PasswordEncoder passwordEncoder;
 
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+    public StudentService(StudentRepository studentRepository,
+                          GroupRepository groupRepository,
+                          PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -129,8 +134,9 @@ public class StudentService {
     }
 
 
-    public void registerStudent(Student student, Integer studentId) throws Exception {
-        Group studentGroup = getStudentGroup(studentId);
+    public void registerStudent(Student student, Integer groupId) throws Exception {
+        Group studentGroup = groupRepository.findById(groupId)
+                .orElseThrow(() -> new Exception("Group not found"));
 
         if (student.getName() == null || student.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");
@@ -162,6 +168,7 @@ public class StudentService {
         }
 
         student.setPassword(passwordEncoder.encode(student.getPassword()));
+
         student.setPhoneNumber(PhoneNumberUtil.addCountryCode(student.getCountry(), student.getPhoneNumber()));
 
         studentRepository.save(student);

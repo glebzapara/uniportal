@@ -1,9 +1,6 @@
 package com.glebzapara.test_project.controllers;
 
-import com.glebzapara.test_project.models.Admin;
-import com.glebzapara.test_project.models.Student;
-import com.glebzapara.test_project.models.Subject;
-import com.glebzapara.test_project.models.Teacher;
+import com.glebzapara.test_project.models.*;
 import com.glebzapara.test_project.services.AdminService;
 import com.glebzapara.test_project.services.StudentService;
 import com.glebzapara.test_project.services.SubjectService;
@@ -239,12 +236,12 @@ public class UniversityController {
     @PostMapping("/students")
     public String createStudent(@ModelAttribute("studentForm") Student student,
                                 @RequestParam("file") MultipartFile file,
-                                @PathVariable Integer id,
+                                @RequestParam("groupId") Integer groupId,
                                 HttpSession httpSession) throws Exception {
         String role = (String) httpSession.getAttribute("role");
         student.setRole(role);
 
-        studentService.registerStudent(student, id);
+        studentService.registerStudent(student, groupId);
 
         if (file != null && !file.isEmpty()) {
             studentService.saveStudentImage(student.getId(), file);
