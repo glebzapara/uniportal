@@ -2,14 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Profile</title>
+    <meta charset="UTF-8">
+    <title>Profile</title>
 </head>
 <body>
 <h1 th:text="${teacherName}"></h1>
 <h1 th:text="${teacherSurname}"></h1>
 <h1 th:text="${teacherEmail}"></h1>
 <h1 th:text="${teacherPhoneNumber}"></h1>
+
 <img th:src="${teacherImage}"/>
+
+<form th:action="@{/logout}" method="post" style="margin-top: 16px;">
+    <button type="submit">Logout</button>
+</form>
+
 </body>
 </html>

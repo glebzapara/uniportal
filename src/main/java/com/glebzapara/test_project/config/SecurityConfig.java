@@ -10,12 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -58,59 +59,56 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.authenticationProvider(adminAuthProvider());
-        auth.authenticationProvider(studentAuthProvider());
-        auth.authenticationProvider(teacherAuthProvider());
-        return auth.build();
+    public AuthenticationManager authenticationManager() {
+        return authentication -> {
+            try {
+                return adminAuthProvider().authenticate(authentication);
+            } catch (Exception ignored) {
+            }
+
+            try {
+                return studentAuthProvider().authenticate(authentication);
+            } catch (Exception ignored) {
+            }
+
+            return teacherAuthProvider().authenticate(authentication);
+        };
     }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .authenticationManager(authenticationManager())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/admins",
-                                "/admins/new",
-                                "/register",
-                                "/login",
-                                "/role-select",
-                                "/students/new",
-                                "/students",
-                                "/teachers",
-                                "/teachers/new",
-                                "/css/**",
-                                "/js/**"
-                        ).permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/admins/**").hasRole("ADMIN")
+                        .requestMatchers("/students/new").hasRole("ADMIN")
+                        .requestMatchers("/students/**").hasAnyRole("ADMIN", "STUDENT")
+                        .requestMatchers("/teachers/**").hasAnyRole("ADMIN", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .failureUrl("/login?error")
                         .successHandler((request, response, authentication) -> {
                             Object principal = authentication.getPrincipal();
-                            if (principal instanceof AdminDetails adminDetails) {
-                                response.sendRedirect("/admins/" + adminDetails.getAdmin().getId() + "/profile");
-                            } else if (principal instanceof StudentDetails studentDetails) {
-                                response.sendRedirect("/students/" + studentDetails.getStudent().getId() + "/profile");
-                            } else if (principal instanceof TeacherDetails teacherDetails) {
-                                response.sendRedirect("/teachers/" + teacherDetails.getTeacher().getId() + "/profile");
-                            } else {
+
+                            if (principal instanceof AdminDetails) {
                                 response.sendRedirect("/");
+                            } else if (principal instanceof StudentDetails s) {
+                                response.sendRedirect("/students/" + s.getStudent().getId() + "/profile");
+                            } else if (principal instanceof TeacherDetails t) {
+                                response.sendRedirect("/teachers/" + t.getTeacher().getId() + "/profile");
                             }
                         })
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
                         .permitAll()
                 );
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -38,21 +38,7 @@ public class Admin {
     private String password;
 
     @NotNull
-    @Pattern(regexp = "^[A-Z]{2,3}$")
-    @Column(name = "country", nullable = false, length = 3)
-    private String country;
-
-    @NotNull
-    @Pattern(regexp = "^\\+[0-9]{9,15}$")
-    @Column(name = "phone_number", nullable = false, length = 16)
-    private String phoneNumber;
-
-    @Size(max = 255)
-    @Column(name = "image")
-    private String image;
-
-    @NotNull
-    @Size(max = 10)
-    @Column(name = "role", nullable = false, length = 10)
+    @Size(max = 20)
+    @Column(name = "role", nullable = false, length = 20)
     private String role;
 }

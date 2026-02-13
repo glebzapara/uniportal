@@ -1,6 +1,8 @@
 package com.glebzapara.test_project.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -24,9 +26,14 @@ public class Department {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Group> groups;
+    @NotNull
+    @Min(1)
+    @Max(8)
+    @Column(name = "number", nullable = false)
+    private Integer number;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Subject> subjects;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
 }

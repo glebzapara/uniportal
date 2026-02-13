@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "teachers")
 @Data
@@ -28,6 +30,7 @@ public class Teacher {
 
     @NotNull
     @Email
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
     @Size(max = 255)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -38,21 +41,22 @@ public class Teacher {
     private String password;
 
     @NotNull
-    @Pattern(regexp = "^[A-Z]{2,3}$")
-    @Column(name = "country", nullable = false, length = 3)
-    private String country;
-
-    @NotNull
+    @Size(max = 16)
     @Pattern(regexp = "^\\+[0-9]{9,15}$")
     @Column(name = "phone_number", nullable = false, length = 16)
     private String phoneNumber;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
     @Size(max = 255)
     @Column(name = "image")
     private String image;
 
     @NotNull
-    @Size(max = 10)
-    @Column(name = "role", nullable = false, length = 10)
+    @Size(max = 20)
+    @Column(name = "role", nullable = false, length = 20)
     private String role;
 }

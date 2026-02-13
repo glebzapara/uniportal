@@ -1,9 +1,10 @@
 package com.glebzapara.test_project.services;
 
-import com.glebzapara.test_project.models.Student;
+import com.glebzapara.test_project.models.Department;
 import com.glebzapara.test_project.models.Teacher;
+import com.glebzapara.test_project.repositories.DepartmentRepository;
+import com.glebzapara.test_project.repositories.GroupRepository;
 import com.glebzapara.test_project.repositories.TeacherRepository;
-import com.glebzapara.test_project.util.PhoneNumberUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,11 +20,14 @@ import java.util.UUID;
 @Service
 public class TeacherService {
     TeacherRepository teacherRepository;
+    DepartmentRepository departmentRepository;
     private PasswordEncoder passwordEncoder;
 
     public TeacherService(TeacherRepository teacherRepository,
+                          DepartmentRepository departmentRepository,
                           PasswordEncoder passwordEncoder) {
         this.teacherRepository = teacherRepository;
+        this.departmentRepository = departmentRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -53,17 +57,11 @@ public class TeacherService {
                 .orElseThrow(() -> new Exception("Email cannot be null"));
     }
 
-    public String getTeacherCountryById(Integer id) throws Exception {
-        return teacherRepository.findById(id)
-                .map(Teacher::getCountry)
-                .orElseThrow(() -> new Exception("Country cannot be null"));
-    }
-
-    public String getTeacherPasswordById(Integer id) throws Exception {
-        return teacherRepository.findById(id)
-                .map(Teacher::getPassword)
-                .orElseThrow(() -> new Exception("Password cannot be null"));
-    }
+//    public String getTeacherPasswordById(Integer id) throws Exception {
+//        return teacherRepository.findById(id)
+//                .map(Teacher::getPassword)
+//                .orElseThrow(() -> new Exception("Password cannot be null"));
+//    }
 
     public String getTeacherPhoneNumberById(Integer id) throws Exception {
         return teacherRepository.findById(id)
@@ -113,7 +111,12 @@ public class TeacherService {
         });
     }
 
-    public void registerTeacher(Teacher teacher) throws Exception {
+    public void registerTeacher(Teacher teacher, Integer departmentId) throws Exception {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+
+        teacher.setDepartment(department);
+
         if (teacher.getName() == null || teacher.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");
         }
@@ -131,7 +134,7 @@ public class TeacherService {
         }
 
         teacher.setPassword(passwordEncoder.encode(teacher.getPassword()));
-        teacher.setPhoneNumber(PhoneNumberUtil.addCountryCode(teacher.getCountry(), teacher.getPhoneNumber()));
+        teacher.setPhoneNumber(teacher.getPhoneNumber());
 
         teacherRepository.save(teacher);
     }

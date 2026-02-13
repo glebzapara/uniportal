@@ -41,9 +41,4 @@ public class Lesson {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
-    @Min(0)
-    @Max(3)
-    @Column(name = "score", nullable = false)
-    private Short score;
-
 }

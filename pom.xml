@@ -31,6 +31,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<!-- Версия не обязательна — Spring Boot подтянет совместимую (сейчас ~4.27+) -->
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>

@@ -15,12 +15,10 @@ public class GroupService {
         this.groupRepository = groupRepository;
     }
 
-    // Получить все группы
     public List<Group> findAll() {
         return groupRepository.findAll();
     }
 
-    // Получить группу по ID
     public Optional<Group> findById(Integer id) {
         return groupRepository.findById(id);
     }

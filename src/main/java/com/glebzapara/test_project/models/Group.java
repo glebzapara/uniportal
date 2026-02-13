@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
+import java.util.List;
+
 @Entity
 @Table(name = "groups")
 @Data
@@ -17,30 +19,18 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @NotNull
     @Min(1)
-    @Max(8)
-    private Integer faculty;
-
-    @NotNull
-    @Min(1)
     @Max(6)
+    @Column(name = "course", nullable = false)
     private Short course;
 
     @NotNull
     @Pattern(regexp = "[A-Z]+[1-8]")
+    @Column(name = "speciality", nullable = false)
     private String speciality;
-
-    @Column(name = "number")
-    private Integer number;
-
-    @Formula("faculty || course || number")
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
 }
 

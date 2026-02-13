@@ -16,23 +16,23 @@ public class Subject {
 
     @NotNull
     @Size(max = 255)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @NotNull
     @Min(1)
     @Max(6)
+    @Column(name = "course", nullable = false)
     private Short course;
 
     @NotNull
-    @Min(1)
-    @Max(8)
-    private Integer faculty;
-
-    @NotNull
+    @Size(max = 2)
     @Pattern(regexp = "[A-Z]+[1-8]")
+    @Column(name = "speciality")
     private String speciality;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 }

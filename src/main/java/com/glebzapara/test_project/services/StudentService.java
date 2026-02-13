@@ -4,7 +4,6 @@ import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.models.Group;
 import com.glebzapara.test_project.repositories.GroupRepository;
 import com.glebzapara.test_project.repositories.StudentRepository;
-import com.glebzapara.test_project.util.PhoneNumberUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,28 +60,18 @@ public class StudentService {
                 .orElseThrow(() -> new Exception("Password cannot be null"));
     }
 
-    public Group getStudentGroup(Integer studentId) throws Exception {
+    public Group getStudentGroupById(Integer studentId) throws Exception {
         return studentRepository.findById(studentId)
                 .map(Student::getGroup)
                 .orElseThrow(() -> new Exception("Group cannot be null"));
     }
 
-    public Integer getStudentFacultyById(Integer studentId) throws Exception {
-        return getStudentGroup(studentId).getFaculty();
+    public Short getStudentGroupCourseById(Integer studentId) throws Exception {
+        return getStudentGroupById(studentId).getCourse();
     }
 
-    public Short getStudentCourseById(Integer studentId) throws Exception {
-        return getStudentGroup(studentId).getCourse();
-    }
-
-    public String getStudentSpecialityById(Integer studentId) throws Exception {
-        return getStudentGroup(studentId).getSpeciality();
-    }
-
-    public String getStudentCountryById(Integer id) throws Exception {
-        return studentRepository.findById(id)
-                .map(Student::getCountry)
-                .orElseThrow(() -> new Exception("Country cannot be null"));
+    public String getStudentGroupSpecialityById(Integer studentId) throws Exception {
+        return getStudentGroupById(studentId).getSpeciality();
     }
 
     public String getStudentPhoneNumberById(Integer id) throws Exception {
@@ -135,61 +124,50 @@ public class StudentService {
 
 
     public void registerStudent(Student student, Integer groupId) throws Exception {
-        Group studentGroup = groupRepository.findById(groupId)
-                .orElseThrow(() -> new Exception("Group not found"));
+        try {
+            Group studentGroup = groupRepository.findById(groupId)
+                    .orElseThrow(() -> new Exception("Group not found"));
 
-        if (student.getName() == null || student.getName().trim().isEmpty()) {
-            throw new Exception("Name cannot be null or empty");
-        }
-        if (student.getSurname() == null || student.getSurname().trim().isEmpty()) {
-            throw new Exception("Surname cannot be null or empty");
-        }
-        if (student.getEmail() == null || student.getEmail().trim().isEmpty()) {
-            throw new Exception("Email cannot be null or empty");
-        }
-        if (student.getPassword() == null || student.getPassword().trim().isEmpty()) {
-            throw new Exception("Password cannot be null or empty");
-        }
-        if (studentGroup.getFaculty() == null
-                || studentGroup.getFaculty() < 1
-                || studentGroup.getFaculty() > 8) {
-            throw new Exception("Faculty must be between 1 and 8");
-        }
-        if (studentGroup.getCourse() == null
-                || studentGroup.getCourse() < 1
-                || studentGroup.getCourse() > 6) {
-            throw new Exception("Course must be between 1 and 6");
-        }
-        if (studentGroup.getSpeciality() == null || studentGroup.getSpeciality().trim().isEmpty()) {
-            throw new Exception("Speciality cannot be null or empty");
-        }
-        if (student.getPhoneNumber() == null || student.getPhoneNumber().trim().isEmpty()) {
-            throw new Exception("Phone number cannot be null or empty");
-        }
+            student.setGroup(studentGroup);
 
-        student.setPassword(passwordEncoder.encode(student.getPassword()));
+            if (student.getName() == null || student.getName().trim().isEmpty()) {
+                throw new Exception("Name cannot be null or empty");
+            }
 
-        student.setPhoneNumber(PhoneNumberUtil.addCountryCode(student.getCountry(), student.getPhoneNumber()));
+            if (student.getSurname() == null || student.getSurname().trim().isEmpty()) {
+                throw new Exception("Surname cannot be null or empty");
+            }
 
-        studentRepository.save(student);
+            if (student.getEmail() == null || student.getEmail().trim().isEmpty()) {
+                throw new Exception("Email cannot be null or empty");
+            }
+
+            if (student.getPassword() == null || student.getPassword().trim().isEmpty()) {
+                throw new Exception("Password cannot be null or empty");
+            }
+
+            if (studentGroup.getCourse() == null
+                    || studentGroup.getCourse() < 1
+                    || studentGroup.getCourse() > 6) {
+                throw new Exception("Course must be between 1 and 6");
+            }
+
+            if (studentGroup.getSpeciality() == null || studentGroup.getSpeciality().trim().isEmpty()) {
+                throw new Exception("Speciality cannot be null or empty");
+            }
+
+            if (student.getPhoneNumber() == null || student.getPhoneNumber().trim().isEmpty()) {
+                throw new Exception("Phone number cannot be null or empty");
+            }
+
+            student.setPassword(passwordEncoder.encode(student.getPassword()));
+
+            student.setPhoneNumber(student.getPhoneNumber());
+
+            studentRepository.save(student);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
-
-
-//    public Integer getStudentFacultyById(Integer id) throws Exception {
-//        return studentRepository.findById(id)
-//                .map(Student::getFaculty)
-//                .orElseThrow(() -> new Exception("Faculty cannot be null"));
-//    }
-//
-//    public Short getStudentCourseById(Integer id) throws Exception {
-//        return studentRepository.findById(id)
-//                .map(Student::getCourse)
-//                .orElseThrow(() -> new Exception("Name cannot be null"));
-//    }
-//
-//    public String getStudentSpecialityById(Integer id) throws Exception {
-//        return studentRepository.findById(id)
-//                .map(Student::getSpeciality)
-//                .orElseThrow(() -> new Exception("Speciality cannot be null"));
-//    }
