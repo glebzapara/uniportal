@@ -33,7 +33,6 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
-			<!-- Версия не обязательна — Spring Boot подтянет совместимую (сейчас ~4.27+) -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
