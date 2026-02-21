@@ -4,28 +4,38 @@ import com.glebzapara.test_project.models.Student;
 import com.glebzapara.test_project.models.Group;
 import com.glebzapara.test_project.repositories.GroupRepository;
 import com.glebzapara.test_project.repositories.StudentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
+
 
 @Service
 public class StudentService {
     StudentRepository studentRepository;
     GroupRepository groupRepository;
     private PasswordEncoder passwordEncoder;
+    private final S3Client s3Client;
+
+    @Value("${r2.bucket}")
+    private String bucket;
+
+    @Value("${r2.public-url}")
+    private String publicUrl;
 
     public StudentService(StudentRepository studentRepository,
                           GroupRepository groupRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, S3Client s3Client) {
         this.studentRepository = studentRepository;
         this.groupRepository = groupRepository;
         this.passwordEncoder = passwordEncoder;
+        this.s3Client = s3Client;
     }
 
     public List<Student> findAllStudents() {
@@ -80,17 +90,21 @@ public class StudentService {
                 .orElseThrow(() -> new Exception("Phone number cannot be null"));
     }
 
-    public byte[] getStudentImageById(Integer id) throws IOException {
-        String imagePath = studentRepository.findById(id)
+    public String getStudentImageById(Integer id) {
+        return studentRepository.findById(id)
                 .map(Student::getImage)
                 .orElse(null);
 
-        if (imagePath == null || imagePath.isEmpty()) return null;
-
-        Path path = Paths.get("G:/IdeaProjects/test_project/src/main/resources/static", imagePath);
-        if (!Files.exists(path)) return null;
-
-        return Files.readAllBytes(path);
+//        String imagePath = studentRepository.findById(id)
+//                .map(Student::getImage)
+//                .orElse(null);
+//
+//        if (imagePath == null || imagePath.isEmpty()) return null;
+//
+//        Path path = Paths.get("G:/IdeaProjects/test_project/src/main/resources/static", imagePath);
+//        if (!Files.exists(path)) return null;
+//
+//        return Files.readAllBytes(path);
     }
 
     public void saveStudentImage(Integer id, MultipartFile file) throws IOException {
@@ -98,26 +112,21 @@ public class StudentService {
             return;
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            System.out.println("Uploaded file is not an image, skipping.");
-            return;
-        }
+        String key = "students/" + id + "/" + UUID.randomUUID();
 
-        Path uploadDir = Paths.get("G:/IdeaProjects/test_project/src/main/resources/static/images");
-        Files.createDirectories(uploadDir);
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(key)
+                        .contentType(file.getContentType())
+                        .build(),
+                RequestBody.fromBytes(file.getBytes())
+        );
 
-        String originalFileName = Paths.get(file.getOriginalFilename()).getFileName().toString();
-        String extension = originalFileName.contains(".")
-                ? originalFileName.substring(originalFileName.lastIndexOf("."))
-                : "";
-        String fileName = id + "_" + UUID.randomUUID() + extension;
-
-        Path target = uploadDir.resolve(fileName);
-        file.transferTo(target);
+        String imageUrl = publicUrl + "/" + key;
 
         studentRepository.findById(id).ifPresent(s -> {
-            s.setImage("images/" + fileName);
+            s.setImage(imageUrl);
             studentRepository.save(s);
         });
     }

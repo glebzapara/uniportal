@@ -155,14 +155,10 @@ public class UniversityController {
     }
 
     @GetMapping("/students/{id}/image")
-    public String getStudentImage(@PathVariable Integer id, Model model) throws IOException {
-        byte[] imageBytes = studentService.getStudentImageById(id);
-        if (imageBytes != null && imageBytes.length > 0) {
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            model.addAttribute("studentImage", "data:image/png;base64," + base64Image);
-        } else {
-            model.addAttribute("studentImage", null);
-        }
+    public String getStudentImage(@PathVariable Integer id, Model model) {
+
+        String imageUrl = studentService.getStudentImageById(id);
+        model.addAttribute("studentImage", imageUrl);
 
         return "studentImage";
     }
