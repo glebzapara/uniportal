@@ -22,7 +22,7 @@ public class Department {
     private Integer id;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "name", nullable = false)
     private String name;
 

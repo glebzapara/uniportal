@@ -20,4 +20,22 @@
 
     </changeSet>
 
+    <changeSet id="increase-department-name-length" author="Gleb Zapara">
+        <modifyDataType
+                tableName="departments"
+                columnName="name"
+                newDataType="VARCHAR(100)"/>
+    </changeSet>
+
+    <changeSet id="insert-departments-1" author="Gleb Zapara">
+        <sql dbms="postgresql">
+        <![CDATA[
+            INSERT INTO departments(name, number, group_id)
+            VALUES
+                ('Information and measurement technologies', 303, 1),
+                ('Automation, computer-integrated technologies and robotics', 301, 2);
+            ]]>
+    </sql>
+    </changeSet>
+
 </databaseChangeLog>

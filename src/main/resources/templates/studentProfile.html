@@ -23,6 +23,10 @@
 
 <img th:src="${studentImage}" alt="Profile photo"/>
 
+<a th:href="@{index.html}">
+    <h3>Back to the main page</h3>
+</a>
+
 <form th:action="@{/logout}" method="post" style="margin-top: 16px;">
     <button type="submit">Logout</button>
 </form>
