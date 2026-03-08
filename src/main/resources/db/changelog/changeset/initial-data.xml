@@ -38,4 +38,17 @@
     </sql>
     </changeSet>
 
+    <changeSet id="insert-admins-1" author="Gleb Zapara">
+        <sql dbms="postgresql">
+        <![CDATA[
+            INSERT INTO admins(name, surname, email, password, role)
+            VALUES
+                ('Gleb', 'Zapara', 'gleb.zapara2008@gmail.com',
+                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                 'ROLE_ADMIN');
+            ]]>
+    </sql>
+
+    </changeSet>
+
 </databaseChangeLog>
