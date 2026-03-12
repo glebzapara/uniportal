@@ -4,51 +4,38 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="insert-groups-1" author="Gleb Zapara">
-
-        <insert tableName="groups">
-            <column name="course" valueNumeric="1"/>
-            <column name="number" valueNumeric="318"/>
-            <column name="speciality" value="G6"/>
-        </insert>
-
-        <insert tableName="groups">
-            <column name="course" valueNumeric="1"/>
-            <column name="number" valueNumeric="310"/>
-            <column name="speciality" value="G7"/>
-        </insert>
-
-    </changeSet>
-
-    <changeSet id="increase-department-name-length" author="Gleb Zapara">
-        <modifyDataType
-                tableName="departments"
-                columnName="name"
-                newDataType="VARCHAR(100)"/>
+    <changeSet id="insert-admins-1" author="Gleb Zapara">
+        <sql dbms="postgresql">
+            <![CDATA[
+            INSERT INTO admins(name, surname, email, password, role)
+            VALUES
+                ('Gleb', 'Zapara', 'gleb.zapara2008@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                'ROLE_ADMIN');
+            ]]>
+        </sql>
     </changeSet>
 
     <changeSet id="insert-departments-1" author="Gleb Zapara">
         <sql dbms="postgresql">
-        <![CDATA[
-            INSERT INTO departments(name, number, group_id)
+            <![CDATA[
+            INSERT INTO departments(name, number)
             VALUES
-                ('Information and measurement technologies', 303, 1),
-                ('Automation, computer-integrated technologies and robotics', 301, 2);
+                ('Information and measurement technologies', 303),
+                ('Automation, computer-integrated technologies and robotics', 301);
             ]]>
-    </sql>
+        </sql>
     </changeSet>
 
-    <changeSet id="insert-admins-1" author="Gleb Zapara">
+    <changeSet id="insert-groups-1" author="Gleb Zapara">
         <sql dbms="postgresql">
-        <![CDATA[
-            INSERT INTO admins(name, surname, email, password, role)
+            <![CDATA[
+            INSERT INTO groups(course, number, speciality, department_id)
             VALUES
-                ('Gleb', 'Zapara', 'gleb.zapara2008@gmail.com',
-                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
-                 'ROLE_ADMIN');
+                (1, 318, 'G6', 1),
+                (1, 310, 'G7', 2);
             ]]>
-    </sql>
-
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

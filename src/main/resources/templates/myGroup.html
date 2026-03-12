@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Group</title>
+</head>
+
+<body>
+
+<h2>My Group</h2>
+
+<h3>Group Information</h3>
+
+<p>Course: <span th:text="${group.course}"></span></p>
+
+<p>Group Number: <span th:text="${group.number}"></span></p>
+
+<p>Speciality: <span th:text="${group.speciality}"></span></p>
+
+<p>Department: <span th:text="${group.department.name}"></span></p>
+
+<hr>
+
+<h3>Students in this group</h3>
+
+<ul>
+    <li th:each="s : ${students}">
+        <span th:text="${s.name}"></span>
+        <span th:text="${s.surname}"></span>
+    </li>
+</ul>
+
+</body>
+
+</html>

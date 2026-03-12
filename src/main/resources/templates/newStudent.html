@@ -4,10 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>New Student</title>
+
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 <body>
+
 <h2>Create New Student</h2>
+
 <form th:action="@{/students}" th:object="${studentForm}" method="post" enctype="multipart/form-data">
+
     <label for="name">Your name:</label>
     <input type="text" th:field="*{name}" id="name">
 
@@ -18,9 +23,9 @@
     <input type="email" th:field="*{email}" id="email">
 
     <label for="password">Your password:</label>
-    <input type="password" th:field="*{password}" id="password" max="25">
+    <input type="password" th:field="*{password}" id="password">
 
-    <label>Group (set by admin):</label>
+    <label>Group:</label>
 
     <select name="groupId">
         <option value="">-- Select group --</option>
@@ -29,16 +34,18 @@
                 th:value="${g.id}"
                 th:text="'Course ' + ${g.course} + ' - ' + ${g.speciality}">
         </option>
+
     </select>
 
-
     <label for="phone_number">Your phone number:</label>
-    <input type="tel" th:field="*{phoneNumber}" id="phone_number" pattern="\+?[0-9\s\-]{7,15}">
+    <input type="tel" th:field="*{phoneNumber}" id="phone_number">
 
     <label for="image">Your image:</label>
     <input type="file" name="file" id="image">
 
     <button type="submit">Submit</button>
+
 </form>
+
 </body>
 </html>

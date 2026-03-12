@@ -4,16 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
+
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 <body>
-<h1 th:text="${teacherName}"></h1>
-<h1 th:text="${teacherSurname}"></h1>
-<h1 th:text="${teacherEmail}"></h1>
-<h1 th:text="${teacherPhoneNumber}"></h1>
+<h1 th:text="${teacher.name}"></h1>
+<h1 th:text="${teacher.surname}"></h1>
+<h1 th:text="${teacher.email}"></h1>
+<h1 th:text="${teacher.phoneNumber}"></h1>
 
-<img th:src="${teacherImage}"/>
+<img th:src="${teacher.image}"/>
 
-<a th:href="@{index.html}">
+<a th:href="@{/}">
     <h3>Back to the main page</h3>
 </a>
 
