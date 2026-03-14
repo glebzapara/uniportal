@@ -1,6 +1,5 @@
 package com.glebzapara.uniportal.models;
 
-import com.glebzapara.uniportal.models.enums.DayOfWeek;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -22,11 +21,6 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week", nullable = false)
-    private DayOfWeek dayOfWeek;
 
     @NotNull
     @ManyToOne

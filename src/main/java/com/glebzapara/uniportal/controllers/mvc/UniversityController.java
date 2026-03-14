@@ -3,13 +3,16 @@ package com.glebzapara.uniportal.controllers.mvc;
 import com.glebzapara.uniportal.models.*;
 import com.glebzapara.uniportal.security.AdminDetails;
 import com.glebzapara.uniportal.security.StudentDetails;
+import com.glebzapara.uniportal.security.TeacherDetails;
 import com.glebzapara.uniportal.services.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller()
 public class UniversityController {
@@ -19,23 +22,34 @@ public class UniversityController {
     GroupService groupService;
     DepartmentService departmentService;
     SubjectService subjectService;
+    GradeService gradeService;
 
     public UniversityController(AdminService adminService,
                                 StudentService studentService,
                                 TeacherService teacherService,
                                 GroupService groupService,
                                 DepartmentService departmentService,
-                                SubjectService subjectService) {
+                                SubjectService subjectService,
+                                GradeService gradeService) {
         this.adminService = adminService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.groupService = groupService;
         this.departmentService = departmentService;
         this.subjectService = subjectService;
+        this.gradeService = gradeService;
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Authentication authentication, Model model) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof StudentDetails) {
+            model.addAttribute("subjects", subjectService.findAllSubjects());
+        } else {
+
+        }
+
         return "index";
     }
 
@@ -156,14 +170,26 @@ public class UniversityController {
         Teacher teacher = teacherService.findOneTeacher(id)
                 .orElseThrow(() -> new Exception("Teacher not found"));
 
-        model.addAttribute( "teacher", teacher);
+        model.addAttribute("teacher", teacher);
 
         return "teacherProfile";
     }
 
-    @GetMapping("/settings")
-    public String settings() {
-        return "settings";
+    @GetMapping("/grades")
+    public String grades(Authentication authentication, Model model) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof StudentDetails studentDetails) {
+            Integer studentId = studentDetails.getStudent().getId();
+
+            model.addAttribute("grades", gradeService.findByStudentId(studentId));
+
+            return "grades";
+        } else {
+
+        }
+
+        return "redirect:/";
     }
 
     @GetMapping("/schedule")
@@ -181,22 +207,63 @@ public class UniversityController {
 
             model.addAttribute("group", student.getGroup());
             model.addAttribute("students", studentService.findByGroup(group));
+
+            return "myGroup";
         }
 
-        return "myGroup";
+        return "redirect:/";
+    }
+
+    @GetMapping("/students")
+    public String students(Model model) {
+        model.addAttribute("students", studentService.findAllStudents());
+
+        return "students";
     }
 
     @GetMapping("/teachers")
-    public String teachers() {
+    public String teachers(Model model) {
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+
         return "teachers";
     }
 
-    @ControllerAdvice
-    public static class GlobalExceptionHandler {
+    @PostMapping("/search")
+    public String search(@RequestParam("searchTerm") String searchTerm, Authentication authentication, Model model) {
+        Object principal = authentication.getPrincipal();
 
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<String> handle(Exception e){
-            return ResponseEntity.status(500).body(e.getMessage());
+        if (principal instanceof StudentDetails) {
+            List<Teacher> searchResults = new ArrayList<>();
+
+            for (Teacher teacher : teacherService.findAllTeachers()) {
+                if (teacher.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        teacher.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        teacher.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    searchResults.add(teacher);
+                }
+            }
+
+            model.addAttribute("teachers", searchResults);
+
+            return "teachers";
         }
+
+        if (principal instanceof TeacherDetails) {
+            List<Student> searchResults = new ArrayList<>();
+
+            for (Student student : studentService.findAllStudents()) {
+                if (student.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        student.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        student.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    searchResults.add(student);
+                }
+            }
+
+            model.addAttribute("students", searchResults);
+
+            return "students";
+        }
+
+        return "redirect:/";
     }
 }

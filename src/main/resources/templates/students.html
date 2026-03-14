@@ -3,25 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>My Profile</title>
+    <title>Students</title>
 
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 <body>
-<h1>Teachers</h1>
+<h1>Students</h1>
 
 <form th:action="@{/search}" method="post" class="mb-3">
     <div class="input-group">
-        <input type="text" class="form-control" name="searchTerm" placeholder="Find a teacher">
+        <input type="text" class="form-control" name="searchTerm" placeholder="Find a student">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
     </div>
 </form>
 
 <ul>
-    <li th:each="t : ${teachers}">
-        <span th:text="${t.name}"></span>
-        <span th:text="${t.surname}"></span>
-        <span th:text="${t.phoneNumber}"></span>
+    <li th:each="s : ${students}">
+        <span th:text="${s.name}"></span>
+        <span th:text="${s.surname}"></span>
+        <span th:text="${s.phoneNumber}"></span>
     </li>
 </ul>
 </body>

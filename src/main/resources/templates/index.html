@@ -12,15 +12,18 @@
 
 <nav class="navbar">
     <div>
-        <span class="logo">UniPortal</span>
+        <span style="font-size:26px; font-weight:700;">
+        Uni<span style="color:#2562eb;">Portal</span>
+        </span>
         <span class="menu" style="display: flex; align-items: center; gap: 10px;">
-            <a th:href="@{/settings}">Settings</a>
+            <a th:href="@{/grades}">Grades</a>
             <a th:href="@{/schedule}">Schedule</a>
             <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-               th:href="@{/my-group}">
-                My Group
-            </a>
-            <a th:href="@{/teachers}">Teachers</a>
+               th:href="@{/my-group}">My Group</a>
+            <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+               th:href="@{/students}">Students</a>
+            <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+               th:href="@{/teachers}">Teachers</a>
             <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                th:href="@{/students/{id}/profile(id=${currentStudent.id})}">Profile</a>
             <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
@@ -43,68 +46,30 @@
                     <div style="background: #3766a0; color: white; padding: 12px; text-align: center; font-weight: bold;">
                         Subjects
                     </div>
-
                     <table cellpadding="15" cellspacing="0" width="100%">
-                        <tr>
+                        <tr th:each="s, stat : ${subjects}" th:if="${stat.index % 3 == 0}">
                             <td align="center" width="33%">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Programming<br>lecture</small></a>
+                                <a href="/course/subject">
+                                    <small th:text="${subjects[stat.index].name}"></small>
+                                </a>
                             </td>
-                            <td align="center" width="33%">
+                            <td align="center" width="33%" th:if="${stat.index + 1 < subjects.size()}">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>English<br>practice</small></a>
+                                <a href="/course/subject">
+                                    <small th:text="${subjects[stat.index + 1].name}"></small>
+                                </a>
                             </td>
-                            <td align="center" width="33%">
+                            <td align="center" width="33%" th:if="${stat.index + 2 < subjects.size()}">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Mathematics<br>lecture</small></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Physics<br>practice</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Databases<br>lecture</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Physical Education<br>practice</small></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Algorithms<br>lecture</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Web Development<br>practice</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Discrete Math<br>lecture</small></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Networks<br>practice</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Operating Systems<br>lecture</small></a>
-                            </td>
-                            <td align="center">
-                                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject"><small>Project Management<br>practice</small></a>
+                                <a href="/course/subject">
+                                    <small th:text="${subjects[stat.index + 2].name}"></small>
+                                </a>
                             </td>
                         </tr>
                     </table>
                 </div>
             </td>
-
         </tr>
     </table>
 

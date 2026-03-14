@@ -10,7 +10,9 @@
 <body>
 
 <div class="login-card">
-    <div class="logo">UniPortal</div>
+    <span style="font-size:26px; font-weight:700;">
+    Uni<span style="color:#2562eb;">Portal</span>
+    </span>
     <h2>Login</h2>
 
     <div th:if="${param.error}" class="alert alert-error">
@@ -26,19 +28,19 @@
         <div class="field">
             <label for="username">Email</label>
             <input type="text"
-                id="username"
-                name="username"
-                placeholder="Введите email"
-                required/>
+                   id="username"
+                   name="username"
+                   placeholder="Введите email"
+                   required/>
         </div>
 
         <div class="field">
             <label for="password">Password</label>
             <input type="password"
-                id="password"
-                name="password"
-                placeholder="Введите пароль"
-                required/>
+                   id="password"
+                   name="password"
+                   placeholder="Введите пароль"
+                   required/>
         </div>
 
         <button type="submit">Sign in</button>

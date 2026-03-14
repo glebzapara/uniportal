@@ -1,8 +1,11 @@
 package com.glebzapara.uniportal.services;
 
+import com.glebzapara.uniportal.models.Grade;
 import com.glebzapara.uniportal.models.Subject;
 import com.glebzapara.uniportal.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SubjectService {
@@ -10,6 +13,10 @@ public class SubjectService {
 
     public SubjectService(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
+    }
+
+    public List<Subject> findAllSubjects() {
+        return subjectRepository.findAll();
     }
 
     public String getSubjectNameById(Integer id) throws Exception {

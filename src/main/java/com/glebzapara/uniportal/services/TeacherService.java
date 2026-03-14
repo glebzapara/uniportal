@@ -3,7 +3,6 @@ package com.glebzapara.uniportal.services;
 import com.glebzapara.uniportal.models.Department;
 import com.glebzapara.uniportal.models.Teacher;
 import com.glebzapara.uniportal.repositories.DepartmentRepository;
-import com.glebzapara.uniportal.repositories.GroupRepository;
 import com.glebzapara.uniportal.repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;

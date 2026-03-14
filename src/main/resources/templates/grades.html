@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Grades</title>
+
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+</head>
+<body>
+<table>
+    <tr th:each="g : ${grades}">
+        <td th:text="${g.subject.name}"></td>
+        <td th:text="${g.teacher.name}"></td>
+        <td th:text="${g.teacher.surname}"></td>
+        <td th:text="${g.grade != null ? g.grade : 0}"></td>
+    </tr>
+</table>
+</body>
+</html>
