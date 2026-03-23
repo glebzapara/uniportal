@@ -1,6 +1,7 @@
 package com.glebzapara.uniportal.controllers.mvc;
 
 import com.glebzapara.uniportal.models.*;
+import com.glebzapara.uniportal.models.enums.DayOfWeek;
 import com.glebzapara.uniportal.security.AdminDetails;
 import com.glebzapara.uniportal.security.StudentDetails;
 import com.glebzapara.uniportal.security.TeacherDetails;
@@ -11,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.security.Principal;
+import java.util.*;
 
 @Controller()
 public class UniversityController {
@@ -22,6 +23,7 @@ public class UniversityController {
     GroupService groupService;
     DepartmentService departmentService;
     SubjectService subjectService;
+    LessonService lessonService;
     GradeService gradeService;
 
     public UniversityController(AdminService adminService,
@@ -30,6 +32,7 @@ public class UniversityController {
                                 GroupService groupService,
                                 DepartmentService departmentService,
                                 SubjectService subjectService,
+                                LessonService lessonService,
                                 GradeService gradeService) {
         this.adminService = adminService;
         this.studentService = studentService;
@@ -37,6 +40,7 @@ public class UniversityController {
         this.groupService = groupService;
         this.departmentService = departmentService;
         this.subjectService = subjectService;
+        this.lessonService = lessonService;
         this.gradeService = gradeService;
     }
 
@@ -44,10 +48,14 @@ public class UniversityController {
     public String index(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof StudentDetails) {
-            model.addAttribute("subjects", subjectService.findAllSubjects());
-        } else {
+        if (principal instanceof StudentDetails studentDetails) {
+            Student student = studentDetails.getStudent();
 
+            model.addAttribute("subjects",
+                    subjectService.findByDepartmentId(
+                            student.getGroup().getDepartment().getId()
+                    )
+            );
         }
 
         return "index";
@@ -114,20 +122,6 @@ public class UniversityController {
         return "studentProfile";
     }
 
-    @GetMapping("/subjects/{id}/name")
-    public String getSubjectName(@PathVariable Integer id, Model model) throws Exception {
-        model.addAttribute("subjectName", subjectService.getSubjectNameById(id));
-
-        return "subjectName";
-    }
-
-    @GetMapping("/subjects/{id}/course")
-    public String getSubjectCourse(@PathVariable Integer id, Model model) throws Exception {
-        model.addAttribute("subjectCourse", subjectService.getSubjectCourseById(id));
-
-        return "subjectCourse";
-    }
-
     @GetMapping("/subjects/new")
     public String newSubject(Model model) {
         model.addAttribute("subjectForm", new Subject());
@@ -185,20 +179,39 @@ public class UniversityController {
             model.addAttribute("grades", gradeService.findByStudentId(studentId));
 
             return "grades";
-        } else {
-
         }
 
         return "redirect:/";
     }
 
     @GetMapping("/schedule")
-    public String schedule() {
+    public String getSchedule(Model model, Principal principal) {
+        String email = principal.getName();
+
+        Student student = studentService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        Map<DayOfWeek, List<Lesson>> schedule = lessonService.getScheduleForStudent(student.getId());
+
+        for (DayOfWeek d : DayOfWeek.values()) {
+            schedule.putIfAbsent(d, new ArrayList<>());
+        }
+
+        model.addAttribute("schedule", schedule);
+        model.addAttribute("timeSlots", List.of(
+                "08:00 - 09:35",
+                "09:50 - 11:25",
+                "11:55 - 13:30",
+                "13:45 - 15:20"
+        ));
+        model.addAttribute("lessonService", lessonService);
+        model.addAttribute("days", DayOfWeek.values());
+
         return "schedule";
     }
 
-    @GetMapping("/my-group")
-    public String myGroup(Authentication authentication, Model model) throws Exception {
+    @GetMapping("/group")
+    public String group(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails studentDetails) {
@@ -208,7 +221,35 @@ public class UniversityController {
             model.addAttribute("group", student.getGroup());
             model.addAttribute("students", studentService.findByGroup(group));
 
-            return "myGroup";
+            return "group";
+        }
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/group/search")
+    public String searchGroup(@RequestParam("searchTerm") String searchTerm,
+                              Authentication authentication,
+                              Model model) {
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof StudentDetails studentDetails) {
+            Group group = studentDetails.getStudent().getGroup();
+            List<Student> students = studentService.findByGroup(group);
+            List<Student> filtered = new ArrayList<>();
+
+            for (Student s : students) {
+                if (s.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        s.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                        s.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    filtered.add(s);
+                }
+            }
+
+            model.addAttribute("group", group);
+            model.addAttribute("students", filtered);
+
+            return "group";
         }
 
         return "redirect:/";

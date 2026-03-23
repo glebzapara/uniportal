@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "students")
 @Data
@@ -52,6 +54,9 @@ public class Student {
     @Size(max = 255)
     @Column(name = "image")
     private String image;
+
+    @Column(name = "last_seen")
+    private LocalDateTime lastSeen;
 
     @NotNull
     @Size(max = 20)

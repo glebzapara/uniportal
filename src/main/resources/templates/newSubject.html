@@ -6,7 +6,9 @@
 
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
+
 <body>
+
 <h2>Create New Subject</h2>
 <form th:action="@{/subjects}" th:object="${subjectForm}" method="post">
     <label for="name">Subject name:</label>
@@ -17,5 +19,6 @@
 
     <button type="submit">Submit</button>
 </form>
+
 </body>
 </html>

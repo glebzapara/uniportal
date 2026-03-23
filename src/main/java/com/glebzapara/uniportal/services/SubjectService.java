@@ -31,6 +31,10 @@ public class SubjectService {
                 .orElseThrow(() -> new Exception("Name cannot be null"));
     }
 
+    public List<Subject> findByDepartmentId(Integer departmentId) {
+        return subjectRepository.findByDepartmentId(departmentId);
+    }
+
     public void registerSubject(Subject subject) throws Exception {
         if (subject.getName() == null || subject.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");

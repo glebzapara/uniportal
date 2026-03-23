@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -74,6 +75,10 @@ public class StudentService {
         });
     }
 
+    public Optional<Student> findByEmail(String email) {
+        return studentRepository.findByEmail(email);
+    }
+
     public void registerStudent(Student student, Integer groupId) throws Exception {
         try {
             Group studentGroup = groupRepository.findById(groupId)
@@ -112,6 +117,7 @@ public class StudentService {
             }
 
             student.setPassword(passwordEncoder.encode(student.getPassword()));
+            student.setLastSeen(LocalDateTime.now());
 
             studentRepository.save(student);
         } catch (Exception e) {

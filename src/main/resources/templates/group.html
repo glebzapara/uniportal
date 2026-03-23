@@ -3,34 +3,97 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>My Group</title>
-
+    <title>Group</title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
+
 <body>
 
-<h2>My Group</h2>
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <span style="font-size:26px; font-weight:700; color:white;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </span>
+            </td>
+            <td align="right">
+                <span style="display:inline-block;">
+                    <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none; margin:0 10px;">Schedule</a>
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none; margin:0 10px;">Grades</a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/group}" style="color:white; text-decoration:none; margin:0 10px;">Group</a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/teachers}" style="color:white; text-decoration:none; margin:0 10px;">Teachers</a>
+                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                        th:href="@{/students}" style="color:white; text-decoration:none; margin:0 10px;">Students</a>
+                    <span style="color:#888;">|</span>
+                    <a th:if="${currentStudent != null}"
+                        th:href="@{/students/{id}/profile(id=${currentStudent.id})}" style="color:#2562eb;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+                    <a th:if="${currentTeacher != null}"
+                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
 
-<h3>Group Information</h3>
+<div style="padding:20px; background:#f2f5f9;">
+    <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px; overflow:hidden;">
+        <div style="background:#3766a0; color:white; padding:10px; font-weight:bold; border-radius:10px 10px 0 0;">
+            Group <span th:text="${group.number}"></span>
+        </div>
 
-<p>Course: <span th:text="${group.course}"></span></p>
+        <div style="padding:20px 20px 15px 20px; display:flex;
+        justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
 
-<p>Group Number: <span th:text="${group.number}"></span></p>
+            <!-- Левая часть - информация о группе -->
+            <div style="line-height:2; flex:1; min-width:220px;">
+                <div><b>Course:</b> <span th:text="${group.course}"></span></div>
+                <div><b>Speciality:</b> <span th:text="${group.speciality}"></span></div>
+                <div><b>Department:</b> <span th:text="${group.department.name}"></span></div>
+            </div>
 
-<p>Speciality: <span th:text="${group.speciality}"></span></p>
+            <!-- Правая часть - поиск (длиннее и по центру справа) -->
+            <form th:action="@{/group/search}" method="post"
+                    style="display:flex; gap:10px; min-width:420px; flex-shrink:0;">
+                <input type="text" name="searchTerm" placeholder="Find a student"
+                        style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+                <button type="submit" style="padding:11px 28px; background:#2562eb; color:white;
+                        border:none; border-radius:6px; cursor:pointer; font-size:15px; white-space:nowrap;">
+                    Search
+                </button>
+            </form>
 
-<p>Department: <span th:text="${group.department.name}"></span></p>
+        </div>
+    </div>
 
-<hr>
-
-<h3>Students in this group</h3>
-
-<ul>
-    <li th:each="s : ${students}">
-        <span th:text="${s.name}"></span>
-        <span th:text="${s.surname}"></span>
-    </li>
-</ul>
+    <div style="border:1px solid #ccc; background:white; border-radius:10px; overflow:hidden;">
+        <div style="background:#3766a0; color:white; padding:14px 20px; font-weight:700;
+        display:grid; grid-template-columns: 2.5fr 1.2fr 1.3fr; align-items:center; font-size:15px;">
+            <div>Student</div>
+            <div style="text-align:left">Phone</div>
+            <div style="text-align:right;">Last seen</div>
+        </div>
+        <div th:each="s : ${students}" style="padding:16px 20px; border-bottom:1px solid #eee;
+        display:grid; grid-template-columns: 2.5fr 1.2fr 1.3fr; align-items:center; font-weight:600; font-size:15px;">
+            <div>
+                <a th:href="@{/students/{id}/profile(id=${s.id})}"
+                    th:text="${s.name + ' ' + s.surname}" style="text-decoration:none;
+                    color:#222; font-weight:700;"></a>
+            </div>
+            <div style="text-align:left; color:#444; font-weight:600;">
+                <span th:text="${s.phoneNumber}"></span>
+            </div>
+            <div style="text-align:right; color:#555; font-weight:600;">
+                <span th:text="${s.lastSeen != null ? #temporals.format(s.lastSeen, 'dd.MM HH:mm') : 'Never'}"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

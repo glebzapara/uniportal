@@ -43,9 +43,38 @@
         <![CDATA[
             INSERT INTO teachers(name, surname, email, password, phone_number, role, department_id)
             VALUES
-                ('Ivan', 'Petrov', 'teacher1@gmail.com',
+                --DEPARTMENT 1
+                ('Ivan', 'Juando', 'teacher1@gmail.com',
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
-                '+380999999999', 'ROLE_TEACHER', 1);
+                '+380999999991', 'ROLE_TEACHER', 1),
+
+                ('Oleg', 'Zvyagintsev', 'teacher2@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999992', 'ROLE_TEACHER', 1),
+
+                ('Dalton', 'Diaz', 'teacher3@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999993', 'ROLE_TEACHER', 1),
+
+                ('Zack', 'Mitchell', 'teacher4@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999994', 'ROLE_TEACHER', 1),
+
+                ('Kobe', 'Walker', 'teacher5@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999995', 'ROLE_TEACHER', 1),
+
+                ('Benjamin', 'Davis', 'teacher6@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999996', 'ROLE_TEACHER', 1),
+
+                ('Walter', 'Robinson', 'teacher7@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999997', 'ROLE_TEACHER', 1),
+
+                ('Nelson Nelson', 'Luke', 'teacher8@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                '+380999999998', 'ROLE_TEACHER', 1);
             ]]>
     </sql>
     </changeSet>
@@ -55,9 +84,18 @@
             <![CDATA[
             INSERT INTO students(name, surname, email, password, group_id, phone_number, role)
             VALUES
-                ('Gleb', 'Zapara', 'gleb.zapara2008@gmail.com',
+                ('Gleb', 'Zapara', 'student1@gmail.com',
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
-                1, '+380669564805', 'ROLE_STUDENT');
+                1, '+380777777777', 'ROLE_STUDENT'),
+
+                ('Nazar', 'Popov', 'student2@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                2, '+380777777778', 'ROLE_STUDENT'),
+
+            --TEST
+                ('Oleg', 'Popov', 'student3@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                1, '+380777777772', 'ROLE_STUDENT');
             ]]>
         </sql>
     </changeSet>
@@ -74,7 +112,16 @@
                 ('Engineering and Computer Graphics', 1, 1),
                 ('Physics', 1, 1),
                 ('Philosophy', 1, 1),
-                ('Ukrainian Language for Professional Purposes', 1, 1);
+                ('Ukrainian Language for Professional Purposes', 1, 1),
+
+                ('Algorithmization and Programming', 1, 2),
+                ('Introduction to the Field', 1, 2),
+                ('Fundamentals of Metrology and Standardization', 1, 2),
+                ('Higher Mathematics', 1, 2),
+                ('Engineering and Computer Graphics', 1, 2),
+                ('Physics', 1, 2),
+                ('Philosophy', 1, 2),
+                ('Ukrainian Language for Professional Purposes', 1, 2);
             ]]>
         </sql>
     </changeSet>
@@ -83,9 +130,84 @@
         <sql dbms="postgresql">
             <![CDATA[
             INSERT INTO grades(student_id, subject_id, teacher_id, grade)
-            VALUES (1, 1, 1, 0);
+            VALUES
+                --STUDENT 1
+                (1, 1, 1, 0),
+                (1, 2, 2, 0),
+                (1, 3, 3, 0),
+                (1, 4, 4, 0),
+                (1, 5, 5, 0),
+                (1, 6, 6, 0),
+                (1, 7, 7, 0),
+                (1, 8, 8, 0),
+
+                --STUDENT 2
+                (2, 9, 1, 0),
+                (2, 10, 2, 0),
+                (2, 11, 3, 0),
+                (2, 12, 4, 0),
+                (2, 13, 5, 0),
+                (2, 14, 6, 0),
+                (2, 15, 7, 0),
+                (2, 16, 8, 0);
             ]]>
         </sql>
+    </changeSet>
+
+    <changeSet id="insert-lessons-1" author="Gleb Zapara">
+        <sql dbms="postgresql">
+        <![CDATA[
+            INSERT INTO lessons (day_of_week, start_time, end_time, group_id, subject_id, teacher_id)
+            VALUES
+                -- GROUP 1
+                ('MONDAY', '08:00:00', '09:35:00', 1, 1, 1),
+                ('MONDAY', '09:50:00', '11:25:00', 1, 4, 4),
+                ('MONDAY', '12:00:00', '13:30:00', 1, 6, 6),
+                ('MONDAY', '13:45:00', '15:20:00', 1, 2, 2),
+
+                ('TUESDAY', '08:00:00', '09:35:00', 1, 2, 2),
+                ('TUESDAY', '09:50:00', '11:25:00', 1, 3, 3),
+                ('TUESDAY', '11:55:00', '13:30:00', 1, 5, 5),
+                ('TUESDAY', '13:45:00', '15:20:00', 1, 1, 1),
+
+                ('WEDNESDAY', '08:00:00', '09:35:00', 1, 4, 4),
+                ('WEDNESDAY', '09:50:00', '11:25:00', 1, 1, 1),
+                ('WEDNESDAY', '13:45:00', '15:20:00', 1, 3, 3),
+
+                ('THURSDAY', '08:00:00', '09:35:00', 1, 6, 6),
+                ('THURSDAY', '09:50:00', '11:25:00', 1, 7, 7),
+                ('THURSDAY', '13:45:00', '15:20:00', 1, 5, 5),
+
+                ('FRIDAY', '08:00:00', '09:35:00', 1, 8, 8),
+                ('FRIDAY', '09:50:00', '11:25:00', 1, 2, 2),
+                ('FRIDAY', '11:55:00', '13:30:00', 1, 3, 3),
+                ('FRIDAY', '13:45:00', '15:20:00', 1, 4, 4),
+
+                -- GROUP 2
+                ('MONDAY', '08:00:00', '09:35:00', 2, 9, 1),
+                ('MONDAY', '09:50:00', '11:25:00', 2, 10, 2),
+                ('MONDAY', '11:55:00', '13:30:00', 2, 11, 3),
+                ('MONDAY', '13:45:00', '15:20:00', 2, 12, 4),
+
+                ('TUESDAY', '08:00:00', '09:35:00', 2, 12, 4),
+                ('TUESDAY', '09:50:00', '11:25:00', 2, 13, 5),
+                ('TUESDAY', '11:55:00', '13:30:00', 2, 14, 6),
+                ('TUESDAY', '13:45:00', '15:20:00', 2, 9, 1),
+
+                ('WEDNESDAY', '08:00:00', '09:35:00', 2, 15, 7),
+                ('WEDNESDAY', '09:50:00', '11:25:00', 2, 16, 8),
+                ('WEDNESDAY', '13:45:00', '15:20:00', 2, 10, 2),
+
+                ('THURSDAY', '08:00:00', '09:35:00', 2, 9, 1),
+                ('THURSDAY', '09:50:00', '11:25:00', 2, 10, 2),
+                ('THURSDAY', '13:45:00', '15:20:00', 2, 11, 3),
+
+                ('FRIDAY', '08:00:00', '09:35:00', 2, 11, 3),
+                ('FRIDAY', '09:50:00', '11:25:00', 2, 12, 4),
+                ('FRIDAY', '11:55:00', '13:30:00', 2, 13, 5),
+                ('FRIDAY', '13:45:00', '15:20:00', 2, 14, 6);
+            ]]>
+    </sql>
     </changeSet>
 
 </databaseChangeLog>

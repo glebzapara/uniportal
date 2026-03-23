@@ -7,43 +7,76 @@
 
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
-<body>
 
-<div class="login-card">
-    <span style="font-size:26px; font-weight:700;">
-    Uni<span style="color:#2562eb;">Portal</span>
-    </span>
-    <h2>Login</h2>
+<body style="
+    margin:0;
+    background:#f2f5f9;
+    font-family:Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    height:100vh;
+    padding-top:220px;
+">
 
-    <div th:if="${param.error}" class="alert alert-error">
-        <font color="red">Invalid email or password. Please try again.</font>
+<div style="
+    width:320px;
+    background:white;
+    padding:30px 25px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-sizing:border-box;
+">
+    <div style="text-align:center; margin-bottom:15px;">
+        <span style="font-size:26px; font-weight:700;">
+            Uni<span style="color:#2562eb;">Portal</span>
+        </span>
     </div>
-
-    <div th:if="${param.logout}" class="alert alert-info">
-        You have been logged out.
+    <h2 style="text-align:center; margin:10px 0 20px 0;">Login</h2>
+    <div th:if="${param.error}" style="text-align:center; margin-bottom:10px;">
+        <font color="red">Invalid email or password</font>
     </div>
-
+    <div th:if="${param.logout}" style="text-align:center; margin-bottom:10px;">
+        <font color="green">You have been logged out</font>
+    </div>
     <form th:action="@{/login}" method="post">
-
-        <div class="field">
-            <label for="username">Email</label>
+        <div style="margin-bottom:15px;">
+            <label>Email</label><br>
             <input type="text"
-                   id="username"
-                   name="username"
-                   placeholder="Введите email"
-                   required/>
+                    name="username"
+                    placeholder="Enter email"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:5px;
+                        box-sizing:border-box;
+            ">
         </div>
-
-        <div class="field">
-            <label for="password">Password</label>
+        <div style="margin-bottom:20px;">
+            <label>Password</label><br>
             <input type="password"
-                   id="password"
-                   name="password"
-                   placeholder="Введите пароль"
-                   required/>
+                name="password"
+                placeholder="Enter password"
+                style="
+                    width:100%;
+                    padding:10px;
+                    margin-top:5px;
+                    box-sizing:border-box;
+            ">
         </div>
-
-        <button type="submit">Sign in</button>
+        <button type="submit"
+                style="
+                    width:100%;
+                    padding:12px;
+                    background:#2562eb;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    font-weight:bold;
+                    cursor:pointer;
+                ">
+            Sign in
+        </button>
     </form>
 </div>
 

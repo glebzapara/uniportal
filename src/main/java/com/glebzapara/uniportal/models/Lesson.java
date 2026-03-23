@@ -1,5 +1,6 @@
 package com.glebzapara.uniportal.models;
 
+import com.glebzapara.uniportal.models.enums.DayOfWeek;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import java.time.LocalTime;
 @Table(name = "lessons")
 @Data
 @NoArgsConstructor
-public class Lesson {
+public class    Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,11 @@ public class Lesson {
     private Teacher teacher;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
+
+    @NotNull
     @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
@@ -35,4 +41,7 @@ public class Lesson {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "day_of_week", nullable = false)
+    private DayOfWeek dayOfWeek;
 }

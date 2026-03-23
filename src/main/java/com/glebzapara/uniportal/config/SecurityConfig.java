@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,14 +23,18 @@ public class SecurityConfig {
     private final AdminDetailsService adminDetailsService;
     private final StudentDetailsService studentDetailsService;
     private final TeacherDetailsService teacherDetailsService;
+    private final LastSeenFilter lastSeenFilter;
 
 
     public SecurityConfig(AdminDetailsService adminDetailsService,
                           StudentDetailsService studentDetailsService,
-                          TeacherDetailsService teacherDetailsService) {
+                          TeacherDetailsService teacherDetailsService,
+                          LastSeenFilter lastSeenFilter) {
+
         this.adminDetailsService = adminDetailsService;
         this.studentDetailsService = studentDetailsService;
         this.teacherDetailsService = teacherDetailsService;
+        this.lastSeenFilter = lastSeenFilter;
     }
 
     @Bean
@@ -79,6 +84,7 @@ public class SecurityConfig {
         http
                 .authenticationManager(authenticationManager())
                 .csrf(csrf -> csrf.disable())
+                .addFilterAfter(lastSeenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/admins/**").hasRole("ADMIN")

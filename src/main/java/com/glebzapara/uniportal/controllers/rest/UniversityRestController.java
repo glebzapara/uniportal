@@ -1,4 +1,4 @@
-package com.glebzapara.test_project.controllers.rest;
+package com.glebzapara.uniportal.controllers.rest;
 
 public class UniversityRestController {
 

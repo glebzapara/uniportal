@@ -3,26 +3,151 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>My Profile</title>
+    <title>Teachers</title>
 
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
+
 <body>
-<h1>Teachers</h1>
 
-<form th:action="@{/search}" method="post" class="mb-3">
-    <div class="input-group">
-        <input type="text" class="form-control" name="searchTerm" placeholder="Find a teacher">
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <span style="font-size:26px; font-weight:700; color:white;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </span>
+            </td>
+            <td align="right">
+                <span style="display:inline-block;">
+                    <a th:href="@{/}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Home
+                    </a>
+                    <a th:href="@{/schedule}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Schedule
+                    </a>
+                    <a th:href="@{/grades}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Grades
+                    </a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/group}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Group
+                    </a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/teachers}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Teachers
+                    </a>
+                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                        th:href="@{/students}"
+                        style="color:white; text-decoration:none; margin:0 10px;">
+                        Students
+                    </a>
+                    <span style="color:#888;">|</span>
+                    <a th:if="${currentStudent != null}"
+                        th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                        style="color:#2562eb; text-decoration:none; margin-left:10px;">
+                        Profile
+                    </a>
+                    <a th:if="${currentTeacher != null}"
+                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                        style="color:#2562eb; text-decoration:none; margin-left:10px;">
+                        Profile
+                    </a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
+
+<div style="padding:20px; background:#f2f5f9;">
+
+    <!-- SEARCH -->
+    <div style="
+        border:1px solid #ccc;
+        background:white;
+        border-radius:10px;
+        margin-bottom:20px;
+        overflow:hidden;
+    ">
+        <form th:action="@{/search}" method="post" style="
+            padding:20px;
+            display:flex;
+            gap:10px;
+        ">
+            <input type="text" name="searchTerm" placeholder="Find a teacher"
+                   style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+            <button type="submit" style="
+                padding:11px 28px;
+                background:#2562eb;
+                color:white;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-size:15px;
+            ">
+                Search
+            </button>
+        </form>
+
     </div>
-</form>
 
-<ul>
-    <li th:each="t : ${teachers}">
-        <span th:text="${t.name}"></span>
-        <span th:text="${t.surname}"></span>
-        <span th:text="${t.phoneNumber}"></span>
-    </li>
-</ul>
+    <!-- TEACHERS TABLE -->
+    <div style="
+        border:1px solid #ccc;
+        background:white;
+        border-radius:10px;
+        overflow:hidden;
+    ">
+
+        <!-- HEADER -->
+        <div style="
+            background:#3766a0;
+            color:white;
+            padding:14px 20px;
+            font-weight:700;
+            display:grid;
+            grid-template-columns: 2fr 1.5fr;
+            align-items:center;
+            font-size:15px;
+        ">
+            <div>Teacher</div>
+            <div style="text-align:right;">Phone</div>
+        </div>
+
+        <!-- ROWS -->
+        <div th:each="t : ${teachers}" style="
+            padding:16px 20px;
+            border-bottom:1px solid #eee;
+            display:grid;
+            grid-template-columns: 2fr 1.5fr;
+            align-items:center;
+            font-weight:600;
+            font-size:15px;
+        ">
+
+            <!-- NAME -->
+            <div>
+                <a th:href="@{/teachers/{id}/profile(id=${t.id})}"
+                   th:text="${t.name + ' ' + t.surname}"
+                   style="text-decoration:none; color:#222; font-weight:700;">
+                </a>
+            </div>
+
+            <!-- PHONE -->
+            <div style="text-align:right; color:#444;">
+                <span th:text="${t.phoneNumber}"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 </body>
 </html>
