@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "students")
@@ -56,7 +57,7 @@ public class Student {
     private String image;
 
     @Column(name = "last_seen")
-    private LocalDateTime lastSeen;
+    private ZonedDateTime lastSeen;
 
     @NotNull
     @Size(max = 20)

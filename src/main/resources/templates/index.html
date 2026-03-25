@@ -94,19 +94,19 @@
                         <tr th:each="s, stat : ${subjects}" th:if="${stat.index % 3 == 0}">
                             <td align="center" width="33%">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject">
+                                <a th:href="@{/subjects/{id}(id=${s.id})}">
                                     <small th:text="${subjects[stat.index].name}"></small>
                                 </a>
                             </td>
                             <td align="center" width="33%" th:if="${stat.index + 1 < subjects.size()}">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject">
+                                <a th:href="@{/subjects/{id}(id=${s.id})}">
                                     <small th:text="${subjects[stat.index + 1].name}"></small>
                                 </a>
                             </td>
                             <td align="center" width="33%" th:if="${stat.index + 2 < subjects.size()}">
                                 <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="100"><br>
-                                <a href="/course/subject">
+                                <a th:href="@{/subjects/{id}(id=${s.id})}">
                                     <small th:text="${subjects[stat.index + 2].name}"></small>
                                 </a>
                             </td>

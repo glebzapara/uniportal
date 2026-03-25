@@ -76,7 +76,7 @@
                 group_id INTEGER NOT NULL REFERENCES groups(id) ON UPDATE CASCADE ON DELETE CASCADE,
                 phone_number VARCHAR(16) NOT NULL CHECK (phone_number ~ '^\+[0-9]{9,15}$'),
                 image VARCHAR(255),
-                last_seen TIMESTAMP,
+                last_seen TIMESTAMP WITH TIME ZONE,
                 role VARCHAR(20) NOT NULL
             );
             ]]>

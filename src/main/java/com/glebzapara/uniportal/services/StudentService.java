@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.*;
 
 
@@ -117,7 +117,7 @@ public class StudentService {
             }
 
             student.setPassword(passwordEncoder.encode(student.getPassword()));
-            student.setLastSeen(LocalDateTime.now());
+            student.setLastSeen(ZonedDateTime.now(ZoneId.of("Europe/Kyiv")));
 
             studentRepository.save(student);
         } catch (Exception e) {

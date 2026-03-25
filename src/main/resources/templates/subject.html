@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Subject</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+</head>
+
+<body>
+
+<!-- NAVBAR (оставил твой как есть) -->
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+  <table width="100%">
+    <tr>
+      <td>
+        <span style="font-size:26px; font-weight:700; color:white;">
+          Uni<span style="color:#2562eb;">Portal</span>
+        </span>
+      </td>
+      <td align="right">
+        <a th:href="@{/}" style="color:white; margin:0 10px;">Home</a>
+        <a th:href="@{/schedule}" style="color:white; margin:0 10px;">Schedule</a>
+        <a th:href="@{/grades}" style="color:white; margin:0 10px;">Grades</a>
+      </td>
+    </tr>
+  </table>
+</nav>
+
+<!-- SUBJECT CARD -->
+<div style="padding:20px;">
+
+  <div style="
+        border:1px solid #ddd;
+        border-radius:10px;
+        background:white;
+        overflow:hidden;
+        max-width:900px;
+        margin:auto;
+    ">
+
+    <!-- HEADER -->
+    <div style="
+            background:#3766a0;
+            color:white;
+            padding:15px;
+            font-size:20px;
+            font-weight:bold;
+        ">
+      <span th:text="${subject.name}"></span>
+    </div>
+
+    <!-- CONTENT -->
+    <div style="padding:20px;">
+
+      <p><b>Course:</b>
+        <span th:text="${subject.course}"></span>
+      </p>
+
+      <p><b>Department:</b>
+        <span th:text="${subject.department.name}"></span>
+      </p>
+
+      <p><b>ID:</b>
+        <span th:text="${subject.id}"></span>
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

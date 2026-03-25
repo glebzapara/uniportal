@@ -45,7 +45,7 @@ public class UniversityController {
     }
 
     @GetMapping("/")
-    public String index(Authentication authentication, Model model) {
+    public String homePage(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails studentDetails) {
@@ -67,7 +67,7 @@ public class UniversityController {
     }
 
     @GetMapping("/admins/new")
-    public String newAdmin(Model model) {
+    public String showCreateAdminForm(Model model) {
         model.addAttribute("adminForm", new Admin());
 
         return "newAdmin";
@@ -76,14 +76,13 @@ public class UniversityController {
     @PostMapping("/admins")
     public String createAdmin(@ModelAttribute("adminForm") Admin admin) throws Exception {
         admin.setRole("ROLE_ADMIN");
-
         adminService.registerAdmin(admin);
 
         return "redirect:/login";
     }
 
     @GetMapping("/students/new")
-    public String newStudent(Model model) {
+    public String showCreateStudentForm(Model model) {
         model.addAttribute("studentForm", new Student());
         model.addAttribute("groups", groupService.findAll());
 
@@ -123,7 +122,7 @@ public class UniversityController {
     }
 
     @GetMapping("/subjects/new")
-    public String newSubject(Model model) {
+    public String showCreateSubjectForm(Model model) {
         model.addAttribute("subjectForm", new Subject());
 
         return "newSubject";
@@ -136,10 +135,20 @@ public class UniversityController {
         return "redirect:/";
     }
 
+    @GetMapping("/subjects/{id}")
+    public String getSubjectPage(@PathVariable Integer id, Model model) throws Exception {
+        Subject subject = subjectService.findById(id);
+
+        model.addAttribute("subject", subject);
+
+        return "subject";
+    }
+
     @GetMapping("/teachers/new")
-    public String newTeacher(Model model) {
+    public String showCreateTeacherForm(Model model) {
         model.addAttribute("teacherForm", new Teacher());
         model.addAttribute("departments", departmentService.findAll());
+
         return "newTeacher";
     }
 
@@ -158,9 +167,8 @@ public class UniversityController {
         return "redirect:/teachers/" + teacher.getId() + "/profile";
     }
 
-
     @GetMapping("/teachers/{id}/profile")
-    public String getTeachersProfile(@PathVariable Integer id, Model model) throws Exception {
+    public String getTeacherProfile(@PathVariable Integer id, Model model) throws Exception {
         Teacher teacher = teacherService.findOneTeacher(id)
                 .orElseThrow(() -> new Exception("Teacher not found"));
 
@@ -170,7 +178,7 @@ public class UniversityController {
     }
 
     @GetMapping("/grades")
-    public String grades(Authentication authentication, Model model) {
+    public String getStudentGrades(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails studentDetails) {
@@ -211,7 +219,7 @@ public class UniversityController {
     }
 
     @GetMapping("/group")
-    public String group(Authentication authentication, Model model) {
+    public String getStudentGroup(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails studentDetails) {
@@ -228,7 +236,7 @@ public class UniversityController {
     }
 
     @PostMapping("/group/search")
-    public String searchGroup(@RequestParam("searchTerm") String searchTerm,
+    public String searchStudentsInGroup(@RequestParam("searchTerm") String searchTerm,
                               Authentication authentication,
                               Model model) {
         Object principal = authentication.getPrincipal();
@@ -256,21 +264,20 @@ public class UniversityController {
     }
 
     @GetMapping("/students")
-    public String students(Model model) {
+    public String getAllStudents(Model model) {
         model.addAttribute("students", studentService.findAllStudents());
-
         return "students";
     }
 
     @GetMapping("/teachers")
-    public String teachers(Model model) {
+    public String getAllTeachers(Model model) {
         model.addAttribute("teachers", teacherService.findAllTeachers());
-
         return "teachers";
     }
 
     @PostMapping("/search")
-    public String search(@RequestParam("searchTerm") String searchTerm, Authentication authentication, Model model) {
+    public String searchByRole(@RequestParam("searchTerm") String searchTerm,
+                              Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails) {

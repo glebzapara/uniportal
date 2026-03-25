@@ -50,14 +50,12 @@
         <div style="padding:20px 20px 15px 20px; display:flex;
         justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
 
-            <!-- Левая часть - информация о группе -->
             <div style="line-height:2; flex:1; min-width:220px;">
                 <div><b>Course:</b> <span th:text="${group.course}"></span></div>
                 <div><b>Speciality:</b> <span th:text="${group.speciality}"></span></div>
                 <div><b>Department:</b> <span th:text="${group.department.name}"></span></div>
             </div>
 
-            <!-- Правая часть - поиск (длиннее и по центру справа) -->
             <form th:action="@{/group/search}" method="post"
                     style="display:flex; gap:10px; min-width:420px; flex-shrink:0;">
                 <input type="text" name="searchTerm" placeholder="Find a student"
@@ -67,7 +65,6 @@
                     Search
                 </button>
             </form>
-
         </div>
     </div>
 
@@ -89,7 +86,10 @@
                 <span th:text="${s.phoneNumber}"></span>
             </div>
             <div style="text-align:right; color:#555; font-weight:600;">
-                <span th:text="${s.lastSeen != null ? #temporals.format(s.lastSeen, 'dd.MM HH:mm') : 'Never'}"></span>
+                <span th:text="${s.lastSeen != null ? #temporals.format(
+                    s.lastSeen.withZoneSameInstant(T(java.time.ZoneId).of('Europe/Kyiv')),
+                    'dd.MM HH:mm'
+                    ) : 'Never'}"></span>
             </div>
         </div>
     </div>

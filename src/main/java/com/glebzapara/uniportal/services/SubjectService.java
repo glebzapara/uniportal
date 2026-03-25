@@ -1,6 +1,5 @@
 package com.glebzapara.uniportal.services;
 
-import com.glebzapara.uniportal.models.Grade;
 import com.glebzapara.uniportal.models.Subject;
 import com.glebzapara.uniportal.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,10 @@ public class SubjectService {
 
     public List<Subject> findAllSubjects() {
         return subjectRepository.findAll();
+    }
+
+    public Subject findById(Integer id) throws Exception {
+        return subjectRepository.findById(id).orElseThrow(() -> new Exception("Subject not found"));
     }
 
     public String getSubjectNameById(Integer id) throws Exception {
