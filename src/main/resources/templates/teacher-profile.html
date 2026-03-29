@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>Students</title>
+    <title>Profile</title>
 
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
@@ -51,76 +50,64 @@
     </table>
 </nav>
 
-<div style="padding:20px; background:#f2f5f9;">
+<div style="height:100vh; display:flex; justify-content:center;
+    align-items:flex-start; background:#f2f5f9; padding-top:165px;">
 
-    <div style="
-        border:1px solid #ccc;
-        background:white;
-        border-radius:10px;
-        margin-bottom:20px;
-        overflow:hidden;
-    ">
-        <form th:action="@{/search}" method="post" style="
-            padding:20px;
-            display:flex;
-            gap:10px;
-        ">
-            <input type="text" name="searchTerm" placeholder="Find a student"
-                    style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
-            <button type="submit" style="
-                padding:11px 28px;
-                background:#2562eb;
-                color:white;
-                border:none;
-                border-radius:6px;
-                cursor:pointer;
-                font-size:15px;
-            ">
-                Search
-            </button>
-        </form>
-    </div>
+    <div style="width:400px; border:1px solid #ccc; background:white; border-radius:10px; overflow:hidden;">
 
-    <div style="
-        border:1px solid #ccc;
-        background:white;
-        border-radius:10px;
-        overflow:hidden;
-    ">
-
-        <div style="
-            background:#3766a0;
-            color:white;
-            padding:14px 20px;
-            font-weight:700;
-            display:grid;
-            grid-template-columns: 2fr 1.5fr;
-            align-items:center;
-            font-size:15px;
-        ">
-            <div>Student</div>
-            <div style="text-align:right;">Phone</div>
+        <div style="background:#3766a0; color:white; padding:12px 20px; font-weight:700;">
+            Profile
         </div>
 
-        <div th:each="s : ${students}" style="
-            padding:16px 20px;
-            border-bottom:1px solid #eee;
-            display:grid;
-            grid-template-columns: 2fr 1.5fr;
-            align-items:center;
-            font-weight:600;
-            font-size:15px;
-        ">
+        <div style="padding:25px; text-align:center;">
 
-            <div>
-                <span
-                        th:text="${s.name + ' ' + s.surname}"
-                        style="text-decoration:none; color:#222; font-weight:700;">
-                </span>
+            <div style="width:90px; height:90px; background:#2f5fd1;
+                color:white; border-radius:50%; display:flex; align-items:center;
+                justify-content:center; font-size:32px; font-weight:700; margin:0 auto 15px auto;"
+                th:text="${#strings.substring(teacher.name,0,1)}">
             </div>
 
-            <div style="text-align:right; color:#444;">
-                <span th:text="${s.phoneNumber}"></span>
+            <div style="font-size:20px; font-weight:700;"
+                th:text="${teacher.name + ' ' + teacher.surname}">
+            </div>
+
+            <div style="border-top:1px solid #eee; margin:15px 0;"></div>
+
+            <div style="font-size:15px; line-height:1.8;">
+
+                <div style="font-weight:550;">
+                    <b style="color:#3766a0;">First name:</b>
+                    <span th:text="${teacher.name}"></span>
+                </div>
+
+                <div style="font-weight:550;">
+                    <b style="color:#3766a0;">Last name:</b>
+                    <span th:text="${teacher.surname}"></span>
+                </div>
+
+                <div style="font-weight:550;">
+                    <b style="color:#3766a0;">Email:</b>
+                    <span th:text="${teacher.email}"></span>
+                </div>
+
+                <div style="font-weight:550;">
+                    <b style="color:#3766a0;">Phone:</b>
+                    <span th:text="${teacher.phoneNumber}"></span>
+                </div>
+
+            </div>
+
+            <div style="margin-top:20px;">
+
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+            border:none; padding:10px 25px;
+            border-radius:6px; font-weight:600; cursor:pointer;">
+                        Logout
+                    </button>
+                </form>
+
             </div>
 
         </div>
@@ -128,7 +115,6 @@
     </div>
 
 </div>
-
 
 </body>
 </html>

@@ -56,6 +56,12 @@ public class UniversityController {
                             student.getGroup().getDepartment().getId()
                     )
             );
+        } else if (principal instanceof TeacherDetails teacherDetails) {
+            Teacher teacher = teacherDetails.getTeacher();
+
+            model.addAttribute("groups", lessonService.findGroupsByTeacher(teacher));
+
+            return "teacher-dashboard";
         }
 
         return "index";
@@ -70,7 +76,7 @@ public class UniversityController {
     public String showCreateAdminForm(Model model) {
         model.addAttribute("adminForm", new Admin());
 
-        return "newAdmin";
+        return "new-admin";
     }
 
     @PostMapping("/admins")
@@ -84,9 +90,15 @@ public class UniversityController {
     @GetMapping("/students/new")
     public String showCreateStudentForm(Model model) {
         model.addAttribute("studentForm", new Student());
-        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("groups", groupService.findAllGroups());
 
-        return "newStudent";
+        return "new-student";
+    }
+
+    @GetMapping("/students")
+    public String getAllStudents(Model model) {
+        model.addAttribute("students", studentService.findAllStudents());
+        return "students";
     }
 
     @PostMapping("/students")
@@ -112,32 +124,36 @@ public class UniversityController {
     }
 
     @GetMapping("/students/{id}/profile")
-    public String getStudentProfile(@PathVariable Integer id, Model model) throws Exception {
+    public String getStudentProfile(@PathVariable Integer id, Model model, Authentication authentication) {
         Student student = studentService.findOneStudent(id)
-                .orElseThrow(() -> new Exception("Student not found"));
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+
 
         model.addAttribute("student", student);
 
-        return "studentProfile";
+        return "student-profile";
     }
 
     @GetMapping("/subjects/new")
     public String showCreateSubjectForm(Model model) {
         model.addAttribute("subjectForm", new Subject());
 
-        return "newSubject";
+        return "new-subject";
     }
 
     @PostMapping("/subjects")
-    public String createSubject(@ModelAttribute("subjectForm") Subject subject) throws Exception {
-        subjectService.registerSubject(subject);
+    public String createSubject(@ModelAttribute("subjectForm") Subject subject,
+                                @RequestParam("departmentId") Integer departmentId) {
+        subjectService.registerSubject(subject, departmentId);
 
         return "redirect:/";
     }
 
     @GetMapping("/subjects/{id}")
     public String getSubjectPage(@PathVariable Integer id, Model model) throws Exception {
-        Subject subject = subjectService.findById(id);
+        Subject subject = subjectService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found with id: " + id));
 
         model.addAttribute("subject", subject);
 
@@ -149,7 +165,55 @@ public class UniversityController {
         model.addAttribute("teacherForm", new Teacher());
         model.addAttribute("departments", departmentService.findAll());
 
-        return "newTeacher";
+        return "new-teacher";
+    }
+
+    @GetMapping("/teachers/{id}/profile")
+    public String getTeacherProfile(@PathVariable Integer id, Model model, Authentication authentication) {
+        Teacher teacher = teacherService.findOneTeacher(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+
+
+        model.addAttribute("teacher", teacher);
+
+        return "teacher-profile";
+    }
+
+    @GetMapping("/teacher/groups/{groupId}")
+    public String getTeacherGroupSchedule(@PathVariable Integer groupId,
+                                          Model model,
+                                          Principal principal) {
+
+        String email = principal.getName();
+
+        Teacher teacher = teacherService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+        Map<DayOfWeek, List<Lesson>> schedule =
+                lessonService.getScheduleForTeacherByGroup(teacher.getId(), groupId);
+
+        for (DayOfWeek d : DayOfWeek.values()) {
+            schedule.putIfAbsent(d, new ArrayList<>());
+        }
+
+        model.addAttribute("schedule", schedule);
+        model.addAttribute("timeSlots", List.of(
+                "08:00 - 09:35",
+                "09:50 - 11:25",
+                "11:55 - 13:30",
+                "13:45 - 15:20"
+        ));
+        model.addAttribute("lessonService", lessonService);
+        model.addAttribute("days", DayOfWeek.values());
+
+        return "schedule";
+    }
+
+    @GetMapping("/teachers")
+    public String getAllTeachers(Model model) {
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+        return "teachers";
     }
 
     @PostMapping("/teachers")
@@ -167,16 +231,6 @@ public class UniversityController {
         return "redirect:/teachers/" + teacher.getId() + "/profile";
     }
 
-    @GetMapping("/teachers/{id}/profile")
-    public String getTeacherProfile(@PathVariable Integer id, Model model) throws Exception {
-        Teacher teacher = teacherService.findOneTeacher(id)
-                .orElseThrow(() -> new Exception("Teacher not found"));
-
-        model.addAttribute("teacher", teacher);
-
-        return "teacherProfile";
-    }
-
     @GetMapping("/grades")
     public String getStudentGrades(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
@@ -192,14 +246,48 @@ public class UniversityController {
         return "redirect:/";
     }
 
+//    @GetMapping("/teacher/groups/{groupId}/grades")
+//    public String getTeacherGrades(@PathVariable Integer groupId,
+//                                   Principal principal,
+//                                   Model model) {
+//
+//        String email = principal.getName();
+//
+//        Teacher teacher = teacherService.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+//
+//        // ❗ без сложной security логики
+//        Optional<Group> group = groupService.findById(groupId);
+//
+//        List<Student> students = studentService.findByGroupId(groupId);
+//
+//        List<Grade> grades = gradeService.findByGroupId(groupId);
+//
+//        model.addAttribute("group", group);
+//        model.addAttribute("students", students);
+//        model.addAttribute("grades", grades);
+//
+//        return "teacher-grades";
+//    }
+
     @GetMapping("/schedule")
     public String getSchedule(Model model, Principal principal) {
         String email = principal.getName();
+        Map<DayOfWeek, List<Lesson>> schedule;
+        Optional<Student> studentOpt = studentService.findByEmail(email);
+        Optional<Teacher> teacherOpt = teacherService.findByEmail(email);
 
-        Student student = studentService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-
-        Map<DayOfWeek, List<Lesson>> schedule = lessonService.getScheduleForStudent(student.getId());
+        if (studentOpt.isPresent()) {
+            Student student = studentOpt.get();
+            schedule = lessonService.getScheduleForStudent(student.getId());
+            model.addAttribute("isTeacher", false);
+        } else if (teacherOpt.isPresent()) {
+            Teacher teacher = teacherOpt.get();
+            schedule = lessonService.getScheduleForTeacher(teacher.getId());
+            model.addAttribute("isTeacher", true);
+        } else {
+            throw new RuntimeException("User not found");
+        }
 
         for (DayOfWeek d : DayOfWeek.values()) {
             schedule.putIfAbsent(d, new ArrayList<>());
@@ -235,10 +323,26 @@ public class UniversityController {
         return "redirect:/";
     }
 
+    @GetMapping("/groups/new")
+    public String showCreateGroupForm(@ModelAttribute Group group,  Model model) {
+        model.addAttribute("groupForm", group);
+        model.addAttribute("departments", departmentService.findAll());
+
+        return "new-group";
+    }
+
+    @PostMapping("/groups")
+    public String createGroup(@ModelAttribute("groupForm") Group group,
+                              @RequestParam("departmentId") Integer departmentId) {
+        groupService.createGroup(group, departmentId);
+
+        return "redirect:/";
+    }
+
     @PostMapping("/group/search")
     public String searchStudentsInGroup(@RequestParam("searchTerm") String searchTerm,
-                              Authentication authentication,
-                              Model model) {
+                                        Authentication authentication,
+                                        Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails studentDetails) {
@@ -246,11 +350,12 @@ public class UniversityController {
             List<Student> students = studentService.findByGroup(group);
             List<Student> filtered = new ArrayList<>();
 
-            for (Student s : students) {
-                if (s.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                        s.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                        s.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
-                    filtered.add(s);
+            for (Student student : students) {
+                String fullName = (student.getName() + " " + student.getSurname()).toLowerCase();
+
+                if (fullName.contains(searchTerm.toLowerCase()) ||
+                        student.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    filtered.add(student);
                 }
             }
 
@@ -263,54 +368,80 @@ public class UniversityController {
         return "redirect:/";
     }
 
-    @GetMapping("/students")
-    public String getAllStudents(Model model) {
-        model.addAttribute("students", studentService.findAllStudents());
-        return "students";
-    }
-
-    @GetMapping("/teachers")
-    public String getAllTeachers(Model model) {
-        model.addAttribute("teachers", teacherService.findAllTeachers());
-        return "teachers";
-    }
-
     @PostMapping("/search")
     public String searchByRole(@RequestParam("searchTerm") String searchTerm,
-                              Authentication authentication, Model model) {
+                               Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof StudentDetails) {
-            List<Teacher> searchResults = new ArrayList<>();
+            List<Teacher> filtered = new ArrayList<>();
 
             for (Teacher teacher : teacherService.findAllTeachers()) {
-                if (teacher.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                        teacher.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                String fullName = (teacher.getName() + " " + teacher.getSurname()).toLowerCase();
+
+                if (fullName.contains(searchTerm.toLowerCase()) ||
                         teacher.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
-                    searchResults.add(teacher);
+                    filtered.add(teacher);
                 }
             }
 
-            model.addAttribute("teachers", searchResults);
+            model.addAttribute("teachers", filtered);
 
             return "teachers";
         }
 
         if (principal instanceof TeacherDetails) {
-            List<Student> searchResults = new ArrayList<>();
+            List<Student> filtered = new ArrayList<>();
 
             for (Student student : studentService.findAllStudents()) {
-                if (student.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                        student.getSurname().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                String fullName = (student.getName() + " " + student.getSurname()).toLowerCase();
+
+                if (fullName.contains(searchTerm.toLowerCase()) ||
                         student.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
-                    searchResults.add(student);
+
+                    filtered.add(student);
                 }
             }
 
-            model.addAttribute("students", searchResults);
+            model.addAttribute("students", filtered);
 
             return "students";
         }
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/departments/new")
+    public String showCreateDepartmentForm(@ModelAttribute Department department,  Model model) {
+        model.addAttribute("departmentForm", department);
+
+        return "new-department";
+    }
+
+    @PostMapping("/departments")
+    public String createDepartment(@ModelAttribute("departmentForm") Department department) {
+        departmentService.createDepartment(department);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/lessons/new")
+    public String showCreateLessonForm(@ModelAttribute Lesson lesson, Model model) {
+        model.addAttribute("lessonForm", lesson);
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+        model.addAttribute("groups", groupService.findAllGroups());
+        model.addAttribute("days", DayOfWeek.values());
+
+        return "new-lesson";
+    }
+
+    @PostMapping("/lessons")
+    public String createLesson(@ModelAttribute("lessonForm") Lesson lesson,
+                               @RequestParam("subjectId") Integer subjectId,
+                               @RequestParam("teacherId") Integer teacherId,
+                               @RequestParam("groupId") Integer groupId) {
+        lessonService.createLesson(lesson, subjectId, teacherId, groupId);
 
         return "redirect:/";
     }

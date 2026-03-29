@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Department</title>
+
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+</head>
+
+<body>
+
+<h2>Create Department</h2>
+
+<form th:action="@{/departments}" th:object="${departmentForm}" method="post" enctype="multipart/form-data">
+    <label for="name">Department name:</label>
+    <input type="text" th:field="*{name}" id="name">
+
+    <label for="number">Department Number:</label>
+    <input type="number" th:field="*{number}" id="number">
+
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New Group</title>
+
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+</head>
+
+<body>
+
+<h2>Create Lesson</h2>
+
+<form th:action="@{/lessons}" th:object="${lessonForm}" method="post">
+
+  <select name="subjectId">
+    <option value="">-- Select subject --</option>
+    <option th:each="s : ${subjects}"
+            th:value="${s.id}"
+            th:text="${s.name}">
+    </option>
+  </select>
+
+  <select name="teacherId">
+    <option value="">-- Select teacher --</option>
+    <option th:each="t : ${teachers}"
+            th:value="${t.id}"
+            th:text="${t.name + ' ' + t.surname}">
+    </option>
+  </select>
+
+  <select name="groupId">
+    <option value="">-- Select group --</option>
+    <option th:each="g : ${groups}"
+            th:value="${g.id}"
+            th:text="${g.number}">
+    </option>
+  </select>
+
+  <label>Start time</label>
+  <input type="time" th:field="*{startTime}">
+
+  <label>End time</label>
+  <input type="time" th:field="*{endTime}">
+
+  <label>Day of week</label>
+  <select th:field="*{dayOfWeek}">
+    <option value="">-- Select day --</option>
+    <option th:each="d : ${days}"
+            th:value="${d}"
+            th:text="${d}">
+    </option>
+  </select>
+
+  <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

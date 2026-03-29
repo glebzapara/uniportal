@@ -11,6 +11,10 @@
             VALUES
                 ('Gleb', 'Zapara', 'admin1@gmail.com',
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
+                'ROLE_SUPER_ADMIN'),
+
+                ('Zak', 'Sarada', 'admin2@gmail.com',
+                '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
                 'ROLE_ADMIN');
             ]]>
         </sql>
@@ -43,7 +47,6 @@
         <![CDATA[
             INSERT INTO teachers(name, surname, email, password, phone_number, role, department_id)
             VALUES
-                --DEPARTMENT 1
                 ('Ivan', 'Juando', 'teacher1@gmail.com',
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
                 '+380999999991', 'ROLE_TEACHER', 1),
@@ -72,7 +75,7 @@
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
                 '+380999999997', 'ROLE_TEACHER', 1),
 
-                ('Nelson Nelson', 'Luke', 'teacher8@gmail.com',
+                ('Nelson', 'Luke', 'teacher8@gmail.com',
                 '$2a$10$LcdQNUErJBlQRzJqAg6equ0oJUiX/jN0Mh/u7r9bmgKS4kS3rj1PC',
                 '+380999999998', 'ROLE_TEACHER', 1);
             ]]>

@@ -10,6 +10,7 @@
 <body>
 
 <h2>Create New Subject</h2>
+
 <form th:action="@{/subjects}" th:object="${subjectForm}" method="post">
     <label for="name">Subject name:</label>
     <input type="text" th:field="*{name}" id="name">

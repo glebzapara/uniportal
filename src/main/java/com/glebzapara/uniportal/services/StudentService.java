@@ -75,6 +75,10 @@ public class StudentService {
         });
     }
 
+    public List<Student> findByGroupId(Integer groupId) {
+        return studentRepository.findByGroupId(groupId);
+    }
+
     public Optional<Student> findByEmail(String email) {
         return studentRepository.findByEmail(email);
     }

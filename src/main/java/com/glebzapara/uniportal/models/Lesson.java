@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Table(name = "lessons")
 @Data
 @NoArgsConstructor
-public class    Lesson {
+public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,25 +1,31 @@
 package com.glebzapara.uniportal.services;
 
+import com.glebzapara.uniportal.models.Department;
 import com.glebzapara.uniportal.models.Subject;
+import com.glebzapara.uniportal.repositories.DepartmentRepository;
 import com.glebzapara.uniportal.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectService {
     SubjectRepository subjectRepository;
+    DepartmentRepository departmentRepository;
 
-    public SubjectService(SubjectRepository subjectRepository) {
+    public SubjectService(SubjectRepository subjectRepository,
+                          DepartmentRepository departmentRepository) {
         this.subjectRepository = subjectRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     public List<Subject> findAllSubjects() {
         return subjectRepository.findAll();
     }
 
-    public Subject findById(Integer id) throws Exception {
-        return subjectRepository.findById(id).orElseThrow(() -> new Exception("Subject not found"));
+    public Optional<Subject> findById(Integer id) throws Exception {
+        return subjectRepository.findById(id);
     }
 
     public String getSubjectNameById(Integer id) throws Exception {
@@ -38,10 +44,11 @@ public class SubjectService {
         return subjectRepository.findByDepartmentId(departmentId);
     }
 
-    public void registerSubject(Subject subject) throws Exception {
-        if (subject.getName() == null || subject.getName().trim().isEmpty()) {
-            throw new Exception("Name cannot be null or empty");
-        }
+    public void registerSubject(Subject subject, Integer departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new RuntimeException("Department not found"));
+
+        subject.setDepartment(department);
 
         subjectRepository.save(subject);
     }

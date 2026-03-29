@@ -8,7 +8,6 @@ import com.glebzapara.uniportal.services.StudentDetailsService;
 import com.glebzapara.uniportal.services.TeacherDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,17 +19,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final AdminDetailsService adminDetailsService;
     private final StudentDetailsService studentDetailsService;
     private final TeacherDetailsService teacherDetailsService;
     private final LastSeenFilter lastSeenFilter;
 
-
     public SecurityConfig(AdminDetailsService adminDetailsService,
                           StudentDetailsService studentDetailsService,
                           TeacherDetailsService teacherDetailsService,
                           LastSeenFilter lastSeenFilter) {
-
         this.adminDetailsService = adminDetailsService;
         this.studentDetailsService = studentDetailsService;
         this.teacherDetailsService = teacherDetailsService;
@@ -62,41 +60,35 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
-        return authentication -> {
-            try {
-                return adminAuthProvider().authenticate(authentication);
-            } catch (Exception ignored) {
-            }
-
-            try {
-                return studentAuthProvider().authenticate(authentication);
-            } catch (Exception ignored) {
-            }
-
-            return teacherAuthProvider().authenticate(authentication);
-        };
-    }
-
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authenticationManager(authenticationManager())
+                .authenticationProvider(adminAuthProvider())
+                .authenticationProvider(studentAuthProvider())
+                .authenticationProvider(teacherAuthProvider())
                 .csrf(csrf -> csrf.disable())
                 .addFilterAfter(lastSeenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/admins/**").hasRole("ADMIN")
-                        .requestMatchers("/students/new").hasRole("ADMIN")
-                        .requestMatchers("/students/**").hasAnyRole("ADMIN", "STUDENT", "TEACHER")
-                        .requestMatchers("/teachers/**").hasAnyRole("ADMIN", "STUDENT", "TEACHER")
+                        .requestMatchers("/admins/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers("/students/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/teachers/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/groups/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/grades/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/departments/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/lessons/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/subjects/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/students/**").hasAnyRole("SUPER_ADMIN", "ADMIN",
+                                                                                "STUDENT", "TEACHER")
+                        .requestMatchers("/teachers/**").hasAnyRole("SUPER_ADMIN", "ADMIN",
+                                                                                    "STUDENT", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .failureUrl("/login?error")
-                        .successHandler((request, response, authentication) -> {
+                        .successHandler((request,
+                                         response,
+                                         authentication) -> {
                             Object principal = authentication.getPrincipal();
 
                             if (principal instanceof AdminDetails) {
@@ -112,7 +104,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

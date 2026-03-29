@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- 🔥 FULL WIDTH BLUE BAR -->
+<div style="
+    width:100%;
+    background:#3766a0;
+    color:white;
+    padding:12px 0;
+    font-weight:700;
+    text-align:center;
+">
+  Teacher Groups
+</div>
+
+<!-- CONTENT -->
+<div style="background:#f2f5f9; padding:20px; min-height:100vh;">
+
+  <div style="max-width:900px; margin:0 auto;">
+
+    <!-- GROUPS -->
+    <div th:each="g : ${groups}"
+         style="border:1px solid #ccc; background:white; border-radius:10px;
+                    padding:18px 20px; margin-bottom:12px;
+                    display:flex; justify-content:space-between; align-items:center;">
+
+      <div style="font-size:18px; font-weight:600;"
+           th:text="${g.speciality}">
+      </div>
+
+      <a th:href="@{/teacher/groups/{id}(id=${g.id})}"
+         style="background:#3766a0; color:white; padding:8px 18px;
+                      text-decoration:none; border-radius:6px; font-weight:600;">
+        Open
+      </a>
+
+    </div>
+
+    <!-- EMPTY -->
+    <div th:if="${#lists.isEmpty(groups)}"
+         style="text-align:center; color:#777; margin-top:20px;">
+      No groups found
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

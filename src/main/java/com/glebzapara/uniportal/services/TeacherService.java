@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @Service
 public class TeacherService {
+    private final TeacherDetailsService teacherDetailsService;
     TeacherRepository teacherRepository;
     DepartmentRepository departmentRepository;
     private PasswordEncoder passwordEncoder;
@@ -33,12 +34,17 @@ public class TeacherService {
     public TeacherService(TeacherRepository teacherRepository,
                           DepartmentRepository departmentRepository,
                           PasswordEncoder passwordEncoder,
-                          S3Client s3Client) {
+                          S3Client s3Client, TeacherDetailsService teacherDetailsService) {
 
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
+        this.teacherDetailsService = teacherDetailsService;
+    }
+
+    public Optional<Teacher> findById(Integer id) {
+        return teacherRepository.findById(id);
     }
 
     public List<Teacher> findAllTeachers() {
@@ -49,10 +55,8 @@ public class TeacherService {
         return teacherRepository.findById(id);
     }
 
-    public String getTeacherImageById(Integer id) {
-        return teacherRepository.findById(id)
-                .map(Teacher::getImage)
-                .orElse(null);
+    public Optional<Teacher> findByEmail(String email) {
+        return teacherRepository.findByEmail(email);
     }
 
     public void saveTeacherImage(Integer id, MultipartFile file) throws IOException {

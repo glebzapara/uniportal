@@ -5,7 +5,8 @@
     <title>Schedule</title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
-<body>
+
+<body style="margin:0; padding:0;">
 
 <nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
     <table width="100%" cellpadding="0" cellspacing="0">
@@ -15,26 +16,30 @@
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
             </td>
+
             <td align="right">
                 <span style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
-                    <a th:href="@{/schedule}" style="color:white;
-                        text-decoration:none; margin:0 10px;">Schedule</a>
-                    <a th:href="@{/grades}" style="color:white;
-                        text-decoration:none; margin:0 10px;">Grades</a>
+
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none; margin:0 10px;">Schedule</a>
+
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none; margin:0 10px;">Grades</a>
+
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                        th:href="@{/group}" style="color:white;
-                        text-decoration:none; margin:0 10px;">Group</a>
+                        th:href="@{/group}" style="color:white; text-decoration:none; margin:0 10px;">Group</a>
+
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                        th:href="@{/teachers}" style="color:white;
-                        text-decoration:none; margin:0 10px;">Teachers</a>
+                        th:href="@{/teachers}" style="color:white; text-decoration:none; margin:0 10px;">Teachers</a>
+
                     <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
-                        th:href="@{/students}" style="color:white;
-                        text-decoration:none; margin:0 10px;">Students</a>
+                        th:href="@{/students}" style="color:white; text-decoration:none; margin:0 10px;">Students</a>
+
                     <span style="color:#888;">|</span>
+
                     <a th:if="${currentStudent != null}"
                         th:href="@{/students/{id}/profile(id=${currentStudent.id})}" style="color:#2562eb;
                         text-decoration:none; margin-left:10px;">Profile</a>
+
                     <a th:if="${currentTeacher != null}"
                         th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
                         text-decoration:none; margin-left:10px;">Profile</a>
@@ -51,6 +56,7 @@
                 <div style="background:#3766a0; color:white; padding:10px; font-weight:bold;">
                     <span th:text="${#strings.capitalize(day.name().toLowerCase())}"></span>
                 </div>
+
                 <div style="
                     display:flex;
                     padding:10px 15px;
@@ -58,16 +64,27 @@
                     background:#60a8c4;
                     border-bottom:1px solid #ccc;
                 ">
+
                     <div style="width:120px; text-align:center;">
                         Time
                     </div>
+
                     <div style="flex:1; text-align:center;">
                         Subject
                     </div>
+
                     <div style="width:220px; text-align:right;">
-                        Teacher
+                        <span th:if="${!isTeacher}">
+                            Teacher
+                        </span>
+
+                        <span th:if="${isTeacher}">
+                            Group
+                        </span>
                     </div>
+
                 </div>
+
                 <div th:each="time : ${timeSlots}"
                     th:with="lesson=${lessonService.findLessonByTime(schedule.get(day), time)}"
                     style="
@@ -76,27 +93,40 @@
                         display:flex;
                         align-items:center;
                     ">
+
                     <div style="width:120px; text-align:center; font-weight:700;">
                         <span th:text="${time}"></span>
                     </div>
+
                     <div style="flex:1; text-align:center;">
                         <span th:if="${lesson != null and lesson.subject != null}"
                             style="font-weight:600;"
                             th:text="${lesson.subject.name}">
                         </span>
+
                         <span th:if="${lesson == null or lesson.subject == null}"
                             style="color:#bbb; font-size:18px;">
                             ➖
                         </span>
                     </div>
+
                     <div style="width:220px; text-align:right;">
-                        <span th:if="${lesson != null and lesson.teacher != null}">
-                            <a th:href="@{/teachers/{id}/profile(id=${lesson.teacher.id})}"
-                                style="color:#2562eb; text-decoration:none;"
-                                th:text="${lesson.teacher.name + ' ' + lesson.teacher.surname}">
-                            </a>
-                        </span>
+
+                        <!-- 👨‍🎓 STUDENT → показываем teacher -->
+                        <span th:if="${!isTeacher and lesson != null and lesson.teacher != null}">
+        <a th:href="@{/teachers/{id}/profile(id=${lesson.teacher.id})}"
+           style="color:#2562eb; text-decoration:none;"
+           th:text="${lesson.teacher.name + ' ' + lesson.teacher.surname}">
+        </a>
+    </span>
+
+                        <!-- 👨‍🏫 TEACHER → показываем group -->
+                        <span th:if="${isTeacher and lesson != null and lesson.group != null}"
+                              th:text="${lesson.group.speciality}">
+    </span>
+
                     </div>
+
                 </div>
             </td>
         </tr>

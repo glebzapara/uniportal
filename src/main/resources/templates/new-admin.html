@@ -11,6 +11,7 @@
 <body>
 
 <h2>Create New Admin</h2>
+
 <form th:action="@{/admins}" th:object="${adminForm}" method="post" enctype="multipart/form-data">
   <label for="name">Your name:</label>
   <input type="text" th:field="*{name}" id="name">
@@ -26,5 +27,6 @@
 
   <button type="submit">Submit</button>
 </form>
+
 </body>
 </html>

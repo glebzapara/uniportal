@@ -22,39 +22,6 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<Admin> findAllAdmins() {
-        return adminRepository.findAll();
-    }
-
-    public Optional<Admin> findOneAdmin(Integer id) {
-        return adminRepository.findById(id);
-    }
-
-    public String getAdminNameById(Integer id) throws Exception {
-        return adminRepository.findById(id)
-                .map(Admin::getName)
-                .orElseThrow(() -> new Exception("Name cannot be null"));
-    }
-
-    public String getAdminSurnameById(Integer id) throws Exception {
-        return adminRepository.findById(id)
-                .map(Admin::getSurname)
-                .orElseThrow(() -> new Exception("Surname cannot be null"));
-    }
-
-    public String getAdminEmailById(Integer id) throws Exception {
-        return adminRepository.findById(id)
-                .map(Admin::getEmail)
-                .orElseThrow(() -> new Exception("Email cannot be null"));
-    }
-
-    public String getAdminPasswordById(Integer id) throws Exception {
-        return adminRepository.findById(id)
-                .map((Admin::getPassword))
-                .orElseThrow(() -> new Exception("Password cannot be null"));
-    }
-
-
     public void registerAdmin(Admin admin) throws Exception {
         if (admin.getName() == null || admin.getName().trim().isEmpty()) {
             throw new Exception("Name cannot be null or empty");

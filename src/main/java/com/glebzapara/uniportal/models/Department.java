@@ -27,8 +27,6 @@ public class Department {
     private String name;
 
     @NotNull
-    @Min(1)
-    @Max(8)
     @Column(name = "number", nullable = false)
     private Integer number;
 }

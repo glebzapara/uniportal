@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 
-<body>
+<body style="margin:0; padding:0;">
 
 <nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
     <table width="100%" cellpadding="0" cellspacing="0">
@@ -17,21 +17,30 @@
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
             </td>
+
             <td align="right">
                 <span style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
+
                     <a th:href="@{/schedule}" style="color:white; text-decoration:none; margin:0 10px;">Schedule</a>
+
                     <a th:href="@{/grades}" style="color:white; text-decoration:none; margin:0 10px;">Grades</a>
+
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                         th:href="@{/group}" style="color:white; text-decoration:none; margin:0 10px;">Group</a>
+
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                         th:href="@{/teachers}" style="color:white; text-decoration:none; margin:0 10px;">Teachers</a>
+
                     <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
                         th:href="@{/students}" style="color:white; text-decoration:none; margin:0 10px;">Students</a>
+
                     <span style="color:#888;">|</span>
+
                     <a th:if="${currentStudent != null}"
                         th:href="@{/students/{id}/profile(id=${currentStudent.id})}" style="color:#2562eb;
                         text-decoration:none; margin-left:10px;">Profile</a>
+
                     <a th:if="${currentTeacher != null}"
                         th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
                         text-decoration:none; margin-left:10px;">Profile</a>
@@ -42,7 +51,9 @@
 </nav>
 
 <div style="padding:20px; background:#f2f5f9;">
+
     <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px; overflow:hidden;">
+
         <div style="background:#3766a0; color:white; padding:10px; font-weight:bold; border-radius:10px 10px 0 0;">
             Group <span th:text="${group.number}"></span>
         </div>
@@ -55,7 +66,6 @@
                 <div><b>Speciality:</b> <span th:text="${group.speciality}"></span></div>
                 <div><b>Department:</b> <span th:text="${group.department.name}"></span></div>
             </div>
-
             <form th:action="@{/group/search}" method="post"
                     style="display:flex; gap:10px; min-width:420px; flex-shrink:0;">
                 <input type="text" name="searchTerm" placeholder="Find a student"
@@ -66,33 +76,41 @@
                 </button>
             </form>
         </div>
+
     </div>
 
     <div style="border:1px solid #ccc; background:white; border-radius:10px; overflow:hidden;">
+
         <div style="background:#3766a0; color:white; padding:14px 20px; font-weight:700;
         display:grid; grid-template-columns: 2.5fr 1.2fr 1.3fr; align-items:center; font-size:15px;">
             <div>Student</div>
             <div style="text-align:left">Phone</div>
             <div style="text-align:right;">Last seen</div>
         </div>
+
         <div th:each="s : ${students}" style="padding:16px 20px; border-bottom:1px solid #eee;
         display:grid; grid-template-columns: 2.5fr 1.2fr 1.3fr; align-items:center; font-weight:600; font-size:15px;">
+
             <div>
-                <a th:href="@{/students/{id}/profile(id=${s.id})}"
-                    th:text="${s.name + ' ' + s.surname}" style="text-decoration:none;
-                    color:#222; font-weight:700;"></a>
+                    <span th:text="${s.name + ' ' + s.surname}" style="text-decoration:none;
+                    color:#222; font-weight:700;"></span>
             </div>
+
             <div style="text-align:left; color:#444; font-weight:600;">
                 <span th:text="${s.phoneNumber}"></span>
             </div>
+
             <div style="text-align:right; color:#555; font-weight:600;">
                 <span th:text="${s.lastSeen != null ? #temporals.format(
                     s.lastSeen.withZoneSameInstant(T(java.time.ZoneId).of('Europe/Kyiv')),
                     'dd.MM HH:mm'
                     ) : 'Never'}"></span>
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 </body>

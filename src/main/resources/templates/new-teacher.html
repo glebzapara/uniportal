@@ -13,17 +13,16 @@
 <h2>Create New Teacher</h2>
 
 <form th:action="@{/teachers}" th:object="${teacherForm}" method="post" enctype="multipart/form-data">
-
-    <label for="name">Your name:</label>
+    <label for="name">Teacher's name:</label>
     <input type="text" th:field="*{name}" id="name">
 
-    <label for="surname">Your surname:</label>
+    <label for="surname">Teacher's  surname:</label>
     <input type="text" th:field="*{surname}" id="surname">
 
-    <label for="email">Your email:</label>
+    <label for="email">Teacher's  email:</label>
     <input type="email" th:field="*{email}" id="email">
 
-    <label for="password">Your password:</label>
+    <label for="password">Teacher's  password:</label>
     <input type="password" th:field="*{password}" id="password">
 
     <label>Department:</label>
@@ -36,17 +35,15 @@
                 th:value="${d.id}"
                 th:text="${d.name}">
         </option>
-
     </select>
 
-    <label for="phone_number">Your phone number:</label>
+    <label for="phone_number">Teacher's phone number:</label>
     <input type="tel" th:field="*{phoneNumber}" id="phone_number">
 
     <label for="image">Your image:</label>
     <input type="file" name="file" id="image">
 
     <button type="submit">Submit</button>
-
 </form>
 
 </body>
