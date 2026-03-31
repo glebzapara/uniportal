@@ -14,7 +14,8 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">
-                <span style="font-size:26px; font-weight:700; color:white;">
+                <span style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white;">
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
             </td>
@@ -53,6 +54,7 @@
 
 <div style="padding:20px; background:#f2f5f9;">
 
+    <!-- SEARCH -->
     <div style="
         border:1px solid #ccc;
         background:white;
@@ -66,7 +68,8 @@
             gap:10px;
         ">
             <input type="text" name="searchTerm" placeholder="Find a student"
-                    style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+                   style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+
             <button type="submit" style="
                 padding:11px 28px;
                 background:#2562eb;
@@ -81,6 +84,7 @@
         </form>
     </div>
 
+    <!-- TABLE -->
     <div style="
         border:1px solid #ccc;
         background:white;
@@ -88,35 +92,52 @@
         overflow:hidden;
     ">
 
+        <!-- HEADER -->
         <div style="
             background:#3766a0;
             color:white;
             padding:14px 20px;
             font-weight:700;
             display:grid;
-            grid-template-columns: 2fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1fr 1.5fr 1.5fr;
             align-items:center;
             font-size:15px;
         ">
             <div>Student</div>
+            <div>Email</div>
+            <div>Group</div>
+            <div style="text-align:center;">Department</div>
             <div style="text-align:right;">Phone</div>
         </div>
 
+        <!-- ROWS -->
         <div th:each="s : ${students}" style="
             padding:16px 20px;
             border-bottom:1px solid #eee;
             display:grid;
-            grid-template-columns: 2fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1fr 1.5fr 1.5fr;
             align-items:center;
             font-weight:600;
             font-size:15px;
         ">
 
             <div>
-                <span
-                        th:text="${s.name + ' ' + s.surname}"
-                        style="text-decoration:none; color:#222; font-weight:700;">
-                </span>
+                <a th:href="@{/students/{id}/profile(id=${s.id})}"
+                   th:text="${s.name + ' ' + s.surname}"
+                   style="text-decoration:none; color:#2562eb; font-weight:700;">
+                </a>
+            </div>
+
+            <div style="color:#444;">
+                <span th:text="${s.email}"></span>
+            </div>
+
+            <div style="color:#444;">
+                <span th:text="${s.group.speciality + ' ' + '{' + s.group.number + '}'}"></span>
+            </div>
+
+            <div style="text-align:center; color:#444;">
+                <span th:text="${s.group.department.name + ' ' + '{' + s.group.department.number + '}'}"></span>
             </div>
 
             <div style="text-align:right; color:#444;">
@@ -128,7 +149,6 @@
     </div>
 
 </div>
-
 
 </body>
 </html>

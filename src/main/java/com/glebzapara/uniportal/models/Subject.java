@@ -29,4 +29,7 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

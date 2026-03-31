@@ -128,7 +128,13 @@ public class UniversityController {
         Student student = studentService.findOneStudent(id)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
 
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
 
+            if (principal instanceof StudentDetails studentDetails) {
+                model.addAttribute("currentStudentId", studentDetails.getStudent().getId());
+            }
+        }
 
         model.addAttribute("student", student);
 
@@ -151,11 +157,26 @@ public class UniversityController {
     }
 
     @GetMapping("/subjects/{id}")
-    public String getSubjectPage(@PathVariable Integer id, Model model) throws Exception {
+    public String getSubjectPage(@PathVariable Integer id,
+                                 Model model,
+                                 Authentication authentication) throws Exception {
         Subject subject = subjectService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subject not found with id: " + id));
-
+                .orElseThrow(() -> new Exception("Subject not found"));
         model.addAttribute("subject", subject);
+
+        Teacher teacher = lessonService.findFirstTeacherBySubjectId(id);
+        model.addAttribute("teacher", teacher);
+
+        String desc = subject.getDescription();
+
+        model.addAttribute("lectures", subjectService.extract(desc, "#LECTURES"));
+        model.addAttribute("labs", subjectService.extract(desc, "#LABS"));
+        model.addAttribute("resources", subjectService.extract(desc, "#RESOURCES"));
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof TeacherDetails teacherDetails) {
+            model.addAttribute("currentTeacher", teacherDetails.getTeacher());
+        }
 
         return "subject";
     }
@@ -173,7 +194,13 @@ public class UniversityController {
         Teacher teacher = teacherService.findOneTeacher(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
 
+            if (principal instanceof TeacherDetails teacherDetails) {
+                model.addAttribute("currentTeacherId", teacherDetails.getTeacher().getId());
+            }
+        }
 
         model.addAttribute("teacher", teacher);
 
@@ -211,8 +238,13 @@ public class UniversityController {
     }
 
     @GetMapping("/teachers")
-    public String getAllTeachers(Model model) {
-        model.addAttribute("teachers", teacherService.findAllTeachers());
+    public String getTeachersPage(Model model) {
+        List<Teacher> teachers = teacherService.findAllTeachers();
+
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("teacherSubjects",
+                teacherService.getTeacherSubjects(teachers));
+
         return "teachers";
     }
 

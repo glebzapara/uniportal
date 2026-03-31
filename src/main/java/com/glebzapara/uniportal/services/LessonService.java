@@ -96,6 +96,16 @@ public class LessonService {
         return schedule;
     }
 
+    public Teacher findFirstTeacherBySubjectId(Integer subjectId) {
+        List<Lesson> lessons = lessonRepository.findBySubjectId(subjectId);
+
+        if (lessons.isEmpty()) {
+            return null;
+        }
+
+        return lessons.get(0).getTeacher();
+    }
+
     public void createLesson(Lesson lesson,
                              Integer subjectId,
                              Integer teacherId,

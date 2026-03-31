@@ -16,6 +16,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     List<Lesson> findByTeacherAndGroupId(Teacher teacher, Integer groupId);
     List<Lesson> findByTeacherId(Integer teacherId);
     List<Lesson> findByTeacherIdAndGroupId(Integer teacherId, Integer groupId);
+    List<Lesson> findBySubjectId(Integer subjectId);
     Optional<Lesson> findFirstByTeacherAndGroupId(Teacher teacher, Integer groupId);
 
     @Query("SELECT DISTINCT l.group FROM Lesson l WHERE l.teacher = :teacher")

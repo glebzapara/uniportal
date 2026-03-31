@@ -14,7 +14,8 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">
-                <span style="font-size:26px; font-weight:700; color:white;">
+                <span style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white;">
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
             </td>
@@ -58,9 +59,9 @@
         <th align="center">Grade</th>
     </tr>
     <tr th:each="g : ${grades}">
-        <td th:text="${g.subject.name}"></td>
-        <td th:text="${g.teacher.name + ' ' + g.teacher.surname}"></td>
-        <td align="center">
+        <td style="font-weight:600;" th:text="${g.subject.name}"></td>
+        <td style="font-weight:600;" th:text="${g.teacher.name + ' ' + g.teacher.surname}"></td>
+        <td style="font-weight:600;" align="center">
             <span th:if="${g.grade != null}" th:text="${g.grade}"></span>
             <span th:if="${g.grade == null}">-</span>
         </td>

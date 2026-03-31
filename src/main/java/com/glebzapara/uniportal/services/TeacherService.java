@@ -3,6 +3,7 @@ package com.glebzapara.uniportal.services;
 import com.glebzapara.uniportal.models.Department;
 import com.glebzapara.uniportal.models.Teacher;
 import com.glebzapara.uniportal.repositories.DepartmentRepository;
+import com.glebzapara.uniportal.repositories.LessonRepository;
 import com.glebzapara.uniportal.repositories.TeacherRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,15 +14,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TeacherService {
     private final TeacherDetailsService teacherDetailsService;
     TeacherRepository teacherRepository;
     DepartmentRepository departmentRepository;
+    LessonRepository lessonRepository;
     private PasswordEncoder passwordEncoder;
     private final S3Client s3Client;
 
@@ -33,11 +33,13 @@ public class TeacherService {
 
     public TeacherService(TeacherRepository teacherRepository,
                           DepartmentRepository departmentRepository,
+                          LessonRepository lessonRepository,
                           PasswordEncoder passwordEncoder,
                           S3Client s3Client, TeacherDetailsService teacherDetailsService) {
 
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
+        this.lessonRepository = lessonRepository;
         this.passwordEncoder = passwordEncoder;
         this.s3Client = s3Client;
         this.teacherDetailsService = teacherDetailsService;
@@ -81,6 +83,22 @@ public class TeacherService {
             t.setImage(imageUrl);
             teacherRepository.save(t);
         });
+    }
+
+    public Map<Integer, String> getTeacherSubjects(List<Teacher> teachers) {
+        Map<Integer, String> teacherSubjects = new HashMap<>();
+
+        for (Teacher t : teachers) {
+            String subjectName = lessonRepository.findByTeacherId(t.getId())
+                    .stream()
+                    .findFirst()
+                    .map(l -> l.getSubject().getName())
+                    .orElse("");
+
+            teacherSubjects.put(t.getId(), subjectName);
+        }
+
+        return teacherSubjects;
     }
 
     public void registerTeacher(Teacher teacher, Integer departmentId) throws Exception {

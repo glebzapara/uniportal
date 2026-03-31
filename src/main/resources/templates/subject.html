@@ -2,23 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Subject</title>
-  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <meta charset="UTF-8">
+    <title>Subject</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 
 <body style="margin:0; padding:0;">
 
 <nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="left">
-                <span style="font-size:26px; font-weight:700; color:white;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <span style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white;">
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
-      </td>
+            </td>
 
-      <td align="right">
+            <td align="right">
                 <span style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
 
@@ -45,48 +46,103 @@
                         th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
                         text-decoration:none; margin-left:10px;">Profile</a>
                 </span>
-      </td>
-    </tr>
-  </table>
+            </td>
+        </tr>
+    </table>
 </nav>
 
-<div style="padding:20px;">
+<div style="background:#f2f5f9; padding:20px;">
 
-  <div style="
-        border:1px solid #ddd;
-        border-radius:10px;
-        background:white;
-        overflow:hidden;
-        max-width:900px;
-        margin:auto;
-    ">
+    <div style="max-width:1100px; margin:0 auto;">
 
-    <div style="
-            background:#3766a0;
-            color:white;
-            padding:15px;
-            font-size:20px;
-            font-weight:bold;
-        ">
-      <span th:text="${subject.name}"></span>
+        <div style="border:1px solid #ccc; background:white; border-radius:10px; overflow:hidden; margin-bottom:20px;">
+
+            <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
+                General
+            </div>
+
+            <div style="padding:18px; line-height:1.8; font-size:16px;">
+
+                <div style="margin-bottom:8px; font-weight:550;">
+                    <b style="color:#3766a0;">Course:</b>
+                    <span th:text="${subject.course}"></span>
+                </div>
+
+                <div style="margin-bottom:8px; font-weight:550;">
+                    <b style="color:#3766a0;">Department:</b>
+                    <span th:text="${subject.department.name}"></span>
+                </div>
+
+                <div style="margin-bottom:8px; font-weight:550;">
+                    <b style="color:#3766a0;">First name:</b>
+                    <span th:text="${teacher.name}"></span>
+                </div>
+
+                <div style="margin-bottom:8px; font-weight:550;">
+                    <b style="color:#3766a0;">Last name:</b>
+                    <span th:text="${teacher.surname}"></span>
+                </div>
+
+                <div style="margin-bottom:8px; font-weight:550;">
+                    <b style="color:#3766a0;">Email:</b>
+                    <span th:text="${teacher.email}"></span>
+                </div>
+
+                <div style="font-weight:550;">
+                    <b style="color:#3766a0;">Phone:</b>
+                    <span th:text="${teacher.phoneNumber}"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LECTURES -->
+        <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
+            <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
+                Lectures
+            </div>
+            <div style="padding:18px; font-size:16px;">
+                <div th:utext="${lectures}"></div>
+            </div>
+        </div>
+
+        <!-- LABS -->
+        <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
+            <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
+                Lab Works
+            </div>
+            <div style="padding:18px; font-size:16px;">
+                <div th:utext="${labs}"></div>
+            </div>
+        </div>
+
+        <!-- RESOURCES -->
+        <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
+            <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
+                Resources
+            </div>
+            <div style="padding:18px; font-size:16px;">
+                <div th:utext="${resources}"></div>
+            </div>
+        </div>
+
+        <!-- BUTTON -->
+        <div th:if="${currentTeacher != null}" style="text-align:right;">
+            <a th:href="@{/subjects/{id}/edit(id=${subject.id})}"
+               style="
+                   background:#2562eb;
+                   color:white;
+                   padding:12px 22px;
+                   text-decoration:none;
+                   border-radius:6px;
+                   font-weight:600;
+                   font-size:15px;
+               ">
+                Edit
+            </a>
+        </div>
+
     </div>
-
-    <div style="padding:20px;">
-
-      <p><b>Course:</b>
-        <span th:text="${subject.course}"></span>
-      </p>
-
-      <p><b>Department:</b>
-        <span th:text="${subject.department.name}"></span>
-      </p>
-
-      <p><b>ID:</b>
-        <span th:text="${subject.id}"></span>
-      </p>
-    </div>
-
-  </div>
 
 </div>
 

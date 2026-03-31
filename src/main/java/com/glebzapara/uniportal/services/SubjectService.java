@@ -44,6 +44,26 @@ public class SubjectService {
         return subjectRepository.findByDepartmentId(departmentId);
     }
 
+    public String extract(String text, String key) {
+        if (text == null) {
+            return "";
+        }
+
+        int start = text.indexOf(key);
+        if (start == -1) {
+            return "";
+        }
+
+        start += key.length();
+
+        int next = text.indexOf("#", start);
+        if (next == -1) {
+            next = text.length();
+        }
+
+        return text.substring(start, next).trim();
+    }
+
     public void registerSubject(Subject subject, Integer departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new RuntimeException("Department not found"));

@@ -91,6 +91,7 @@
                 name VARCHAR(255) NOT NULL,
                 course SMALLINT NOT NULL CHECK (course >= 1 AND course <= 6),
                 department_id INTEGER REFERENCES departments(id) NOT NULL,
+                description TEXT,
                 UNIQUE (name, course, department_id)
             );
             ]]>
