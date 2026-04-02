@@ -1,12 +1,10 @@
 package com.glebzapara.uniportal.services;
 
 import com.glebzapara.uniportal.models.Department;
-import com.glebzapara.uniportal.models.Group;
 import com.glebzapara.uniportal.repositories.DepartmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DepartmentService {
@@ -20,8 +18,13 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
-    public Optional<Department> findById(Integer id) {
-        return departmentRepository.findById(id);
+    public Department findById(Integer id) {
+        return departmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Department not found"));
+    }
+
+    public void deleteById(Integer id) {
+        departmentRepository.deleteById(id);
     }
 
     public void createDepartment(Department department) {

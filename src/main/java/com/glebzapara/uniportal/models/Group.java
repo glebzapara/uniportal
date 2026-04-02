@@ -1,10 +1,7 @@
 package com.glebzapara.uniportal.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
@@ -27,6 +24,11 @@ public class Group {
     @Max(6)
     @Column(name = "course", nullable = false)
     private Short course;
+
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @NotNull
     @Column(name = "number", nullable = false)

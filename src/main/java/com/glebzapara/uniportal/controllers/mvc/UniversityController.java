@@ -17,6 +17,7 @@ import java.util.*;
 
 @Controller()
 public class UniversityController {
+
     AdminService adminService;
     StudentService studentService;
     TeacherService teacherService;
@@ -76,7 +77,7 @@ public class UniversityController {
     public String showCreateAdminForm(Model model) {
         model.addAttribute("adminForm", new Admin());
 
-        return "new-admin";
+        return "admin-form";
     }
 
     @PostMapping("/admins")
@@ -87,18 +88,35 @@ public class UniversityController {
         return "redirect:/login";
     }
 
-    @GetMapping("/students/new")
-    public String showCreateStudentForm(Model model) {
-        model.addAttribute("studentForm", new Student());
-        model.addAttribute("groups", groupService.findAllGroups());
+    @GetMapping("/admins/edit/{id}")
+    public String editAdmin(@PathVariable Integer id, Model model) {
+        Admin admin = adminService.findById(id);
 
-        return "new-student";
+        model.addAttribute("adminForm", admin);
+
+        return "admin-form";
+    }
+
+    @GetMapping("/admins/delete/{id}")
+    public String deleteAdmin(@PathVariable Integer id) {
+        adminService.deleteById(id);
+
+        return "redirect:/";
     }
 
     @GetMapping("/students")
     public String getAllStudents(Model model) {
         model.addAttribute("students", studentService.findAllStudents());
+
         return "students";
+    }
+
+    @GetMapping("/students/new")
+    public String showCreateStudentForm(Model model) {
+        model.addAttribute("studentForm", new Student());
+        model.addAttribute("groups", groupService.findAllGroups());
+
+        return "student-form";
     }
 
     @PostMapping("/students")
@@ -141,100 +159,20 @@ public class UniversityController {
         return "student-profile";
     }
 
-    @GetMapping("/subjects/new")
-    public String showCreateSubjectForm(Model model) {
-        model.addAttribute("subjectForm", new Subject());
+    @GetMapping("/students/edit/{id}")
+    public String editStudent(@PathVariable Integer id, Model model) {
+        Student student = studentService.findById(id);
 
-        return "new-subject";
+        model.addAttribute("studentForm", student);
+
+        return "student-form";
     }
 
-    @PostMapping("/subjects")
-    public String createSubject(@ModelAttribute("subjectForm") Subject subject,
-                                @RequestParam("departmentId") Integer departmentId) {
-        subjectService.registerSubject(subject, departmentId);
+    @GetMapping("/students/delete/{id}")
+    public String deleteStudent(@PathVariable Integer id) {
+        studentService.deleteById(id);
 
         return "redirect:/";
-    }
-
-    @GetMapping("/subjects/{id}")
-    public String getSubjectPage(@PathVariable Integer id,
-                                 Model model,
-                                 Authentication authentication) throws Exception {
-        Subject subject = subjectService.findById(id)
-                .orElseThrow(() -> new Exception("Subject not found"));
-        model.addAttribute("subject", subject);
-
-        Teacher teacher = lessonService.findFirstTeacherBySubjectId(id);
-        model.addAttribute("teacher", teacher);
-
-        String desc = subject.getDescription();
-
-        model.addAttribute("lectures", subjectService.extract(desc, "#LECTURES"));
-        model.addAttribute("labs", subjectService.extract(desc, "#LABS"));
-        model.addAttribute("resources", subjectService.extract(desc, "#RESOURCES"));
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof TeacherDetails teacherDetails) {
-            model.addAttribute("currentTeacher", teacherDetails.getTeacher());
-        }
-
-        return "subject";
-    }
-
-    @GetMapping("/teachers/new")
-    public String showCreateTeacherForm(Model model) {
-        model.addAttribute("teacherForm", new Teacher());
-        model.addAttribute("departments", departmentService.findAll());
-
-        return "new-teacher";
-    }
-
-    @GetMapping("/teachers/{id}/profile")
-    public String getTeacherProfile(@PathVariable Integer id, Model model, Authentication authentication) {
-        Teacher teacher = teacherService.findOneTeacher(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
-
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-
-            if (principal instanceof TeacherDetails teacherDetails) {
-                model.addAttribute("currentTeacherId", teacherDetails.getTeacher().getId());
-            }
-        }
-
-        model.addAttribute("teacher", teacher);
-
-        return "teacher-profile";
-    }
-
-    @GetMapping("/teacher/groups/{groupId}")
-    public String getTeacherGroupSchedule(@PathVariable Integer groupId,
-                                          Model model,
-                                          Principal principal) {
-
-        String email = principal.getName();
-
-        Teacher teacher = teacherService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
-
-        Map<DayOfWeek, List<Lesson>> schedule =
-                lessonService.getScheduleForTeacherByGroup(teacher.getId(), groupId);
-
-        for (DayOfWeek d : DayOfWeek.values()) {
-            schedule.putIfAbsent(d, new ArrayList<>());
-        }
-
-        model.addAttribute("schedule", schedule);
-        model.addAttribute("timeSlots", List.of(
-                "08:00 - 09:35",
-                "09:50 - 11:25",
-                "11:55 - 13:30",
-                "13:45 - 15:20"
-        ));
-        model.addAttribute("lessonService", lessonService);
-        model.addAttribute("days", DayOfWeek.values());
-
-        return "schedule";
     }
 
     @GetMapping("/teachers")
@@ -246,6 +184,14 @@ public class UniversityController {
                 teacherService.getTeacherSubjects(teachers));
 
         return "teachers";
+    }
+
+    @GetMapping("/teachers/new")
+    public String showCreateTeacherForm(Model model) {
+        model.addAttribute("teacherForm", new Teacher());
+        model.addAttribute("departments", departmentService.findAll());
+
+        return "teacher-form";
     }
 
     @PostMapping("/teachers")
@@ -263,6 +209,199 @@ public class UniversityController {
         return "redirect:/teachers/" + teacher.getId() + "/profile";
     }
 
+    @GetMapping("/teachers/{id}/profile")
+    public String getTeacherProfile(@PathVariable Integer id, Model model, Authentication authentication) {
+        List<Teacher> teachers = teacherService.findAllTeachers();
+        Teacher teacher = teacherService.findOneTeacher(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof TeacherDetails teacherDetails) {
+                model.addAttribute("currentTeacherId", teacherDetails.getTeacher().getId());
+            }
+        }
+
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("teacherSubjects",
+                teacherService.getTeacherSubjects(teachers));
+
+        return "teacher-profile";
+    }
+
+    @GetMapping("/teachers/edit/{id}")
+    public String editTeacher(@PathVariable Integer id, Model model) {
+        Teacher teacher = teacherService.findById(id);
+
+        model.addAttribute("teacherForm", teacher);
+
+        return "teacher-form";
+    }
+
+    @GetMapping("/teachers/delete/{id}")
+    public String deleteTeacher(@PathVariable Integer id) {
+        teacherService.deleteById(id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/groups/new")
+    public String showCreateGroupForm(@ModelAttribute Group group,  Model model) {
+        model.addAttribute("groupForm", group);
+        model.addAttribute("departments", departmentService.findAll());
+
+        return "group-form";
+    }
+
+    @PostMapping("/groups")
+    public String createGroup(@ModelAttribute("groupForm") Group group,
+                              @RequestParam("departmentId") Integer departmentId) {
+        groupService.createGroup(group, departmentId);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/groups/edit/{id}")
+    public String editGroup(@PathVariable Integer id, Model model) {
+        Group group = groupService.findById(id);
+
+        model.addAttribute("groupForm", group);
+
+        return "group-form";
+    }
+
+    @GetMapping("/groups/delete/{id}")
+    public String deleteGroup(@PathVariable Integer id) {
+        groupService.deleteById(id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/departments/new")
+    public String showCreateDepartmentForm(@ModelAttribute Department department,  Model model) {
+        model.addAttribute("departmentForm", department);
+
+        return "department-form";
+    }
+
+    @PostMapping("/departments")
+    public String createDepartment(@ModelAttribute("departmentForm") Department department) {
+        departmentService.createDepartment(department);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/departments/edit/{id}")
+    public String editDepartment(@PathVariable Integer id, Model model) {
+        Department department = departmentService.findById(id);
+
+        model.addAttribute("departmentForm", department);
+
+        return "department-form";
+    }
+
+    @GetMapping("/departments/delete/{id}")
+    public String deleteDepartment(@PathVariable Integer id) {
+        departmentService.deleteById(id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/subjects/new")
+    public String showCreateSubjectForm(Model model) {
+        model.addAttribute("subjectForm", new Subject());
+
+        return "subject-form";
+    }
+
+    @PostMapping("/subjects")
+    public String createSubject(@ModelAttribute("subjectForm") Subject subject,
+                                @RequestParam("departmentId") Integer departmentId) {
+        subjectService.registerSubject(subject, departmentId);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/subjects/{id}")
+    public String getSubjectPage(@PathVariable Integer id,
+                                 Model model,
+                                 Authentication authentication) throws Exception {
+        Subject subject = subjectService.findById(id);
+
+        model.addAttribute("subject", subject);
+
+        Teacher teacher = lessonService.findFirstTeacherBySubjectId(id);
+
+        model.addAttribute("teacher", teacher);
+
+        String desc = subject.getDescription();
+
+        model.addAttribute("lectures", subjectService.extract(desc, "#LECTURES"));
+        model.addAttribute("labs", subjectService.extract(desc, "#LABS"));
+        model.addAttribute("resources", subjectService.extract(desc, "#RESOURCES"));
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof TeacherDetails teacherDetails) {
+            model.addAttribute("currentTeacher", teacherDetails.getTeacher());
+        }
+
+        return "subject";
+    }
+
+    @GetMapping("/subjects/edit/{id}")
+    public String editSubject(@PathVariable Integer id, Model model) {
+        Subject subject = subjectService.findById(id);
+
+        model.addAttribute("subjectForm", subject);
+
+        return "subject-form";
+    }
+
+    @GetMapping("/subjects/delete/{id}")
+    public String deleteSubject(@PathVariable Integer id) {
+        subjectService.deleteById(id);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/lessons/new")
+    public String showCreateLessonForm(@ModelAttribute Lesson lesson, Model model) {
+        model.addAttribute("lessonForm", lesson);
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+        model.addAttribute("groups", groupService.findAllGroups());
+        model.addAttribute("days", DayOfWeek.values());
+
+        return "lesson-form";
+    }
+
+    @PostMapping("/lessons")
+    public String createLesson(@ModelAttribute("lessonForm") Lesson lesson,
+                               @RequestParam("subjectId") Integer subjectId,
+                               @RequestParam("teacherId") Integer teacherId,
+                               @RequestParam("groupId") Integer groupId) {
+        lessonService.createLesson(lesson, subjectId, teacherId, groupId);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/lessons/edit/{id}")
+    public String editLesson(@PathVariable Integer id, Model model) {
+        Lesson lesson = lessonService.findById(id);
+
+        model.addAttribute("lessonForm", lesson);
+
+        return "lesson-form";
+    }
+
+    @GetMapping("/lessons/delete/{id}")
+    public String deleteLesson(@PathVariable Integer id) {
+        lessonService.deleteById(id);
+
+        return "redirect:/";
+    }
+
     @GetMapping("/grades")
     public String getStudentGrades(Authentication authentication, Model model) {
         Object principal = authentication.getPrincipal();
@@ -278,29 +417,29 @@ public class UniversityController {
         return "redirect:/";
     }
 
-//    @GetMapping("/teacher/groups/{groupId}/grades")
-//    public String getTeacherGrades(@PathVariable Integer groupId,
-//                                   Principal principal,
-//                                   Model model) {
-//
-//        String email = principal.getName();
-//
-//        Teacher teacher = teacherService.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("Teacher not found"));
-//
-//        // ❗ без сложной security логики
-//        Optional<Group> group = groupService.findById(groupId);
-//
-//        List<Student> students = studentService.findByGroupId(groupId);
-//
-//        List<Grade> grades = gradeService.findByGroupId(groupId);
-//
-//        model.addAttribute("group", group);
-//        model.addAttribute("students", students);
-//        model.addAttribute("grades", grades);
-//
-//        return "teacher-grades";
-//    }
+    @GetMapping("/grades/new")
+    public String showCreateGradesForm(Model model) {
+        model.addAttribute("gradeForm", new Grade());
+        model.addAttribute("lessonForm", new Lesson());
+
+        return "grade-form";
+    }
+
+    @GetMapping("/grades/edit/{id}")
+    public String editGrade(@PathVariable Integer id, Model model) {
+        Grade grade = gradeService.findById(id);
+
+        model.addAttribute("gradeForm", grade);
+
+        return "grade-form";
+    }
+
+    @GetMapping("/grades/delete/{id}")
+    public String deleteGrade(@PathVariable Integer id) {
+        gradeService.deleteById(id);
+
+        return "redirect:/";
+    }
 
     @GetMapping("/schedule")
     public String getSchedule(Model model, Principal principal) {
@@ -355,20 +494,33 @@ public class UniversityController {
         return "redirect:/";
     }
 
-    @GetMapping("/groups/new")
-    public String showCreateGroupForm(@ModelAttribute Group group,  Model model) {
-        model.addAttribute("groupForm", group);
-        model.addAttribute("departments", departmentService.findAll());
+    @GetMapping("/teacher/groups/{groupId}")
+    public String getTeacherGroupSchedule(@PathVariable Integer groupId,
+                                          Model model,
+                                          Principal principal) {
+        String email = principal.getName();
 
-        return "new-group";
-    }
+        Teacher teacher = teacherService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
-    @PostMapping("/groups")
-    public String createGroup(@ModelAttribute("groupForm") Group group,
-                              @RequestParam("departmentId") Integer departmentId) {
-        groupService.createGroup(group, departmentId);
+        Map<DayOfWeek, List<Lesson>> schedule =
+                lessonService.getScheduleForTeacherByGroup(teacher.getId(), groupId);
 
-        return "redirect:/";
+        for (DayOfWeek d : DayOfWeek.values()) {
+            schedule.putIfAbsent(d, new ArrayList<>());
+        }
+
+        model.addAttribute("schedule", schedule);
+        model.addAttribute("timeSlots", List.of(
+                "08:00 - 09:35",
+                "09:50 - 11:25",
+                "11:55 - 13:30",
+                "13:45 - 15:20"
+        ));
+        model.addAttribute("lessonService", lessonService);
+        model.addAttribute("days", DayOfWeek.values());
+
+        return "schedule";
     }
 
     @PostMapping("/group/search")
@@ -439,41 +591,6 @@ public class UniversityController {
 
             return "students";
         }
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/departments/new")
-    public String showCreateDepartmentForm(@ModelAttribute Department department,  Model model) {
-        model.addAttribute("departmentForm", department);
-
-        return "new-department";
-    }
-
-    @PostMapping("/departments")
-    public String createDepartment(@ModelAttribute("departmentForm") Department department) {
-        departmentService.createDepartment(department);
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/lessons/new")
-    public String showCreateLessonForm(@ModelAttribute Lesson lesson, Model model) {
-        model.addAttribute("lessonForm", lesson);
-        model.addAttribute("subjects", subjectService.findAllSubjects());
-        model.addAttribute("teachers", teacherService.findAllTeachers());
-        model.addAttribute("groups", groupService.findAllGroups());
-        model.addAttribute("days", DayOfWeek.values());
-
-        return "new-lesson";
-    }
-
-    @PostMapping("/lessons")
-    public String createLesson(@ModelAttribute("lessonForm") Lesson lesson,
-                               @RequestParam("subjectId") Integer subjectId,
-                               @RequestParam("teacherId") Integer teacherId,
-                               @RequestParam("groupId") Integer groupId) {
-        lessonService.createLesson(lesson, subjectId, teacherId, groupId);
 
         return "redirect:/";
     }

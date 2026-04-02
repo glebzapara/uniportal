@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Grade</title>
+</head>
+
+<body style="
+    font-family:sans-serif;
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+">
+
+<div style="transform: translateY(-68px);">
+
+    <h2>Create Grade</h2>
+
+    <form th:action="@{/grades}" th:object="${gradeForm}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <label>Student ID:</label><br>
+        <input type="number" th:field="*{student.id}"><br><br>
+
+        <label>Subject ID:</label><br>
+        <input type="number" th:field="*{subject.id}"><br><br>
+
+        <label>Teacher ID:</label><br>
+        <input type="number" th:field="*{teacher.id}"><br><br>
+
+        <label>Grade:</label><br>
+        <input type="number" th:field="*{gradeValue}" min="1" max="100"><br><br>
+
+        <button type="submit">Save</button>
+    </form>
+
+</div>
+
+</body>
+</html>

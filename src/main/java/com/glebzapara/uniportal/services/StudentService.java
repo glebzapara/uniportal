@@ -43,6 +43,15 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public Student findById(Integer id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+    }
+
+    public void deleteById(Integer id) {
+        studentRepository.deleteById(id);
+    }
+
     public Optional<Student> findOneStudent(Integer id) {
         return studentRepository.findById(id);
     }

@@ -7,7 +7,6 @@ import com.glebzapara.uniportal.repositories.GroupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GroupService {
@@ -23,8 +22,13 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
-    public Optional<Group> findById(Integer id) {
-        return groupRepository.findById(id);
+    public Group findById(Integer id) {
+        return groupRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+    }
+
+    public void deleteById(Integer id) {
+        groupRepository.deleteById(id);
     }
 
     public void createGroup(Group group, Integer departmentId) {

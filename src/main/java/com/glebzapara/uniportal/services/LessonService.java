@@ -31,6 +31,14 @@ public class LessonService {
         this.groupRepository = groupRepository;
     }
 
+    public Lesson findById(Integer id) {
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
+    }
+
+    public void deleteById(Integer id) {
+        lessonRepository.deleteById(id);
+    }
     public Map<DayOfWeek, List<Lesson>> getScheduleForStudent(Integer studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow();

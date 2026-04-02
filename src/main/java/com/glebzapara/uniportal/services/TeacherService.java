@@ -45,12 +45,17 @@ public class TeacherService {
         this.teacherDetailsService = teacherDetailsService;
     }
 
-    public Optional<Teacher> findById(Integer id) {
-        return teacherRepository.findById(id);
-    }
-
     public List<Teacher> findAllTeachers() {
         return teacherRepository.findAll();
+    }
+
+    public void deleteById(Integer id) {
+        teacherRepository.deleteById(id);
+    }
+
+    public Teacher findById(Integer id) {
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
     }
 
     public Optional<Teacher> findOneTeacher(Integer id) {

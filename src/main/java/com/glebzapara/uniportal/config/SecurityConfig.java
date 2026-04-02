@@ -70,17 +70,33 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/admins/**").hasRole("SUPER_ADMIN")
-                        .requestMatchers("/students/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/teachers/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/groups/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/grades/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/departments/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/lessons/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/subjects/new").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/students/**").hasAnyRole("SUPER_ADMIN", "ADMIN",
-                                                                                "STUDENT", "TEACHER")
-                        .requestMatchers("/teachers/**").hasAnyRole("SUPER_ADMIN", "ADMIN",
-                                                                                    "STUDENT", "TEACHER")
+                        .requestMatchers(
+                                "/students/new",
+                                "/students/edit/**",
+                                "/students/delete/**",
+                                "/teachers/new",
+                                "/teachers/edit/**",
+                                "/teachers/delete/**",
+                                "/groups/new",
+                                "/groups/edit/**",
+                                "/groups/delete/**",
+                                "/departments/new",
+                                "/departments/edit/**",
+                                "/departments/delete/**",
+                                "/subjects/new",
+                                "/subjects/edit/**",
+                                "/subjects/delete/**",
+                                "/lessons/new",
+                                "/lessons/edit/**",
+                                "/lessons/delete/**",
+                                "/grades/new",
+                                "/grades/edit/**",
+                                "/grades/delete/**"
+                        ).hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/students/**")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
+                        .requestMatchers("/teachers/**")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

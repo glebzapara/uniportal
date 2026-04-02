@@ -1,6 +1,7 @@
 package com.glebzapara.uniportal.services;
 
 import com.glebzapara.uniportal.models.Department;
+import com.glebzapara.uniportal.models.Student;
 import com.glebzapara.uniportal.models.Subject;
 import com.glebzapara.uniportal.repositories.DepartmentRepository;
 import com.glebzapara.uniportal.repositories.SubjectRepository;
@@ -24,8 +25,13 @@ public class SubjectService {
         return subjectRepository.findAll();
     }
 
-    public Optional<Subject> findById(Integer id) throws Exception {
-        return subjectRepository.findById(id);
+    public Subject findById(Integer id) {
+        return subjectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+    }
+
+    public void deleteById(Integer id) {
+        subjectRepository.deleteById(id);
     }
 
     public String getSubjectNameById(Integer id) throws Exception {

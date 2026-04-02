@@ -2,93 +2,90 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniPortal</title>
-
+    <title>Login</title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 </head>
 
 <body style="
-    margin:0;
-    background:#f2f5f9;
-    font-family:Arial, sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    height:100vh;
-    padding-top:220px;
+    margin: 0;
+    background: #f2f5f9;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 ">
 
 <div style="
-    width:320px;
+    width:460px;
     background:white;
-    padding:30px 25px;
-    border:1px solid #ddd;
-    border-radius:10px;
+    padding:40px 35px;
+    border:1px solid #cfcfcf;
+    border-radius:12px;
     box-sizing:border-box;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    margin-top:-60px;
 ">
 
-    <div style="text-align:center; margin-bottom:15px;">
-        <span style="font-size:26px; font-weight:700;">
+    <div style="text-align:center; margin:10px 0 35px 0;">
+        <span style="font-size:30px; font-weight:700;">
             Uni<span style="color:#2562eb;">Portal</span>
         </span>
     </div>
 
-    <div style="text-align:center; margin:10px 0 20px 0; font-size:20px; font-weight:600;">
-        Login
+    <div th:if="${param.error}" style="text-align:center; margin-bottom:15px; font-size:15px;">
+        <span style="color:red;">Invalid email or password</span>
     </div>
 
-    <div th:if="${param.error}" style="text-align:center; margin-bottom:10px;">
-        <font color="red">Invalid email or password</font>
-    </div>
-
-    <div th:if="${param.logout}" style="text-align:center; margin-bottom:10px;">
-        <font color="green">You have been logged out</font>
+    <div th:if="${param.logout}" style="text-align:center; margin-bottom:15px; font-size:15px;">
+        <span style="color:green;">You have been logged out</span>
     </div>
     <form th:action="@{/login}" method="post">
-        <div style="margin-bottom:15px;">
-            <label>Email</label>
 
-            <br>
-
+        <div style="margin-bottom:18px;">
+            <label style="font-size:15px; font-weight:600;">Email</label>
             <input type="text"
-                    name="username"
-                    placeholder="Enter email"
-                    style="
+                   name="username"
+                   placeholder="Enter email"
+                   style="
                         width:100%;
-                        padding:10px;
-                        margin-top:5px;
+                        padding:12px;
+                        margin-top:6px;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        font-size:15px;
                         box-sizing:border-box;
-            ">
+                   ">
         </div>
 
-        <div style="margin-bottom:20px;">
-            <label>Password</label>
-
-            <br>
-
+        <div style="margin-bottom:25px;">
+            <label style="font-size:15px; font-weight:600;">Password</label>
             <input type="password"
-                name="password"
-                placeholder="Enter password"
-                style="
-                    width:100%;
-                    padding:10px;
-                    margin-top:5px;
-                    box-sizing:border-box;
-            ">
+                   name="password"
+                   placeholder="Enter password"
+                   style="
+                        width:100%;
+                        padding:12px;
+                        margin-top:6px;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        font-size:15px;
+                        box-sizing:border-box;
+                   ">
         </div>
         <button type="submit"
                 style="
-                    width:100%;
-                    padding:12px;
-                    background:#2562eb;
-                    color:white;
-                    border:none;
-                    border-radius:8px;
-                    font-weight:bold;
-                    cursor:pointer;
-                ">
-
+            width:100%;
+            padding:14px;
+            background:#2562eb;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-weight:700;
+            font-size:16px;
+            cursor:pointer;
+            margin-top:10px;
+        ">
             Sign in
         </button>
     </form>

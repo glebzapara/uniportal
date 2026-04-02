@@ -20,29 +20,37 @@
 
             <td align="right">
                 <span style="display:inline-block;">
-                    <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
+                    <a th:href="@{/}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
 
-                    <a th:href="@{/schedule}" style="color:white; text-decoration:none; margin:0 10px;">Schedule</a>
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
 
-                    <a th:href="@{/grades}" style="color:white; text-decoration:none; margin:0 10px;">Grades</a>
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                        th:href="@{/group}" style="color:white; text-decoration:none; margin:0 10px;">Group</a>
+                       th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                        th:href="@{/teachers}" style="color:white; text-decoration:none; margin:0 10px;">Teachers</a>
+                       th:href="@{/teachers}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
 
                     <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
-                        th:href="@{/students}" style="color:white; text-decoration:none; margin:0 10px;">Students</a>
+                       th:href="@{/students}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
 
                     <span style="color:#888;">|</span>
 
                     <a th:if="${currentStudent != null}"
-                        th:href="@{/students/{id}/profile(id=${currentStudent.id})}" style="color:#2562eb;
+                       th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
 
                     <a th:if="${currentTeacher != null}"
-                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
+                       th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
                 </span>
             </td>
@@ -54,7 +62,14 @@
     <table width="100%" style="border-spacing:0 15px;">
         <tr th:each="day : ${days}">
             <td style="border:1px solid #ccc; background:white; border-radius:10px; overflow:hidden;">
-                <div style="background:#3766a0; color:white; padding:10px; font-weight:bold;">
+                <div style="
+                    background:#3766a0;
+                    color:white;
+                    padding:10px;
+                    font-weight:700;
+                    font-size:18px;
+                    position:relative;
+                ">
                     <span th:text="${#strings.capitalize(day.name().toLowerCase())}"></span>
                 </div>
 

@@ -21,29 +21,37 @@
 
             <td align="right">
                 <span style="display:inline-block;">
-                    <a th:href="@{/}" style="color:white; text-decoration:none; margin:0 10px;">Home</a>
+                    <a th:href="@{/}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
 
-                    <a th:href="@{/schedule}" style="color:white; text-decoration:none; margin:0 10px;">Schedule</a>
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
 
-                    <a th:href="@{/grades}" style="color:white; text-decoration:none; margin:0 10px;">Grades</a>
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                       th:href="@{/group}" style="color:white; text-decoration:none; margin:0 10px;">Group</a>
+                        th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                       th:href="@{/teachers}" style="color:white; text-decoration:none; margin:0 10px;">Teachers</a>
+                        th:href="@{/teachers}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
 
                     <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
-                       th:href="@{/students}" style="color:white; text-decoration:none; margin:0 10px;">Students</a>
+                        th:href="@{/students}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
 
                     <span style="color:#888;">|</span>
 
                     <a th:if="${currentStudent != null}"
-                       th:href="@{/students/{id}/profile(id=${currentStudent.id})}" style="color:#2562eb;
+                        th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                        style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
 
                     <a th:if="${currentTeacher != null}"
-                       th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}" style="color:#2562eb;
+                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                        style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
                 </span>
             </td>
@@ -51,7 +59,6 @@
     </table>
 </nav>
 
-<!-- IMAGES -->
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td width="25%">
@@ -69,53 +76,84 @@
     </tr>
 </table>
 
-<!-- 🔥 FULL WIDTH BLUE BAR -->
-<div style="
-    width:100%;
-    background:#3766a0;
-    color:white;
-    padding:12px 0;
-    font-weight:700;
-    text-align:center;
-">
-    Teacher Groups
-</div>
+<table width="100%" cellpadding="10" cellspacing="0">
+    <tr>
+        <td colspan="3" align="center"
+            style="background:#3766a0; color:white;
+            padding:12px 0; font-weight:700; font-size:19px;">
+            Groups
+        </td>
+    </tr>
 
-<!-- CONTENT -->
-<div style="
-    max-width:1400px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    gap:20px;
-">
+    <tr th:each="g, stat : ${groups}" th:if="${stat.index % 3 == 0}">
+        <td width="33%" align="center" style="border:2px solid #4a67a1;">
+            <div style="padding:10px;">
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="150">
 
-    <div th:each="g : ${groups}"
-         style="border:1px solid #ccc; background:white; border-radius:10px;
-                padding:18px 20px;
-                display:flex; justify-content:space-between; align-items:center;">
+                <br><br>
 
-        <div style="font-size:18px; font-weight:600;"
-             th:text="${g.speciality}">
-        </div>
+                <div style="font-weight:700; font-size:18px;">
+                    <span th:text="${groups[stat.index].name}"></span>
+                </div>
 
-        <a th:href="@{/subjects/{id}(id=${g.id})}"
-           style="background:#3766a0; color:white; padding:8px 18px;
-                  text-decoration:none; border-radius:6px; font-weight:600;">
-            Open
-        </a>
+                <br>
 
-    </div>
+                <a th:href="@{/subjects/{id}(id=${groups[stat.index].id})}"
+                    style="display:block; background:#3766a0;
+                    color:white; padding:10px; text-decoration:none;
+                    border-radius:4px; font-weight:700; font-size:18px;">
+                    Open
+                </a>
+            </div>
+        </td>
 
-        <!-- EMPTY -->
-        <div th:if="${#lists.isEmpty(groups)}"
-             style="text-align:center; color:#777; margin-top:20px;">
-            No groups found
-        </div>
+        <td width="33%" align="center"
+            th:if="${stat.index + 1 < groups.size()}"
+            style="border:2px solid #4a67a1;">
+            <div style="padding:10px;">
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="150">
 
-    </div>
+                <br><br>
 
-</div>
+                <div style="font-weight:700; font-size:18px;">
+                    <span th:text="${groups[stat.index + 1].name}"></span>
+                </div>
+
+                <br>
+
+                <a th:href="@{/subjects/{id}(id=${groups[stat.index + 1].id})}"
+                    style="display:block; background:#3766a0;
+                    color:white; padding:10px; text-decoration:none;
+                    border-radius:4px; font-weight:700; font-size:18px;">
+                    Open
+                </a>
+            </div>
+        </td>
+
+        <td width="33%" align="center"
+            th:if="${stat.index + 2 < groups.size()}"
+            style="border:2px solid #4a67a1;">
+            <div style="padding:10px;">
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg" width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+                    <span th:text="${groups[stat.index + 2].name}"></span>
+                </div>
+
+                <br>
+
+                <a th:href="@{/subjects/{id}(id=${groups[stat.index + 2].id})}"
+                    style="display:block; background:#3766a0;
+                    color:white; padding:10px; text-decoration:none;
+                    border-radius:4px; font-weight:700; font-size:18px;">
+                    Open
+                </a>
+            </div>
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>

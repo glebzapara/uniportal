@@ -25,8 +25,8 @@
             <![CDATA[
             INSERT INTO departments(name, number)
             VALUES
-                ('Information and measurement technologies', 303),
-                ('Automation, computer-integrated technologies and robotics', 301);
+                ('Department of aircraft control systems', 303),
+                ('Department of intellectual measurement systems and quality engineering', 301);
             ]]>
         </sql>
     </changeSet>
@@ -34,10 +34,11 @@
     <changeSet id="insert-groups-1" author="Gleb Zapara">
         <sql dbms="postgresql">
             <![CDATA[
-            INSERT INTO groups(course, number, speciality, department_id)
+            INSERT INTO groups(course, name, number, speciality, department_id)
             VALUES
-                (1, 318, 'G6', 1),
-                (1, 310, 'G7', 2);
+                (1, 'Information and measurement technologies', 318, 'G6', 1),
+                (1, 'Automation, computer-integrated technologies and robotics', 310, 'G5', 2),
+                (1, 'Engineering of mobile applications', 312, 'G7', 2);
             ]]>
         </sql>
     </changeSet>
@@ -132,7 +133,7 @@
     <changeSet id="insert-grades-1" author="Gleb Zapara">
         <sql dbms="postgresql">
             <![CDATA[
-            INSERT INTO grades(student_id, subject_id, teacher_id, grade)
+            INSERT INTO grades(student_id, subject_id, teacher_id, grade_value)
             VALUES
                 --STUDENT 1
                 (1, 1, 1, 0),
@@ -208,7 +209,31 @@
                 ('FRIDAY', '08:00:00', '09:35:00', 2, 11, 3),
                 ('FRIDAY', '09:50:00', '11:25:00', 2, 12, 4),
                 ('FRIDAY', '11:55:00', '13:30:00', 2, 13, 5),
-                ('FRIDAY', '13:45:00', '15:20:00', 2, 14, 6);
+                ('FRIDAY', '13:45:00', '15:20:00', 2, 14, 6),
+
+                -- GROUP 3 (G7)
+                ('MONDAY', '08:00:00', '09:35:00', 3, 9, 1),
+                ('MONDAY', '09:50:00', '11:25:00', 3, 10, 2),
+                ('MONDAY', '11:55:00', '13:30:00', 3, 11, 3),
+                ('MONDAY', '13:45:00', '15:20:00', 3, 12, 4),
+
+                ('TUESDAY', '08:00:00', '09:35:00', 3, 13, 5),
+                ('TUESDAY', '09:50:00', '11:25:00', 3, 14, 6),
+                ('TUESDAY', '11:55:00', '13:30:00', 3, 15, 7),
+                ('TUESDAY', '13:45:00', '15:20:00', 3, 16, 8),
+
+                ('WEDNESDAY', '08:00:00', '09:35:00', 3, 9, 1),
+                ('WEDNESDAY', '09:50:00', '11:25:00', 3, 10, 2),
+                ('WEDNESDAY', '13:45:00', '15:20:00', 3, 11, 3),
+
+                ('THURSDAY', '08:00:00', '09:35:00', 3, 12, 4),
+                ('THURSDAY', '09:50:00', '11:25:00', 3, 13, 5),
+                ('THURSDAY', '13:45:00', '15:20:00', 3, 14, 6),
+
+                ('FRIDAY', '08:00:00', '09:35:00', 3, 15, 7),
+                ('FRIDAY', '09:50:00', '11:25:00', 3, 16, 8),
+                ('FRIDAY', '11:55:00', '13:30:00', 3, 9, 1),
+                ('FRIDAY', '13:45:00', '15:20:00', 3, 10, 2);
             ]]>
     </sql>
     </changeSet>

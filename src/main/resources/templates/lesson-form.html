@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New Lesson</title>
+</head>
+
+<body style="
+    font-family:sans-serif;
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+">
+
+<div style="transform: translateY(-68px); min-width:250px;">
+
+  <h2>Create Lesson</h2>
+
+  <form th:action="@{/lessons}" th:object="${lessonForm}" method="post">
+    <input type="hidden" th:field="*{id}">
+
+    <label>Subject:</label><br>
+    <select name="subjectId" style="width:100%;">
+      <option value="">-- Select subject --</option>
+      <option th:each="s : ${subjects}"
+              th:value="${s.id}"
+              th:text="${s.name}">
+      </option>
+    </select><br><br>
+
+    <label>Teacher:</label><br>
+    <select name="teacherId" style="width:100%;">
+      <option value="">-- Select teacher --</option>
+      <option th:each="t : ${teachers}"
+              th:value="${t.id}"
+              th:text="${t.name + ' ' + t.surname}">
+      </option>
+    </select><br><br>
+
+    <label>Group:</label><br>
+    <select name="groupId" style="width:100%;">
+      <option value="">-- Select group --</option>
+      <option th:each="g : ${groups}"
+              th:value="${g.id}"
+              th:text="${g.number}">
+      </option>
+    </select><br><br>
+
+    <label>Start Time:</label><br>
+    <input type="time" th:field="*{startTime}" style="width:100%;"><br><br>
+
+    <label>End Time:</label><br>
+    <input type="time" th:field="*{endTime}" style="width:100%;"><br><br>
+
+    <label>Day of Week:</label><br>
+    <select th:field="*{dayOfWeek}" style="width:100%;">
+      <option value="">-- Select day --</option>
+      <option th:each="d : ${days}"
+              th:value="${d}"
+              th:text="${d}">
+      </option>
+    </select><br><br>
+
+    <button type="submit">Save</button>
+  </form>
+
+</div>
+
+</body>
+</html>

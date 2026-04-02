@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Teacher</title>
+</head>
+
+<body style="
+    font-family:sans-serif;
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+">
+
+<div style="transform: translateY(-68px); min-width:250px;">
+
+    <h2>Create Teacher</h2>
+
+    <form th:action="@{/teachers}" th:object="${teacherForm}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <label>Name:</label><br>
+        <input type="text" th:field="*{name}" style="width:100%;"><br><br>
+
+        <label>Surname:</label><br>
+        <input type="text" th:field="*{surname}" style="width:100%;"><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" th:field="*{email}" style="width:100%;"><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" th:field="*{password}" style="width:100%;"><br><br>
+
+        <label>Department:</label><br>
+        <select name="departmentId" style="width:100%;">
+            <option value="">-- Select department --</option>
+            <option th:each="d : ${departments}"
+                    th:value="${d.id}"
+                    th:text="${d.name}">
+            </option>
+        </select><br><br>
+
+        <label>Phone Number:</label><br>
+        <input type="tel" th:field="*{phoneNumber}" style="width:100%;"><br><br>
+
+        <label>Image:</label><br>
+        <input type="file" name="file" style="width:100%;"><br><br>
+
+        <button type="submit">Save</button>
+    </form>
+
+</div>
+
+</body>
+</html>

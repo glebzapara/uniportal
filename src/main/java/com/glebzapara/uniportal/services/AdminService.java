@@ -1,6 +1,7 @@
 package com.glebzapara.uniportal.services;
 
 import com.glebzapara.uniportal.models.Admin;
+import com.glebzapara.uniportal.models.Department;
 import com.glebzapara.uniportal.repositories.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,15 @@ public class AdminService {
     public AdminService(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public Admin findById(Integer id) {
+        return adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+    }
+
+    public void deleteById(Integer id) {
+        adminRepository.deleteById(id);
     }
 
     public void registerAdmin(Admin admin) throws Exception {
