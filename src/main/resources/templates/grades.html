@@ -70,8 +70,8 @@
         <td style="font-weight:600;" th:text="${g.subject.name}"></td>
         <td style="font-weight:600;" th:text="${g.teacher.name + ' ' + g.teacher.surname}"></td>
         <td style="font-weight:600;" align="center">
-            <span th:if="${g.grade != null}" th:text="${g.grade}"></span>
-            <span th:if="${g.grade == null}">-</span>
+            <span th:if="${g.gradeValue != null}" th:text="${g.gradeValue}"></span>
+            <span th:if="${g.gradeValue == null}">-</span>
         </td>
     </tr>
 </table>

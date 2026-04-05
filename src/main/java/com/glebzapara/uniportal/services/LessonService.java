@@ -36,6 +36,26 @@ public class LessonService {
                 .orElseThrow(() -> new RuntimeException("Lesson not found"));
     }
 
+    public void createLesson(Lesson lesson,
+                             Integer subjectId,
+                             Integer teacherId,
+                             Integer groupId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+
+        lesson.setSubject(subject);
+        lesson.setTeacher(teacher);
+        lesson.setGroup(group);
+
+        lessonRepository.save(lesson);
+    }
+
     public void deleteById(Integer id) {
         lessonRepository.deleteById(id);
     }
@@ -56,12 +76,27 @@ public class LessonService {
         return schedule;
     }
 
-    public List<Lesson> findByTeacherAndGroup(Teacher teacher, Integer groupId) {
-        return lessonRepository.findByTeacherAndGroupId(teacher, groupId);
+//    public List<Lesson> findByTeacherAndGroup(Teacher teacher, Integer groupId) {
+//        return lessonRepository.findByTeacherAndGroupId(teacher, groupId);
+//    }
+
+    public List<Subject> findSubjectsByGroup(Group group) {
+
+        if (group == null) return new ArrayList<>();
+
+        List<Lesson> lessons = lessonRepository.findByGroupId(group.getId());
+
+        if (lessons == null) return new ArrayList<>();
+
+        return lessons.stream()
+                .map(Lesson::getSubject)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
     }
 
-    public List<Group> findGroupsByTeacher(Teacher teacher) {
-        return lessonRepository.findGroupsByTeacher(teacher);
+    public List<Group> findGroupsByTeacher(Integer teacherId) {
+        return lessonRepository.findGroupsByTeacherId(teacherId);
     }
 
     public Lesson findLessonByTime(List<Lesson> lessons, String time) {
@@ -114,23 +149,19 @@ public class LessonService {
         return lessons.get(0).getTeacher();
     }
 
-    public void createLesson(Lesson lesson,
-                             Integer subjectId,
-                             Integer teacherId,
-                             Integer groupId) {
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
+    public List<Subject> findSubjectsByTeacherAndGroup(Integer teacherId, Integer groupId) {
 
-        Teacher teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        List<Lesson> lessons =
+                lessonRepository.findByTeacherIdAndGroupId(teacherId, groupId);
 
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("Group not found"));
+        return lessons.stream()
+                .map(Lesson::getSubject)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+    }
 
-        lesson.setSubject(subject);
-        lesson.setTeacher(teacher);
-        lesson.setGroup(group);
-
-        lessonRepository.save(lesson);
+    public boolean teacherOwnsSubject(Integer teacherId, Integer subjectId) {
+        return lessonRepository.existsByTeacherIdAndSubjectId(teacherId, subjectId);
     }
 }

@@ -92,7 +92,7 @@ public class SecurityConfig {
                                 "/grades/new",
                                 "/grades/edit/**",
                                 "/grades/delete/**"
-                        ).hasAnyRole("SUPER_ADMIN", "ADMIN")
+    /*Шлак Teacher*/    ).hasAnyRole("SUPER_ADMIN", "ADMIN", "TEACHER")
                         .requestMatchers("/students/**")
                         .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
                         .requestMatchers("/teachers/**")

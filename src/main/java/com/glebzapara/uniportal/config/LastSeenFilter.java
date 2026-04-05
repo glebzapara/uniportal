@@ -28,12 +28,20 @@ public class LastSeenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null && auth.getPrincipal() instanceof StudentDetails studentDetails) {
             Student student = studentDetails.getStudent();
-            student.setLastSeen(ZonedDateTime.now(ZoneId.of("Europe/Kyiv")));
-            studentRepository.save(student);
+
+            ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Kyiv"));
+
+            if (student.getLastSeen() == null ||
+                    student.getLastSeen().isBefore(now.minusMinutes(5))) {
+
+                student.setLastSeen(now);
+                studentRepository.save(student);
+            }
         }
 
         filterChain.doFilter(request, response);

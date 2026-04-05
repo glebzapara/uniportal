@@ -27,15 +27,15 @@ public class GroupService {
                 .orElseThrow(() -> new RuntimeException("Group not found"));
     }
 
-    public void deleteById(Integer id) {
-        groupRepository.deleteById(id);
-    }
-
     public void createGroup(Group group, Integer departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new RuntimeException("Department not found"));
 
         group.setDepartment(department);
         groupRepository.save(group);
+    }
+
+    public void deleteById(Integer id) {
+        groupRepository.deleteById(id);
     }
 }

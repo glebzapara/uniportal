@@ -46,9 +46,9 @@ public class SubjectService {
                 .orElseThrow(() -> new Exception("Name cannot be null"));
     }
 
-    public List<Subject> findByDepartmentId(Integer departmentId) {
-        return subjectRepository.findByDepartmentId(departmentId);
-    }
+//    public List<Subject> findByDepartmentId(Integer departmentId) {
+//        return subjectRepository.findByDepartmentId(departmentId);
+//    }
 
     public String extract(String text, String key) {
         if (text == null) {

@@ -37,6 +37,6 @@ public class Grade {
     @NotNull
     @Min(0)
     @Max(100)
-    @Column(name = "grade", nullable = false)
+    @Column(name = "gradeValue", nullable = false)
     private Short gradeValue;
 }

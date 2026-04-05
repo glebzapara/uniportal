@@ -1,5 +1,6 @@
 package com.glebzapara.uniportal.services;
 
+import com.glebzapara.uniportal.models.Department;
 import com.glebzapara.uniportal.models.Grade;
 import com.glebzapara.uniportal.repositories.GradeRepository;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,9 @@ public class GradeService {
 
     public List<Grade> findByStudentId(Integer studentId) {
         return gradeRepository.findByStudentId(studentId);
+    }
+
+    public void createGrade(Grade grade) {
+        gradeRepository.save(grade);
     }
 }

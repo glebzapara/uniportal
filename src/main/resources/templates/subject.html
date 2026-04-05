@@ -104,7 +104,6 @@
             </div>
         </div>
 
-        <!-- LECTURES -->
         <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
             <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
                 Lectures
@@ -114,7 +113,6 @@
             </div>
         </div>
 
-        <!-- LABS -->
         <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
             <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
                 Lab works
@@ -124,7 +122,6 @@
             </div>
         </div>
 
-        <!-- RESOURCES -->
         <div style="border:1px solid #ccc; background:white; border-radius:10px; margin-bottom:20px;">
             <div style="background:#3766a0; color:white; padding:14px 18px; font-weight:bold; font-size:18px;">
                 Resources
@@ -134,9 +131,8 @@
             </div>
         </div>
 
-        <!-- BUTTON -->
-        <div th:if="${currentTeacher != null}" style="text-align:right;">
-            <a th:href="@{/subjects/{id}/edit(id=${subject.id})}"
+        <div th:if="${isOwner}" style="text-align:right;">
+            <a th:href="@{/subjects/edit/{id}(id=${subject.id})}"
                style="
                    background:#2562eb;
                    color:white;
