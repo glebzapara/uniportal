@@ -1,4 +1,4 @@
-# Uniportal
+# UniPortal
 
 University portal backend built with Spring Boot.
 

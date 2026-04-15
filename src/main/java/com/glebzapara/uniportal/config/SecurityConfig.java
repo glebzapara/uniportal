@@ -68,7 +68,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .addFilterAfter(lastSeenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login",
+                                        "/robots.txt",
+                                        "/favicon.svg",
+                                        "/images/**").permitAll()
                         .requestMatchers("/admins/**").hasRole("SUPER_ADMIN")
                         .requestMatchers(
                                 "/students/new",
