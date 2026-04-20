@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login",
                                         "/robots.txt",
-                                        "/favicon.svg",
+                                        "/favicon.ico",
                                         "/images/**").permitAll()
                         .requestMatchers("/admins/**").hasRole("SUPER_ADMIN")
                         .requestMatchers(
