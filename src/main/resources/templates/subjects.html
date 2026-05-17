@@ -1,16 +1,69 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Subjects</title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 
+<body style="margin:0; padding:0;">
+
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <span style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </span>
+            </td>
+
+            <td align="right">
+                <span style="display:inline-block;">
+                    <a th:href="@{/}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
+
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
+
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/teachers}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
+
+                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                       th:href="@{/students}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
+
+                    <span style="color:#888;">|</span>
+
+                    <a th:if="${currentStudent != null}"
+                       th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+
+                    <a th:if="${currentTeacher != null}"
+                       th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
+
 <body>
 
 <h2>Subjects</h2>
 
-<div th:each="s : ${subjects}">
+<div th:if="${isStudent}" th:each="s : ${subjects}">
     <p>
         <span th:text="${s.name}"></span>
 
@@ -18,6 +71,194 @@
             Open
         </a>
     </p>
+</div>
+
+<div th:if="${isAdmin}" style="padding:20px; background:#f2f5f9;">
+
+    <div style="
+        border:1px solid #ccc;
+        background:white;
+        border-radius:10px;
+        margin-bottom:20px;
+        overflow:hidden;
+    ">
+
+        <form th:action="@{/admin/subjects/search}"
+              method="post"
+              style="
+                padding:20px;
+                display:flex;
+                gap:10px;
+        ">
+
+            <input type="text"
+                   name="searchTerm"
+                   placeholder="Find a subject"
+
+                   style="
+                    flex:1;
+                    padding:11px 14px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    font-size:15px;
+                   ">
+
+            <button type="submit"
+
+                    style="
+                    padding:11px 28px;
+                    background:#2562eb;
+                    color:white;
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:15px;
+                    ">
+
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div style="
+    border:1px solid #ccc;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    margin:20px;
+">
+
+    <div style="
+        background:#3766a0;
+        color:white;
+        padding:14px 20px;
+        font-weight:700;
+        display:grid;
+        grid-template-columns: 2fr 2fr 1.5fr;
+        align-items:center;
+        font-size:16px;
+    ">
+
+        <div>
+
+            Subject
+
+        </div>
+
+        <div th:if="${isAdmin}">
+
+            Department
+
+        </div>
+
+        <div style="text-align:right;">
+
+            Actions
+
+        </div>
+
+    </div>
+
+    <div th:each="s : ${subjects}"
+
+         style="
+        padding:16px 20px;
+        border-bottom:1px solid #eee;
+        display:grid;
+        grid-template-columns: 2fr 2fr 1.5fr;
+        align-items:center;
+        font-weight:600;
+        font-size:15px;
+    ">
+
+        <div>
+
+            <a th:href="@{/subjects/{id}(id=${s.id})}"
+               th:text="${s.name}"
+
+               style="
+                text-decoration:none;
+                color:#2562eb;
+                font-weight:700;
+               ">
+            </a>
+
+        </div>
+
+        <div th:if="${isAdmin}"
+             style="font-weight:700;">
+
+            <span th:text="${s.department.name}"></span>
+
+        </div>
+
+        <div style="
+            text-align:right;
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+        ">
+
+            <a th:if="${isAdmin}"
+               th:href="@{/subjects/edit/{id}(id=${s.id})}"
+
+               style="
+                background:#2562eb;
+                color:white;
+                text-decoration:none;
+                padding:8px 16px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:700;
+               ">
+
+                Edit
+
+            </a>
+
+            <a th:if="${isAdmin}"
+               th:href="@{/subjects/delete/{id}(id=${s.id})}"
+
+               style="
+                background:#d62828;
+                color:white;
+                text-decoration:none;
+                padding:8px 16px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:700;
+               ">
+
+                Delete
+
+            </a>
+
+            <a th:if="${!isAdmin}"
+               th:href="@{/subjects/{id}(id=${s.id})}"
+
+               style="
+                background:#2562eb;
+                color:white;
+                text-decoration:none;
+                padding:8px 16px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:700;
+               ">
+
+                Open
+
+            </a>
+
+        </div>
+
+    </div>
+
 </div>
 
 </body>

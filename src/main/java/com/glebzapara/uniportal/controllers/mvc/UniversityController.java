@@ -2,6 +2,7 @@ package com.glebzapara.uniportal.controllers.mvc;
 
 import com.glebzapara.uniportal.models.*;
 import com.glebzapara.uniportal.models.enums.DayOfWeek;
+import com.glebzapara.uniportal.security.AdminDetails;
 import com.glebzapara.uniportal.security.StudentDetails;
 import com.glebzapara.uniportal.security.TeacherDetails;
 import com.glebzapara.uniportal.services.*;
@@ -63,6 +64,8 @@ public class UniversityController {
             model.addAttribute("groups", lessonService.findGroupsByTeacher(teacher.getId()));
 
             return "teacher-dashboard";
+        } else if (principal instanceof AdminDetails) {
+            return "admin-dashboard";
         }
 
         return "index";
@@ -469,6 +472,7 @@ public class UniversityController {
                 lessonService.findSubjectsByTeacherAndGroup(teacherId, groupId);
 
         model.addAttribute("subjects", subjects);
+        model.addAttribute("isStudent", true);
 
         return "subjects";
     }
@@ -522,6 +526,7 @@ public class UniversityController {
             Integer studentId = studentDetails.getStudent().getId();
 
             model.addAttribute("grades", gradeService.findByStudentId(studentId));
+            model.addAttribute("isStudent", true);
 
             return "grades";
         }
@@ -596,46 +601,202 @@ public class UniversityController {
         return "schedule";
     }
 
-    @PostMapping("/search")
-    public String searchByRole(@RequestParam("searchTerm") String searchTerm,
-                               Authentication authentication, Model model) {
-        Object principal = authentication.getPrincipal();
+    @GetMapping("/admin/admins")
+    public String getAllAdmins(Model model) {
+        model.addAttribute("admins", adminService.findAllAdmins());
 
-        if (principal instanceof StudentDetails) {
-            List<Teacher> filtered = new ArrayList<>();
+        return "admins";
+    }
 
-            for (Teacher teacher : teacherService.findAllTeachers()) {
-                String fullName = (teacher.getName() + " " + teacher.getSurname()).toLowerCase();
+    @GetMapping("/admin/groups")
+    public String getAdminAllGroups(Model model) {
+        model.addAttribute("groups", groupService.findAllGroups());
 
-                if (fullName.contains(searchTerm.toLowerCase()) ||
-                        teacher.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
-                    filtered.add(teacher);
-                }
+        return "groups";
+    }
+
+    @GetMapping("/admin/grades")
+    public String getAdminAllGrades(Model model) {
+        model.addAttribute("grades", gradeService.findAllGrades());
+        model.addAttribute("isAdmin", true);
+
+        return "grades";
+    }
+
+    @GetMapping("/admin/subjects")
+    public String getAdminAllSubjects(Model model) {
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("isAdmin", true);
+
+        return "subjects";
+    }
+
+    @GetMapping("/admin/lessons")
+    public String getAdminAllLessons(Model model) {
+        model.addAttribute("lessons", lessonService.findAllLessons());
+
+        return "lessons";
+    }
+
+    @GetMapping("/admin/departments")
+    public String getAdminAllDepartments(Model model) {
+        model.addAttribute("departments", departmentService.findAllDepartments());
+
+        return "departments";
+    }
+
+    @PostMapping("/admin/students/search")
+    public String searchStudents(@RequestParam("searchTerm") String searchTerm,
+                                 Model model) {
+        List<Student> filtered = new ArrayList<>();
+
+        for (Student student : studentService.findAllStudents()) {
+            String fullName = (student.getName() + " " + student.getSurname()).toLowerCase();
+
+            if (fullName.contains(searchTerm.toLowerCase())
+                    || student.getEmail().toLowerCase().contains(searchTerm.toLowerCase())
+                    || student.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())
+                    || student.getGroup().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+
+                filtered.add(student);
             }
-
-            model.addAttribute("teachers", filtered);
-
-            return "teachers";
         }
 
-        if (principal instanceof TeacherDetails) {
-            List<Student> filtered = new ArrayList<>();
+        model.addAttribute("students", filtered);
 
-            for (Student student : studentService.findAllStudents()) {
-                String fullName = (student.getName() + " " + student.getSurname()).toLowerCase();
+        return "students";
+    }
 
-                if (fullName.contains(searchTerm.toLowerCase()) ||
-                        student.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())) {
+    @PostMapping("/admin/teachers/search")
+    public String searchTeachers(@RequestParam("searchTerm") String searchTerm,
+                                 Model model) {
+        List<Teacher> filtered = new ArrayList<>();
 
-                    filtered.add(student);
-                }
+        for (Teacher teacher : teacherService.findAllTeachers()) {
+            String fullName = (teacher.getName() + " " + teacher.getSurname()).toLowerCase();
+
+            if (fullName.contains(searchTerm.toLowerCase())
+                    || teacher.getEmail().toLowerCase().contains(searchTerm.toLowerCase())
+                    || teacher.getPhoneNumber().toLowerCase().contains(searchTerm.toLowerCase())
+                    || teacher.getDepartment().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+
+                filtered.add(teacher);
             }
-
-            model.addAttribute("students", filtered);
-
-            return "students";
         }
 
-        return "redirect:/";
+        model.addAttribute("teachers", filtered);
+
+        return "teachers";
+    }
+
+    @PostMapping("/admin/groups/search")
+    public String searchGroups(@RequestParam("searchTerm") String searchTerm,
+                               Model model) {
+        List<Group> filtered = new ArrayList<>();
+
+        for (Group group : groupService.findAllGroups()) {
+            if (group.getName().toLowerCase().contains(searchTerm.toLowerCase())
+                    || group.getDepartment().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(group);
+            }
+        }
+
+        model.addAttribute("groups", filtered);
+
+        return "groups";
+    }
+
+    @PostMapping("/admin/subjects/search")
+    public String searchSubjects(@RequestParam("searchTerm") String searchTerm,
+                                 Model model) {
+        List<Subject> filtered = new ArrayList<>();
+
+        for (Subject subject : subjectService.findAllSubjects()) {
+            if (subject.getName().toLowerCase().contains(searchTerm.toLowerCase())
+                    || subject.getDepartment().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(subject);
+            }
+        }
+
+        model.addAttribute("subjects", filtered);
+
+        return "subjects";
+    }
+
+    @PostMapping("/admin/lessons/search")
+    public String searchLessons(@RequestParam("searchTerm") String searchTerm,
+                                Model model) {
+        List<Lesson> filtered = new ArrayList<>();
+
+        for (Lesson lesson : lessonService.findAllLessons()) {
+            if (lesson.getSubject().getName().toLowerCase().contains(searchTerm.toLowerCase())
+                    || lesson.getTeacher().getSurname().toLowerCase().contains(searchTerm.toLowerCase())
+                    || lesson.getGroup().getName().toLowerCase().contains(searchTerm.toLowerCase())
+                    || lesson.getDayOfWeek().name().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(lesson);
+            }
+        }
+
+        model.addAttribute("lessons", filtered);
+
+        return "lessons";
+    }
+
+    @PostMapping("/admin/departments/search")
+    public String searchDepartments(@RequestParam("searchTerm") String searchTerm,
+                                    Model model) {
+        List<Department> filtered = new ArrayList<>();
+
+        for (Department department : departmentService.findAllDepartments()) {
+            if (department.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(department);
+            }
+        }
+
+        model.addAttribute("departments", filtered);
+
+        return "departments";
+    }
+
+    @PostMapping("/admin/admins/search")
+    public String searchAdmins(@RequestParam("searchTerm") String searchTerm,
+                               Model model) {
+        List<Admin> filtered = new ArrayList<>();
+
+        for (Admin admin : adminService.findAllAdmins()) {
+            String fullName = (admin.getName() + " " + admin.getSurname()).toLowerCase();
+
+            if (fullName.contains(searchTerm.toLowerCase())
+                    || admin.getEmail().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(admin);
+            }
+        }
+
+        model.addAttribute("admins", filtered);
+
+        return "admins";
+    }
+
+    @PostMapping("/admin/grades/search")
+    public String searchGrades(@RequestParam("searchTerm") String searchTerm,
+                               Model model) {
+        List<Grade> filtered = new ArrayList<>();
+
+        for (Grade grade : gradeService.findAllGrades()) {
+            if (grade.getStudent().getSurname().toLowerCase().contains(searchTerm.toLowerCase())
+                    || grade.getSubject().getName().toLowerCase().contains(searchTerm.toLowerCase())
+                    || String.valueOf(grade.getGradeValue()).contains(searchTerm)) {
+                filtered.add(grade);
+            }
+        }
+
+        model.addAttribute("grades", filtered);
+
+        return "grades";
+    }
+
+    @GetMapping("/403")
+    public String accessDenied() {
+        return "403";
     }
 }

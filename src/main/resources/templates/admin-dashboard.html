@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>UniPortal</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
+</head>
+
+<body style="margin:0; padding:0;">
+
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <span style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </span>
+            </td>
+
+            <td align="right">
+                <span style="display:inline-block;">
+                    <a th:href="@{/}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
+
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
+
+                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/teachers}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
+
+                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                        th:href="@{/students}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
+
+                    <span style="color:#888;">|</span>
+
+                    <a th:if="${currentStudent != null}"
+                        th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                        style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+
+                    <a th:if="${currentTeacher != null}"
+                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                        style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td width="25%">
+            <img src="/images/pang-yuhao-_kd5cxwZOK4-unsplash.jpg"
+                style="display:block;" width="100%" height="330">
+        </td>
+        <td width="25%">
+            <img src="/images/vadim-sherbakov-d6ebY-faOO0-unsplash.jpg"
+                style="display:block;" width="100%" height="330">
+        </td>
+        <td width="25%">
+            <img src="/images/darya-tryfanava-d55fhArDES0-unsplash.jpg"
+                style="display:block;" width="100%" height="330">
+        </td>
+        <td width="25%">
+            <img src="/images/leon-wu-LLfRMRT-9AY-unsplash.jpg"
+                style="display:block;" width="100%" height="330">
+        </td>
+    </tr>
+</table>
+
+<table width="100%" cellpadding="10" cellspacing="0">
+
+    <tr>
+        <td colspan="3" align="center"
+            style="background:#3766a0; color:white;
+            padding:12px 0; font-weight:700; font-size:19px;">
+
+            Administration
+
+        </td>
+    </tr>
+
+    <tr>
+
+        <!-- ADMINS -->
+
+        <td width="33%" align="center"
+            th:if="${currentAdmin != null and currentAdmin.role == 'ROLE_SUPER_ADMIN'}"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Admins
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/admins/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/admins}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/admins}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <!-- STUDENTS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Students
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/students/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/students}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/students}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <!-- TEACHERS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Teachers
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/teachers/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/teachers}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/teachers}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+    <tr>
+
+        <!-- GROUPS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Groups
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/groups/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/groups}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/groups}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <!-- SUBJECTS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Subjects
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/subjects/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/subjects}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/subjects}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <!-- LESSONS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Lessons
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/lessons/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/lessons}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/lessons}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+    <tr>
+
+        <!-- GRADES -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Grades
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/grades/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/grades}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/grades}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <!-- DEPARTMENTS -->
+
+        <td width="33%" align="center"
+            style="border:2px solid #4a67a1;">
+
+            <div style="padding:10px;">
+
+                <img src="/images/boxicons-ZXVtn6R5E9Q-unsplash.jpg"
+                     width="150">
+
+                <br><br>
+
+                <div style="font-weight:700; font-size:18px;">
+
+                    Departments
+
+                </div>
+
+                <br>
+
+                <a th:href="@{/departments/new}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    New
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/departments}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Edit
+
+                </a>
+
+                <br>
+
+                <a th:href="@{/admin/departments}"
+                   style="display:block; background:#3766a0;
+                   color:white; padding:10px;
+                   text-decoration:none; border-radius:4px;
+                   font-weight:700; font-size:18px;">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </td>
+
+        <td width="33%"></td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>

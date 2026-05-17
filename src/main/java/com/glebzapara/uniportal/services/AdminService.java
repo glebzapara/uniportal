@@ -2,6 +2,7 @@ package com.glebzapara.uniportal.services;
 
 import com.glebzapara.uniportal.models.Admin;
 import com.glebzapara.uniportal.models.Department;
+import com.glebzapara.uniportal.models.Student;
 import com.glebzapara.uniportal.repositories.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,10 @@ public class AdminService {
     public Admin findById(Integer id) {
         return adminRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));
+    }
+
+    public List<Admin> findAllAdmins() {
+        return adminRepository.findAll();
     }
 
     public void deleteById(Integer id) {

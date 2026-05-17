@@ -95,12 +95,15 @@ public class SecurityConfig {
                                 "/grades/new",
                                 "/grades/edit/**",
                                 "/grades/delete/**"
-    /*Шлак Teacher*/    ).hasAnyRole("SUPER_ADMIN", "ADMIN", "TEACHER")
+                        ).hasAnyRole("SUPER_ADMIN", "ADMIN")
                         .requestMatchers("/students/**")
                         .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
                         .requestMatchers("/teachers/**")
                         .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/403")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

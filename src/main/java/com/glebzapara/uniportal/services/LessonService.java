@@ -36,6 +36,10 @@ public class LessonService {
                 .orElseThrow(() -> new RuntimeException("Lesson not found"));
     }
 
+    public List<Lesson> findAllLessons() {
+        return lessonRepository.findAll();
+    }
+
     public void createLesson(Lesson lesson,
                              Integer subjectId,
                              Integer teacherId,

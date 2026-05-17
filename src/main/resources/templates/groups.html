@@ -2,24 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Teachers</title>
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
+  <meta charset="UTF-8">
+  <title>Groups</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 
 <body style="margin:0; padding:0;">
 
 <nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="left">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="left">
                 <span style="font-size:26px; font-weight:700;
                     font-family:'Inter', sans-serif; color:white;">
                     Uni<span style="color:#2562eb;">Portal</span>
                 </span>
-            </td>
+      </td>
 
-            <td align="right">
+      <td align="right">
                 <span style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Home</a>
@@ -54,101 +54,163 @@
                        style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
                 </span>
-            </td>
-        </tr>
-    </table>
+      </td>
+    </tr>
+  </table>
 </nav>
 
 <div style="padding:20px; background:#f2f5f9;">
 
-    <div style="
+  <div style="
         border:1px solid #ccc;
         background:white;
         border-radius:10px;
         margin-bottom:20px;
         overflow:hidden;
     ">
-        <form th:action="@{/admin/teachers/search}" method="post" style="
-            padding:20px;
-            display:flex;
-            gap:10px;
-        ">
-            <input type="text" name="searchTerm" placeholder="Find a teacher"
-                   style="flex:1; padding:11px 14px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
-            <button type="submit" style="
-                padding:11px 28px;
-                background:#2562eb;
-                color:white;
-                border:none;
-                border-radius:6px;
-                cursor:pointer;
-                font-size:15px;
-            ">
-                Search
-            </button>
-        </form>
-    </div>
 
-    <div style="
+    <form th:action="@{/admin/groups/search}"
+          method="post"
+          style="
+                padding:20px;
+                display:flex;
+                gap:10px;
+        ">
+
+      <input type="text"
+             name="searchTerm"
+             placeholder="Find a group"
+
+             style="
+                    flex:1;
+                    padding:11px 14px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    font-size:15px;
+                   ">
+
+      <button type="submit"
+
+              style="
+                    padding:11px 28px;
+                    background:#2562eb;
+                    color:white;
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:15px;
+                    ">
+
+        Search
+
+      </button>
+
+    </form>
+
+  </div>
+
+  <div style="
         border:1px solid #ccc;
         background:white;
         border-radius:10px;
         overflow:hidden;
     ">
 
-        <div style="
+    <div style="
             background:#3766a0;
             color:white;
             padding:14px 20px;
             font-weight:700;
             display:grid;
-            grid-template-columns: 2fr 2fr 2fr 2fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1fr 1.5fr;
             align-items:center;
             font-size:16px;
         ">
-            <div>Teacher</div>
-            <div>Email</div>
-            <div>Subject</div>
-            <div>Department</div>
-            <div style="text-align:right;">Phone</div>
-        </div>
 
-        <div th:each="t : ${teachers}" style="
+      <div>Group</div>
+
+      <div>Department</div>
+
+      <div style="text-align:center;">Number</div>
+
+      <div style="text-align:right;">Actions</div>
+
+    </div>
+
+    <div th:each="g : ${groups}"
+
+         style="
             padding:16px 20px;
             border-bottom:1px solid #eee;
             display:grid;
-            grid-template-columns: 2fr 2fr 2fr 2fr 1.5fr;
+            grid-template-columns: 2fr 2fr 1fr 1.5fr;
             align-items:center;
             font-weight:600;
             font-size:15px;
         ">
 
-            <div>
-                <a th:href="@{/teachers/{id}/profile(id=${t.id})}"
-                   th:text="${t.name + ' ' + t.surname}"
-                   style="text-decoration:none; color:#2562eb; font-weight:700;">
-                </a>
-            </div>
+      <div style="font-weight:700;">
 
-            <div style="font-weight:700;">
-                <span th:text="${t.email}"></span>
-            </div>
+        <span th:text="${g.name + ' (' + g.speciality + ')'}"></span>
 
-            <div style="font-weight:700;">
-                <span th:text="${teacherSubjects[t.id]}"></span>
-            </div>
+      </div>
 
-            <div style="font-weight:700;">
-                <span th:text="${t.department.name + ' [' + t.department.number + ']'}"></span>
-            </div>
+      <div style="font-weight:700;">
 
-            <div style="text-align:right; font-weight:700;">
-                <span th:text="${t.phoneNumber}"></span>
-            </div>
+        <span th:text="${g.department.name}"></span>
 
-        </div>
+      </div>
+
+      <div style="text-align:center; font-weight:700;">
+
+        <span th:text="${g.number}"></span>
+
+      </div>
+
+      <div style="
+                text-align:right;
+                display:flex;
+                justify-content:flex-end;
+                gap:10px;
+            ">
+
+        <a th:href="@{/groups/edit/{id}(id=${g.id})}"
+
+           style="
+                    background:#2562eb;
+                    color:white;
+                    text-decoration:none;
+                    padding:8px 16px;
+                    border-radius:6px;
+                    font-size:14px;
+                    font-weight:700;
+                   ">
+
+          Edit
+
+        </a>
+
+        <a th:href="@{/groups/delete/{id}(id=${g.id})}"
+
+           style="
+                    background:#d62828;
+                    color:white;
+                    text-decoration:none;
+                    padding:8px 16px;
+                    border-radius:6px;
+                    font-size:14px;
+                    font-weight:700;
+                   ">
+
+          Delete
+
+        </a>
+
+      </div>
 
     </div>
+
+  </div>
 
 </div>
 

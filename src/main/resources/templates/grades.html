@@ -59,7 +59,8 @@
     </table>
 </nav>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%" align="center" style="font-size:19px;">
+<table th:if="${isStudent}"
+        border="1" cellpadding="15" cellspacing="0" width="100%" align="center" style="font-size:19px;">
     <tr bgcolor="#3766a0" style="color:white;">
         <th align="left">Subject</th>
         <th align="left">Teacher</th>
@@ -73,6 +74,171 @@
             <span th:if="${g.gradeValue == null}">-</span>
         </td>
     </tr>
+</table>
+
+<div th:if="${isAdmin}" style="padding:20px; background:#f2f5f9;">
+
+    <div style="
+        border:1px solid #ccc;
+        background:white;
+        border-radius:10px;
+        margin-bottom:20px;
+        overflow:hidden;
+    ">
+
+        <form th:action="@{/admin/grades/search}"
+              method="post"
+              style="
+                padding:20px;
+                display:flex;
+                gap:10px;
+        ">
+
+            <input type="text"
+                   name="searchTerm"
+                   placeholder="Find a grade"
+
+                   style="
+                    flex:1;
+                    padding:11px 14px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    font-size:15px;
+                   ">
+
+            <button type="submit"
+
+                    style="
+                    padding:11px 28px;
+                    background:#2562eb;
+                    color:white;
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:15px;
+                    ">
+
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<table border="1"
+       cellpadding="15"
+       cellspacing="0"
+       width="100%"
+       align="center"
+       style="font-size:19px;">
+
+    <tr bgcolor="#3766a0" style="color:white;">
+
+        <th th:if="${isAdmin}" align="left">
+
+            Student
+
+        </th>
+
+        <th align="left">
+
+            Subject
+
+        </th>
+
+        <th align="left">
+
+            Teacher
+
+        </th>
+
+        <th align="center">
+
+            Grade
+
+        </th>
+
+        <th th:if="${isAdmin}" align="center">
+
+            Actions
+
+        </th>
+
+    </tr>
+
+    <tr th:each="g : ${grades}">
+
+        <td th:if="${isAdmin}"
+            style="font-weight:600;"
+            th:text="${g.student.name + ' ' + g.student.surname}">
+        </td>
+
+        <td style="font-weight:600;"
+            th:text="${g.subject.name}">
+        </td>
+
+        <td style="font-weight:600;"
+            th:text="${g.teacher.name + ' ' + g.teacher.surname}">
+        </td>
+
+        <td style="font-weight:600;"
+            align="center">
+
+            <span th:if="${g.gradeValue != null}"
+                  th:text="${g.gradeValue}">
+            </span>
+
+            <span th:if="${g.gradeValue == null}">
+
+                -
+
+            </span>
+
+        </td>
+
+        <td th:if="${isAdmin}"
+            align="center">
+
+            <a th:href="@{/grades/edit/{id}(id=${g.id})}"
+
+               style="
+                background:#2562eb;
+                color:white;
+                text-decoration:none;
+                padding:8px 16px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:700;
+                margin-right:8px;
+               ">
+
+                Edit
+
+            </a>
+
+            <a th:href="@{/grades/delete/{id}(id=${g.id})}"
+
+               style="
+                background:#d62828;
+                color:white;
+                text-decoration:none;
+                padding:8px 16px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:700;
+               ">
+
+                Delete
+
+            </a>
+
+        </td>
+
+    </tr>
+
 </table>
 
 </body>
