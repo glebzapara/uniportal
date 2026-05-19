@@ -147,6 +147,8 @@ public class UniversityController {
 
             if (principal instanceof StudentDetails studentDetails) {
                 model.addAttribute("currentStudentId", studentDetails.getStudent().getId());
+            } else if (principal instanceof AdminDetails) {
+                model.addAttribute("isAdmin", true);
             }
         }
 
@@ -217,6 +219,8 @@ public class UniversityController {
 
             if (principal instanceof TeacherDetails teacherDetails) {
                 model.addAttribute("currentTeacherId", teacherDetails.getTeacher().getId());
+            } else if (principal instanceof AdminDetails) {
+                model.addAttribute("isAdmin", true);
             }
         }
 
@@ -291,8 +295,9 @@ public class UniversityController {
     }
 
     @GetMapping("/groups/new")
-    public String showCreateGroupForm(@ModelAttribute Group group,  Model model) {
+    public String showCreateGroupForm(@ModelAttribute Group group, Model model) {
         model.addAttribute("groupForm", group);
+        model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
 
         return "group-form";
@@ -311,6 +316,8 @@ public class UniversityController {
         Group group = groupService.findById(id);
 
         model.addAttribute("groupForm", group);
+
+        model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
 
         return "group-form";
@@ -462,17 +469,14 @@ public class UniversityController {
     public String getSubjects(@PathVariable Integer groupId,
                               Authentication authentication,
                               Model model) {
-
-        TeacherDetails teacherDetails =
-                (TeacherDetails) authentication.getPrincipal();
+        TeacherDetails teacherDetails = (TeacherDetails) authentication.getPrincipal();
 
         Integer teacherId = teacherDetails.getTeacher().getId();
 
-        List<Subject> subjects =
-                lessonService.findSubjectsByTeacherAndGroup(teacherId, groupId);
+        List<Subject> subjects = lessonService.findSubjectsByTeacherAndGroup(teacherId, groupId);
 
         model.addAttribute("subjects", subjects);
-        model.addAttribute("isStudent", true);
+        model.addAttribute("isAdmin", false);
 
         return "subjects";
     }
@@ -537,7 +541,10 @@ public class UniversityController {
     @GetMapping("/grades/new")
     public String showCreateGradesForm(Model model) {
         model.addAttribute("gradeForm", new Grade());
-        model.addAttribute("lessonForm", new Lesson());
+
+        model.addAttribute("students", studentService.findAllStudents());
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("teachers", teacherService.findAllTeachers());
 
         return "grade-form";
     }
@@ -554,6 +561,10 @@ public class UniversityController {
         Grade grade = gradeService.findById(id);
 
         model.addAttribute("gradeForm", grade);
+
+        model.addAttribute("students", studentService.findAllStudents());
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("teachers", teacherService.findAllTeachers());
 
         return "grade-form";
     }

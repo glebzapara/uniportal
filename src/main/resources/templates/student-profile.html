@@ -132,16 +132,36 @@
 
             </div>
 
-            <div style="margin-top:30px;"
-                 th:if="${currentStudentId == student.id}">
+            <div style="margin-top:30px;">
 
-                <form th:action="@{/logout}" method="post">
+                <form th:if="${currentStudentId == student.id}"
+                        th:action="@{/logout}" method="post">
                     <button type="submit"
                             style="background:#e53935; color:white;
-                                   border:none; padding:12px 32px;
-                                   border-radius:6px; font-weight:600;
-                                   cursor:pointer; font-size:15px;">
+                                border:none; padding:12px 32px;
+                                border-radius:6px; font-weight:600;
+                                cursor:pointer; font-size:15px;">
                         Logout
+                    </button>
+                </form>
+
+                <form th:if="${isAdmin}" th:action="@{/students/edit/{id}(id=${student.id})}">
+                    <button type="submit"
+                            style="background:#2562eb; color:white;
+                                border:none; padding:12px 32px;
+                                border-radius:6px; font-weight:600;
+                                cursor:pointer; font-size:15px;">
+                        Edit
+                    </button>
+                </form>
+                <br>
+                <form th:if="${isAdmin}" th:action="@{/students/delete/{id}(id=${student.id})}">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+                                border:none; padding:12px 32px;
+                                border-radius:6px; font-weight:600;
+                                cursor:pointer; font-size:15px;">
+                        Delete
                     </button>
                 </form>
             </div>

@@ -21,14 +21,34 @@
     <form th:action="@{/grades}" th:object="${gradeForm}" method="post">
         <input type="hidden" th:field="*{id}">
 
-        <label>Student ID:</label><br>
-        <input type="number" th:field="*{student.id}"><br><br>
+        <label>Student:</label><br>
+        <select th:field="*{student.id}" style="width:100%;">
+            <option value="">-- Select student --</option>
+            <option th:each="s : ${students}"
+                    th:value="${s.id}"
+                    th:text="${s.name + ' ' + s.surname}">
+            </option>
+        </select><br><br>
 
-        <label>Subject ID:</label><br>
-        <input type="number" th:field="*{subject.id}"><br><br>
+        <label>Subject:</label><br>
+        <select th:field="*{subject.id}" style="width:100%;">
+            <option value="">-- Select subject --</option>
 
-        <label>Teacher ID:</label><br>
-        <input type="number" th:field="*{teacher.id}"><br><br>
+            <option th:each="s : ${subjects}"
+                    th:value="${s.id}"
+                    th:text="${s.name}">
+            </option>
+        </select><br><br>
+
+        <label>Teacher:</label><br>
+        <select th:field="*{teacher.id}" style="width:100%;">
+            <option value="">-- Select teacher --</option>
+
+            <option th:each="t : ${teachers}"
+                    th:value="${t.id}"
+                    th:text="${t.name + ' ' + t.surname}">
+            </option>
+        </select><br><br>
 
         <label>Grade:</label><br>
         <input type="number" th:field="*{gradeValue}" min="0" max="100"><br><br>

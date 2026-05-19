@@ -30,19 +30,9 @@
                     <a th:href="@{/grades}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
 
-                    <a th:if="${currentTeacher != null}"
-                        th:href="@{/teacher/grades}"
-                        style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">
-                        Grades
-                    </a>
-
-                    <a th:if="${currentStudent != null}"
-                        th:href="@{/grades}"
-                        style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">
-                        Grades
-                    </a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                         th:href="@{/teachers}" style="color:white; text-decoration:none;

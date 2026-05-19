@@ -59,23 +59,6 @@
     </table>
 </nav>
 
-<table th:if="${isStudent}"
-        border="1" cellpadding="15" cellspacing="0" width="100%" align="center" style="font-size:19px;">
-    <tr bgcolor="#3766a0" style="color:white;">
-        <th align="left">Subject</th>
-        <th align="left">Teacher</th>
-        <th align="center">Grade</th>
-    </tr>
-    <tr th:each="g : ${grades}">
-        <td style="font-weight:600;" th:text="${g.subject.name}"></td>
-        <td style="font-weight:600;" th:text="${g.teacher.name + ' ' + g.teacher.surname}"></td>
-        <td style="font-weight:600;" align="center">
-            <span th:if="${g.gradeValue != null}" th:text="${g.gradeValue}"></span>
-            <span th:if="${g.gradeValue == null}">-</span>
-        </td>
-    </tr>
-</table>
-
 <div th:if="${isAdmin}" style="padding:20px; background:#f2f5f9;">
 
     <div style="
