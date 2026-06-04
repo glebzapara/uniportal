@@ -19,9 +19,6 @@ public class LessonService {
     public LessonService(StudentRepository studentRepository,
                          LessonRepository lessonRepository,
                          SubjectRepository subjectRepository,
-                         SubjectService subjectService,
-                         GroupService groupService,
-                         TeacherService teacherService,
                          TeacherRepository teacherRepository,
                          GroupRepository groupRepository) {
         this.studentRepository = studentRepository;
@@ -79,10 +76,6 @@ public class LessonService {
 
         return schedule;
     }
-
-//    public List<Lesson> findByTeacherAndGroup(Teacher teacher, Integer groupId) {
-//        return lessonRepository.findByTeacherAndGroupId(teacher, groupId);
-//    }
 
     public List<Subject> findSubjectsByGroup(Group group) {
 

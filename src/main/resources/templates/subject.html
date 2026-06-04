@@ -13,10 +13,10 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="left">
-                <span style="font-size:26px; font-weight:700;
-                    font-family:'Inter', sans-serif; color:white;">
+                <a th:href="@{/}" style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white; text-decoration:none;">
                     Uni<span style="color:#2562eb;">Portal</span>
-                </span>
+                </a>
             </td>
 
             <td align="right">
@@ -27,8 +27,9 @@
                     <a th:href="@{/schedule}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
 
-                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
-                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        th:href="@{/grades}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                        th:href="@{/group}" style="color:white; text-decoration:none;
@@ -75,6 +76,12 @@
                     <b style="color:#3766a0;">Course:</b>
                     <span th:text="${subject.course}"></span>
                 </div>
+
+                <div style="margin-bottom:10px; font-weight:550">
+                    <b style="color:#3766a0; font-weight:600;">Speciality:</b>
+                    <span th:text="${subject.group.name +
+                    ' (' + subject.group.speciality + ') ' +
+                    '[' + subject.group.number + ']'}"></span></div>
 
                 <div style="margin-bottom:8px; font-weight:550;">
                     <b style="color:#3766a0;">Department:</b>
@@ -129,6 +136,21 @@
             <div style="padding:18px; font-size:16px;">
                 <div th:utext="${resources}"></div>
             </div>
+        </div>
+
+        <div th:if="${isOwner}" style="text-align:left;">
+            <a th:href="@{/subjects/grades/{id}(id=${subject.id})}"
+               style="
+                   background:#2562eb;
+                   color:white;
+                   padding:12px 22px;
+                   text-decoration:none;
+                   border-radius:6px;
+                   font-weight:600;
+                   font-size:15px;
+               ">
+                Grades
+            </a>
         </div>
 
         <div th:if="${isOwner}" style="text-align:right;">

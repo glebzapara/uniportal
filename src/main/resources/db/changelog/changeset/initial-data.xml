@@ -34,11 +34,11 @@
     <changeSet id="insert-groups-1" author="Gleb Zapara">
         <sql dbms="postgresql">
             <![CDATA[
-            INSERT INTO groups(course, name, number, speciality, department_id)
+            INSERT INTO groups(name, course, number, speciality, department_id)
             VALUES
-                (1, 'Information and measurement technologies', 318, 'G6', 1),
-                (1, 'Automation, computer-integrated technologies and robotics', 310, 'G5', 2),
-                (1, 'Engineering of mobile applications', 312, 'G7', 2);
+                ('Information and measurement technologies', 1, 318, 'G6', 1),
+                ('Automation, computer-integrated technologies and robotics', 1, 310, 'G5', 2),
+                ('Engineering of mobile applications', 1, 312, 'G7', 2);
             ]]>
         </sql>
     </changeSet>
@@ -107,25 +107,25 @@
     <changeSet id="insert-subjects-1" author="Gleb Zapara">
         <sql dbms="postgresql">
             <![CDATA[
-            INSERT INTO subjects(name, course, department_id)
+            INSERT INTO subjects(name, course, group_id, department_id)
             VALUES
-                ('Algorithmization and Programming', 1, 1),
-                ('Introduction to the Field', 1, 1),
-                ('Fundamentals of Metrology and Standardization', 1, 1),
-                ('Higher Mathematics', 1, 1),
-                ('Engineering and Computer Graphics', 1, 1),
-                ('Physics', 1, 1),
-                ('Philosophy', 1, 1),
-                ('Ukrainian Language for Professional Purposes', 1, 1),
+                ('Algorithmization and Programming', 1, 1, 1),
+                ('Introduction to the Field', 1, 1, 1),
+                ('Fundamentals of Metrology and Standardization', 1, 1, 1),
+                ('Higher Mathematics', 1, 1, 1),
+                ('Engineering and Computer Graphics', 1, 1, 1),
+                ('Physics', 1, 1, 1),
+                ('Philosophy', 1, 1, 1),
+                ('Ukrainian Language for Professional Purposes', 1, 1, 1),
 
-                ('Algorithmization and Programming', 1, 2),
-                ('Introduction to the Field', 1, 2),
-                ('Fundamentals of Metrology and Standardization', 1, 2),
-                ('Higher Mathematics', 1, 2),
-                ('Engineering and Computer Graphics', 1, 2),
-                ('Physics', 1, 2),
-                ('Philosophy', 1, 2),
-                ('Ukrainian Language for Professional Purposes', 1, 2);
+                ('Algorithmization and Programming', 1, 2, 2),
+                ('Introduction to the Field', 1, 2, 2),
+                ('Fundamentals of Metrology and Standardization', 1, 2, 2),
+                ('Higher Mathematics', 1, 2, 2),
+                ('Engineering and Computer Graphics', 1, 2, 2),
+                ('Physics', 1, 2, 2),
+                ('Philosophy', 1, 2, 2),
+                ('Ukrainian Language for Professional Purposes', 1,2,  2);
             ]]>
         </sql>
     </changeSet>

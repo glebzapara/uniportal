@@ -27,6 +27,11 @@ public class Subject {
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+    @NotNull
+    @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 

@@ -6,6 +6,7 @@ import com.glebzapara.uniportal.repositories.GradeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GradeService {
@@ -30,6 +31,14 @@ public class GradeService {
 
     public List<Grade> findByStudentId(Integer studentId) {
         return gradeRepository.findByStudentId(studentId);
+    }
+
+    public List<Grade> findBySubjectId(Integer subjectId) {
+        return gradeRepository.findBySubjectId(subjectId);
+    }
+
+    public Optional<Grade> findByStudentIdAndSubjectId(Integer studentId, Integer subjectId) {
+        return gradeRepository.findByStudentIdAndSubjectId(studentId, subjectId);
     }
 
     public void createGrade(Grade grade) {

@@ -316,7 +316,6 @@ public class UniversityController {
         Group group = groupService.findById(id);
 
         model.addAttribute("groupForm", group);
-
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
 
@@ -360,7 +359,7 @@ public class UniversityController {
     }
 
     @GetMapping("/departments/new")
-    public String showCreateDepartmentForm(@ModelAttribute Department department,  Model model) {
+    public String showCreateDepartmentForm(@ModelAttribute Department department, Model model) {
         model.addAttribute("departmentForm", department);
 
         return "department-form";
@@ -392,6 +391,7 @@ public class UniversityController {
     @GetMapping("/subjects/new")
     public String showCreateSubjectForm(Model model) {
         model.addAttribute("subjectForm", new Subject());
+        model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
 
         return "subject-form";
@@ -399,8 +399,9 @@ public class UniversityController {
 
     @PostMapping("/subjects")
     public String createSubject(@ModelAttribute("subjectForm") Subject subject,
+                                @RequestParam("groupId") Integer groupId,
                                 @RequestParam("departmentId") Integer departmentId) {
-        subjectService.registerSubject(subject, departmentId);
+        subjectService.registerSubject(subject, groupId, departmentId);
 
         return "redirect:/";
     }
@@ -448,14 +449,48 @@ public class UniversityController {
             Integer teacherId = teacherDetails.getTeacher().getId();
 
             if (!lessonService.teacherOwnsSubject(teacherId, id)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                return "403";
             }
         }
 
         model.addAttribute("subjectForm", subject);
+        model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
 
         return "subject-form";
+    }
+
+    @GetMapping("/subjects/grades/{id}")
+    public String getSubjectGrades(@PathVariable Integer id, Authentication authentication, Model model) {
+        Subject subject = subjectService.findById(id);
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof TeacherDetails teacherDetails) {
+            Integer teacherId = teacherDetails.getTeacher().getId();
+
+            if (!lessonService.teacherOwnsSubject(teacherId, id)) {
+                return "403";
+            }
+        }
+
+        Group group = subject.getGroup();
+
+        List<Student> students = studentService.findByGroupId(group.getId());
+
+        Map<Integer, Grade> grades = new HashMap<>();
+
+        for (Student student : students) {
+            gradeService.findByStudentIdAndSubjectId(student.getId(), subject.getId())
+                    .ifPresent(grade -> grades
+                            .put(student.getId(), grade));
+        }
+
+        model.addAttribute("subject", subject);
+        model.addAttribute("students", students);
+        model.addAttribute("grades", grades);
+
+        return "subject-grades";
     }
 
     @GetMapping("/subjects/delete/{id}")
@@ -524,18 +559,12 @@ public class UniversityController {
 
     @GetMapping("/grades")
     public String getStudentGrades(Authentication authentication, Model model) {
-        Object principal = authentication.getPrincipal();
+        Integer studentId = ((StudentDetails) authentication.getPrincipal()).getStudent().getId();
 
-        if (principal instanceof StudentDetails studentDetails) {
-            Integer studentId = studentDetails.getStudent().getId();
+        model.addAttribute("grades", gradeService.findByStudentId(studentId));
+        model.addAttribute("isStudent", true);
 
-            model.addAttribute("grades", gradeService.findByStudentId(studentId));
-            model.addAttribute("isStudent", true);
-
-            return "grades";
-        }
-
-        return "redirect:/";
+        return "grades";
     }
 
     @GetMapping("/grades/new")
@@ -557,8 +586,17 @@ public class UniversityController {
     }
 
     @GetMapping("/grades/edit/{id}")
-    public String editGrade(@PathVariable Integer id, Model model) {
+    public String editGrade(@PathVariable Integer id, Authentication authentication, Model model) {
         Grade grade = gradeService.findById(id);
+
+        Teacher teacher = ((TeacherDetails) authentication.getPrincipal()).getTeacher();
+
+        System.out.println("Grade teacher = " + grade.getTeacher().getId());
+        System.out.println("Current teacher = " + teacher.getId());
+
+        if (!grade.getTeacher().getId().equals(teacher.getId())) {
+            return "403";
+        }
 
         model.addAttribute("gradeForm", grade);
 
@@ -656,6 +694,25 @@ public class UniversityController {
         return "departments";
     }
 
+    @PostMapping("/admin/admins/search")
+    public String searchAdmins(@RequestParam("searchTerm") String searchTerm,
+                               Model model) {
+        List<Admin> filtered = new ArrayList<>();
+
+        for (Admin admin : adminService.findAllAdmins()) {
+            String fullName = (admin.getName() + " " + admin.getSurname()).toLowerCase();
+
+            if (fullName.contains(searchTerm.toLowerCase())
+                    || admin.getEmail().toLowerCase().contains(searchTerm.toLowerCase())) {
+                filtered.add(admin);
+            }
+        }
+
+        model.addAttribute("admins", filtered);
+
+        return "admins";
+    }
+
     @PostMapping("/admin/students/search")
     public String searchStudents(@RequestParam("searchTerm") String searchTerm,
                                  Model model) {
@@ -696,6 +753,8 @@ public class UniversityController {
         }
 
         model.addAttribute("teachers", filtered);
+        model.addAttribute("teacherSubjects",
+                teacherService.getTeacherSubjects(filtered));
 
         return "teachers";
     }
@@ -767,25 +826,6 @@ public class UniversityController {
         model.addAttribute("departments", filtered);
 
         return "departments";
-    }
-
-    @PostMapping("/admin/admins/search")
-    public String searchAdmins(@RequestParam("searchTerm") String searchTerm,
-                               Model model) {
-        List<Admin> filtered = new ArrayList<>();
-
-        for (Admin admin : adminService.findAllAdmins()) {
-            String fullName = (admin.getName() + " " + admin.getSurname()).toLowerCase();
-
-            if (fullName.contains(searchTerm.toLowerCase())
-                    || admin.getEmail().toLowerCase().contains(searchTerm.toLowerCase())) {
-                filtered.add(admin);
-            }
-        }
-
-        model.addAttribute("admins", filtered);
-
-        return "admins";
     }
 
     @PostMapping("/admin/grades/search")

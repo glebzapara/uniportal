@@ -12,12 +12,12 @@
 <nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
   <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
-      <td align="left">
-                <span style="font-size:26px; font-weight:700;
-                    font-family:'Inter', sans-serif; color:white;">
-                    Uni<span style="color:#2562eb;">Portal</span>
-                </span>
-      </td>
+        <td align="left">
+            <a th:href="@{/}" style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white; text-decoration:none;">
+                Uni<span style="color:#2562eb;">Portal</span>
+            </a>
+        </td>
 
       <td align="right">
                 <span style="display:inline-block;">
@@ -27,8 +27,9 @@
                     <a th:href="@{/schedule}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
 
-                    <a th:href="@{/grades}" style="color:white; text-decoration:none;
-                    margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/grades}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
 
                     <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
                        th:href="@{/group}" style="color:white; text-decoration:none;

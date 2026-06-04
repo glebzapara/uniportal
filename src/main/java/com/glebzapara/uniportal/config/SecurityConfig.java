@@ -87,15 +87,17 @@ public class SecurityConfig {
                                 "/departments/edit/**",
                                 "/departments/delete/**",
                                 "/subjects/new",
-                                "/subjects/edit/**",
                                 "/subjects/delete/**",
                                 "/lessons/new",
                                 "/lessons/edit/**",
                                 "/lessons/delete/**",
                                 "/grades/new",
-                                "/grades/edit/**",
                                 "/grades/delete/**"
                         ).hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/subjects/edit/**",
+                                        "/subjects/grades/**",
+                                        "/grades/edit/**")
+                        .hasAnyRole("SUPER_ADMIN", "ADMIN", "TEACHER")
                         .requestMatchers("/students/**")
                         .hasAnyRole("SUPER_ADMIN", "ADMIN", "STUDENT", "TEACHER")
                         .requestMatchers("/teachers/**")

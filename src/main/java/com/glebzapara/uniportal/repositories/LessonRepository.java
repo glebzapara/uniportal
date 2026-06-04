@@ -12,11 +12,9 @@ import java.util.List;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     List<Lesson> findByGroupId(Integer groupId);
-//    List<Lesson> findByTeacherAndGroupId(Teacher teacher, Integer groupId);
     List<Lesson> findByTeacherId(Integer teacherId);
     List<Lesson> findByTeacherIdAndGroupId(Integer teacherId, Integer groupId);
     List<Lesson> findBySubjectId(Integer subjectId);
-//    Optional<Lesson> findFirstByTeacherAndGroupId(Teacher teacher, Integer groupId);
     boolean existsByTeacherIdAndSubjectId(Integer teacherId, Integer subjectId);
 
     @Query("SELECT DISTINCT l.group FROM Lesson l WHERE l.teacher.id = :teacherId")
