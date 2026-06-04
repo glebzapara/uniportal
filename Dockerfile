@@ -5,6 +5,6 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
-COPY --from=build /app/target/uniportal-0.2.3-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/uniportal-0.3.4-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

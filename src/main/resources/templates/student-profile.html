@@ -73,12 +73,16 @@
         </div>
 
         <div style="padding:35px; text-align:center;">
-            <div style="width:100px; height:100px; background:#2f5fd1;
-                color:white; border-radius:50%; display:flex;
-                align-items:center; justify-content:center;
-                font-size:36px; font-weight:700;
-                margin:0 auto 18px auto;"
-                th:text="${student.image != null ? student.image : #strings.substring(student.name,0,1)}">
+            <img th:if="${student.image != null}"
+                 th:src="${student.image}"
+                    style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
+
+            <div th:if="${student.image == null}"
+                style="width:100px; height:100px; background:#2f5fd1;
+            color:white; border-radius:50%; display:flex; align-items:center;
+            justify-content:center; font-size:36px; font-weight:700;
+            margin:0 auto;"
+                th:text="${#strings.substring(student.name,0,1)}">
             </div>
 
             <div style="font-size:26px; font-weight:700; margin-bottom:12px;"
