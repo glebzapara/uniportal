@@ -19,43 +19,19 @@
             </a>
         </td>
 
-      <td align="right">
+        <td align="right">
                 <span style="display:inline-block;">
-                    <a th:href="@{/}" style="color:white; text-decoration:none;
-                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
-
-                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
-                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
-
-                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                       th:href="@{/grades}" style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
-
-                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                       th:href="@{/group}" style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
-
-                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
-                       th:href="@{/teachers}" style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
-
-                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
-                       th:href="@{/students}" style="color:white; text-decoration:none;
-                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
-
-                    <span style="color:#888;">|</span>
-
-                    <a th:if="${currentStudent != null}"
-                       th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
-                       style="color:#2562eb; font-size:17px;font-weight:500;
-                        text-decoration:none; margin-left:10px;">Profile</a>
-
-                    <a th:if="${currentTeacher != null}"
-                       th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
-                       style="color:#2562eb; font-size:17px;font-weight:500;
-                        text-decoration:none; margin-left:10px;">Profile</a>
+                    <form th:action="@{/logout}" method="post">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+                        border:none; padding:12px 32px;
+                        border-radius:6px; font-weight:600;
+                        cursor:pointer; font-size:15px;">
+                            Logout
+                    </button>
+                    </form>
                 </span>
-      </td>
+        </td>
     </tr>
   </table>
 </nav>
@@ -154,7 +130,7 @@
 
       <div style="font-weight:700;">
 
-        <span th:text="${l.subject.name}"></span>
+        <span style="color:#2562eb;" th:text="${l.subject.name}"></span>
 
       </div>
 
@@ -166,7 +142,8 @@
 
       <div style="font-weight:700;">
 
-        <span th:text="${l.group.name}"></span>
+        <span th:text="${l.group.name + ' (' + l.group.speciality + ') '
+                    + ' [' + l.group.number + ']'}"></span>
 
       </div>
 

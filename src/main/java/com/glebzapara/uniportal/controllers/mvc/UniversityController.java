@@ -511,6 +511,7 @@ public class UniversityController {
         List<Subject> subjects = lessonService.findSubjectsByTeacherAndGroup(teacherId, groupId);
 
         model.addAttribute("subjects", subjects);
+        model.addAttribute("studentsCount", studentService.countByGroupId(groupId));
         model.addAttribute("isAdmin", false);
 
         return "subjects";
@@ -589,13 +590,14 @@ public class UniversityController {
     public String editGrade(@PathVariable Integer id, Authentication authentication, Model model) {
         Grade grade = gradeService.findById(id);
 
-        Teacher teacher = ((TeacherDetails) authentication.getPrincipal()).getTeacher();
+        Object principal = authentication.getPrincipal();
 
-        System.out.println("Grade teacher = " + grade.getTeacher().getId());
-        System.out.println("Current teacher = " + teacher.getId());
+        if (principal instanceof TeacherDetails teacherDetails) {
+            Teacher teacher = teacherDetails.getTeacher();
 
-        if (!grade.getTeacher().getId().equals(teacher.getId())) {
-            return "403";
+            if (!grade.getTeacher().getId().equals(teacher.getId())) {
+                return "403";
+            }
         }
 
         model.addAttribute("gradeForm", grade);
@@ -789,6 +791,7 @@ public class UniversityController {
         }
 
         model.addAttribute("subjects", filtered);
+        model.addAttribute("isAdmin", true);
 
         return "subjects";
     }
@@ -833,15 +836,20 @@ public class UniversityController {
                                Model model) {
         List<Grade> filtered = new ArrayList<>();
 
+        String fullName;
         for (Grade grade : gradeService.findAllGrades()) {
-            if (grade.getStudent().getSurname().toLowerCase().contains(searchTerm.toLowerCase())
-                    || grade.getSubject().getName().toLowerCase().contains(searchTerm.toLowerCase())
-                    || String.valueOf(grade.getGradeValue()).contains(searchTerm)) {
+             fullName = (grade.getStudent().getName() + " "
+                    + grade.getStudent().getSurname()).toLowerCase();
+
+            if (fullName.contains(searchTerm.toLowerCase())) {
                 filtered.add(grade);
             }
         }
 
         model.addAttribute("grades", filtered);
+        model.addAttribute("isAdmin", true);
+
+        System.out.println("Found = " + filtered.size());
 
         return "grades";
     }

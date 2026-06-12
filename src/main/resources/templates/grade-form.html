@@ -2,59 +2,188 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Grade</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
+<body style="margin:0; padding:0;">
 
-<body style="
-    font-family:sans-serif;
-    margin:0;
-    height:100vh;
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <a th:href="@{/}" style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white; text-decoration:none;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </a>
+            </td>
+
+            <td  align="right">
+                <span th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                      style="display:inline-block;">
+                    <a th:href="@{/}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Home</a>
+
+                    <a th:href="@{/schedule}" style="color:white; text-decoration:none;
+                    margin:0 10px; font-size:17px; font-weight:500;">Schedule</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/grades}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Grades</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/group}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Group</a>
+
+                    <a th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                       th:href="@{/teachers}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Teachers</a>
+
+                    <a th:if="${currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                       th:href="@{/students}" style="color:white; text-decoration:none;
+                        margin:0 10px; font-size:17px; font-weight:500;">Students</a>
+
+                    <span style="color:#888;">|</span>
+
+                    <a th:if="${currentStudent != null}"
+                       th:href="@{/students/{id}/profile(id=${currentStudent.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+
+                    <a th:if="${currentTeacher != null}"
+                       th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
+                       style="color:#2562eb; font-size:17px;font-weight:500;
+                        text-decoration:none; margin-left:10px;">Profile</a>
+                </span>
+            </td>
+
+            <td align="right">
+                <span th:if="${currentAdmin != null}"
+                        style="display:inline-block;">
+                    <form th:action="@{/logout}" method="post">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+                        border:none; padding:12px 32px;
+                        border-radius:6px; font-weight:600;
+                        cursor:pointer; font-size:15px;">
+                            Logout
+                    </button>
+                    </form>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
+
+<div style="
+    min-height:calc(100vh - 120px);
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:40px 20px;
 ">
 
-<div style="transform: translateY(-68px);">
+    <div style="
+        width:550px;
+        background:white;
+        border:1px solid #ccc;
+        border-radius:10px;
+        overflow:hidden;
+        box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    ">
 
-    <h2>Create Grade</h2>
+        <div style="
+            background:#3766a0;
+            color:white;
+            padding:16px 20px;
+            font-size:18px;
+            font-weight:700;
+        ">
+            Create Grade
+        </div>
 
-    <form th:action="@{/grades}" th:object="${gradeForm}" method="post">
-        <input type="hidden" th:field="*{id}">
+        <form th:action="@{/grades}"
+              th:object="${gradeForm}"
+              method="post"
+              style="padding:30px;">
 
-        <label>Student:</label><br>
-        <select th:field="*{student.id}" style="width:100%;">
-            <option value="">-- Select student --</option>
-            <option th:each="s : ${students}"
-                    th:value="${s.id}"
-                    th:text="${s.name + ' ' + s.surname}">
-            </option>
-        </select><br><br>
+            <input type="hidden" th:field="*{id}">
 
-        <label>Subject:</label><br>
-        <select th:field="*{subject.id}" style="width:100%;">
-            <option value="">-- Select subject --</option>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Student</label>
 
-            <option th:each="s : ${subjects}"
-                    th:value="${s.id}"
-                    th:text="${s.name}">
-            </option>
-        </select><br><br>
+                <select th:field="*{student.id}"
+                        style="width:100%; padding:12px; box-sizing:border-box;
+                        border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+                    <option value="">-- Select student --</option>
 
-        <label>Teacher:</label><br>
-        <select th:field="*{teacher.id}" style="width:100%;">
-            <option value="">-- Select teacher --</option>
+                    <option th:each="s : ${students}"
+                            th:value="${s.id}"
+                            th:text="${s.name + ' ' + s.surname}">
+                    </option>
+                </select>
+            </div>
 
-            <option th:each="t : ${teachers}"
-                    th:value="${t.id}"
-                    th:text="${t.name + ' ' + t.surname}">
-            </option>
-        </select><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Subject</label>
 
-        <label>Grade:</label><br>
-        <input type="number" th:field="*{gradeValue}" min="0" max="100"><br><br>
+                <select th:field="*{subject.id}"
+                        style="width:100%; padding:12px; box-sizing:border-box;
+                        border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+                    <option value="">-- Select subject --</option>
 
-        <button type="submit">Save</button>
-    </form>
+                    <option th:each="s : ${subjects}"
+                            th:value="${s.id}"
+                            th:text="${s.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Teacher</label>
+
+                <select th:field="*{teacher.id}"
+                        style="width:100%; padding:12px; box-sizing:border-box;
+                        border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+                    <option value="">-- Select teacher --</option>
+
+                    <option th:each="t : ${teachers}"
+                            th:value="${t.id}"
+                            th:text="${t.name + ' ' + t.surname}">
+                    </option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="font-weight:600;">Grade</label>
+
+                <input type="number"
+                       th:field="*{gradeValue}"
+                       min="0"
+                       max="100"
+                       style="width:100%; padding:12px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
+
+            <button type="submit"
+                    style="
+            width:100%;
+            padding:13px;
+            background:#2562eb;
+            color:white;
+            box-sizing:border-box;
+            border:none;
+            border-radius:6px;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+            ">
+                Save Grade
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 

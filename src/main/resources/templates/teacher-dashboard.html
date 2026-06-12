@@ -97,7 +97,7 @@
                 <br><br>
 
                 <div style="font-weight:700; font-size:18px;">
-                    <span th:text="${groups[stat.index].name}"></span>
+                    <span th:text="${groups[stat.index].name + ' [' + groups[stat.index].number + ']'}"></span>
                 </div>
 
                 <br>
@@ -120,7 +120,7 @@
                 <br><br>
 
                 <div style="font-weight:700; font-size:18px;">
-                    <span th:text="${groups[stat.index + 1].name}"></span>
+                    <span th:text="${groups[stat.index + 1].name + ' [' + groups[stat.index + 1].number + ']'}"></span>
                 </div>
 
                 <br>
@@ -143,7 +143,7 @@
                 <br><br>
 
                 <div style="font-weight:700; font-size:18px;">
-                    <span th:text="${groups[stat.index + 2].name}"></span>
+                    <span th:text="${groups[stat.index + 2].name  + ' [' + groups[stat.index + 2].number + ']'}"></span>
                 </div>
 
                 <br>

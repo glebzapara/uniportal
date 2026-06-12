@@ -20,7 +20,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="create-departments" author="zapara">
+    <changeSet id="create-departments" author="Gleb Zapara">
         <sql dbms="postgresql" splitStatements="true" stripComments="true">
             <![CDATA[
             CREATE TABLE departments(
@@ -32,7 +32,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="create-groups" author="zapara">
+    <changeSet id="create-groups" author="Gleb Zapara">
         <sql dbms="postgresql" splitStatements="true" stripComments="true">
             <![CDATA[
             CREATE TABLE groups(
@@ -41,7 +41,8 @@
                 name VARCHAR(100) NOT NULL,
                 number INTEGER NOT NULL,
                 speciality VARCHAR(2) NOT NULL CHECK (speciality ~ '[A-Z]+[1-8]'),
-                department_id INTEGER NOT NULL REFERENCES departments(id) ON UPDATE CASCADE ON DELETE CASCADE
+                department_id INTEGER NOT NULL REFERENCES departments(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                UNIQUE (number)
             );
             ]]>
         </sql>
@@ -137,7 +138,7 @@
                 subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
                 teacher_id INTEGER REFERENCES teachers(id) ON DELETE SET NULL,
                 grade_value SMALLINT NOT NULL CHECK (grade_value >= 0 AND grade_value <= 100),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                UNIQUE (student_id, subject_id)
             );
             ]]>
         </sql>

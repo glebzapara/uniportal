@@ -2,54 +2,158 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Teacher</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 
-<body style="
-    font-family:sans-serif;
-    margin:0;
-    height:100vh;
+<body style="margin:0; padding:0;">
+
+<nav style="background:#213d60; padding:12px 20px; border-bottom:2px solid #2562eb;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="left">
+                <a th:href="@{/}" style="font-size:26px; font-weight:700;
+                    font-family:'Inter', sans-serif; color:white; text-decoration:none;">
+                    Uni<span style="color:#2562eb;">Portal</span>
+                </a>
+            </td>
+
+            <td align="right">
+                <span style="display:inline-block;">
+                    <form th:action="@{/logout}" method="post">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+                        border:none; padding:12px 32px;
+                        border-radius:6px; font-weight:600;
+                        cursor:pointer; font-size:15px;">
+                            Logout
+                    </button>
+                    </form>
+                </span>
+            </td>
+        </tr>
+    </table>
+</nav>
+
+<div style="
+    min-height:calc(100vh - 120px);
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:40px 20px;
 ">
 
-<div style="transform: translateY(-68px); min-width:250px;">
+    <div style="
+        width:650px;
+        background:white;
+        border:1px solid #ccc;
+        border-radius:10px;
+        overflow:hidden;
+        box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    ">
 
-    <h2>Create Teacher</h2>
+        <div style="
+            background:#3766a0;
+            color:white;
+            padding:16px 20px;
+            font-size:18px;
+            font-weight:700;
+        ">
+            Create Teacher
+        </div>
 
-    <form th:action="@{/teachers}" th:object="${teacherForm}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{id}">
+        <form th:action="@{/teachers}"
+              th:object="${teacherForm}"
+              method="post"
+              enctype="multipart/form-data"
+              style="padding:30px;">
 
-        <label>Name:</label><br>
-        <input type="text" th:field="*{name}" style="width:100%;"><br><br>
+            <input type="hidden" th:field="*{id}">
 
-        <label>Surname:</label><br>
-        <input type="text" th:field="*{surname}" style="width:100%;"><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Name</label>
+                <input type="text"
+                       th:field="*{name}"
+                       style="width:100%; box-sizing:border-box;
+                       padding:12px; border:1px solid #ccc;
+                       border-radius:6px; margin-top:6px;">
+            </div>
 
-        <label>Email:</label><br>
-        <input type="email" th:field="*{email}" style="width:100%;"><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Surname</label>
+                <input type="text"
+                       th:field="*{surname}"
+                       style="width:100%; padding:12px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
 
-        <label>Password:</label><br>
-        <input type="password" th:field="*{password}" style="width:100%;"><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Email</label>
+                <input type="email"
+                       th:field="*{email}"
+                       style="width:100%; padding:12px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
 
-        <label>Department:</label><br>
-        <select name="departmentId" style="width:100%;">
-            <option value="">-- Select department --</option>
-            <option th:each="d : ${departments}"
-                    th:value="${d.id}"
-                    th:text="${d.name}">
-            </option>
-        </select><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Password</label>
+                <input type="password"
+                       th:field="*{password}"
+                       style="width:100%; padding:12px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
 
-        <label>Phone Number:</label><br>
-        <input type="tel" th:field="*{phoneNumber}" style="width:100%;"><br><br>
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Department</label>
 
-        <label>Image:</label><br>
-        <input type="file" name="file" style="width:100%;"><br><br>
+                <select name="departmentId"
+                        style="width:100%; padding:12px; box-sizing:border-box;
+                        border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+                    <option value="">-- Select department --</option>
 
-        <button type="submit">Save</button>
-    </form>
+                    <option th:each="d : ${departments}"
+                            th:value="${d.id}"
+                            th:text="${d.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:600;">Phone Number</label>
+                <input type="tel"
+                       th:field="*{phoneNumber}"
+                       style="width:100%; padding:12px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="font-weight:600;">Image</label>
+                <input type="file"
+                       name="file"
+                       style="width:100%; padding:10px; box-sizing:border-box;
+                       border:1px solid #ccc; border-radius:6px; margin-top:6px;">
+            </div>
+
+            <button type="submit"
+                    style="
+                    width:100%;
+                    padding:13px;
+                    background:#2562eb;
+                    color:white;
+                    box-sizing:border-box;
+                    border:none;
+                    border-radius:6px;
+                    font-size:15px;
+                    font-weight:700;
+                    cursor:pointer;
+                    ">
+                Save Teacher
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 

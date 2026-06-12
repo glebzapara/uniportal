@@ -92,6 +92,10 @@ public class StudentService {
         return studentRepository.findByEmail(email);
     }
 
+    public long countByGroupId(Integer groupId) {
+        return studentRepository.countByGroupId(groupId);
+    }
+
     public void registerStudent(Student student, Integer groupId) throws Exception {
         try {
             Group studentGroup = groupRepository.findById(groupId)

@@ -20,7 +20,9 @@
             </td>
 
             <td align="right">
-                <span style="display:inline-block;">
+                <span th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'
+                    or currentTeacher != null and currentTeacher.role == 'ROLE_TEACHER'}"
+                        style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Home</a>
 
@@ -56,11 +58,26 @@
                         text-decoration:none; margin-left:10px;">Profile</a>
                 </span>
             </td>
+
+            <td align="right">
+            <span th:if="${currentAdmin != null}"
+                  style="display:inline-block;">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit"
+                                style="background:#e53935; color:white;
+                        border:none; padding:12px 32px;
+                        border-radius:6px; font-weight:600;
+                        cursor:pointer; font-size:15px;">
+                                Logout
+                        </button>
+                    </form>
+            </span>
+            </td>
         </tr>
     </table>
 </nav>
 
-<div th:if="${isAdmin}" style="padding:20px; background:#f2f5f9;">
+<div th:if="${isAdmin}" style="padding:15px 20px 5px 20px;">
 
     <div style="
         border:1px solid #ccc;
@@ -155,9 +172,11 @@
 
     <tr th:each="g : ${grades}">
 
-        <td th:if="${isAdmin}"
-            style="font-weight:600;"
-            th:text="${g.student.name + ' ' + g.student.surname}">
+        <td th:if="${isAdmin}">
+            <a th:href="@{/students/{id}/profile(id=${g.student.id})}"
+                style="color:#2562eb; font-weight:600; text-decoration:none;"
+                th:text="${g.student.name + ' ' + g.student.surname}">
+            </a>
         </td>
 
         <td style="font-weight:600;"
@@ -171,15 +190,7 @@
         <td style="font-weight:600;"
             align="center">
 
-            <span th:if="${g.gradeValue != null}"
-                  th:text="${g.gradeValue}">
-            </span>
-
-            <span th:if="${g.gradeValue == null}">
-
-                -
-
-            </span>
+            <span th:text="${g.gradeValue}"></span>
 
         </td>
 
@@ -188,7 +199,7 @@
 
             <a th:href="@{/grades/edit/{id}(id=${g.id})}"
 
-               style="
+                style="
                 background:#2562eb;
                 color:white;
                 text-decoration:none;
@@ -197,7 +208,7 @@
                 font-size:14px;
                 font-weight:700;
                 margin-right:8px;
-               ">
+                ">
 
                 Edit
 

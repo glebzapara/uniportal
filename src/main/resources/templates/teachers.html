@@ -20,7 +20,8 @@
             </td>
 
             <td align="right">
-                <span style="display:inline-block;">
+                <span th:if="${currentStudent != null and currentStudent.role == 'ROLE_STUDENT'}"
+                        style="display:inline-block;">
                     <a th:href="@{/}" style="color:white; text-decoration:none;
                     margin:0 10px; font-size:17px; font-weight:500;">Home</a>
 
@@ -54,6 +55,21 @@
                        th:href="@{/teachers/{id}/profile(id=${currentTeacher.id})}"
                        style="color:#2562eb; font-size:17px;font-weight:500;
                         text-decoration:none; margin-left:10px;">Profile</a>
+                </span>
+            </td>
+
+            <td align="right">
+                <span th:if="${currentAdmin != null}"
+                      style="display:inline-block;">
+                    <form th:action="@{/logout}" method="post">
+                    <button type="submit"
+                            style="background:#e53935; color:white;
+                        border:none; padding:12px 32px;
+                        border-radius:6px; font-weight:600;
+                        cursor:pointer; font-size:15px;">
+                            Logout
+                    </button>
+                    </form>
                 </span>
             </td>
         </tr>
