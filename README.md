@@ -1,6 +1,10 @@
 # UniPortal
 
-University portal backend built with Spring Boot.
+University management system built with Spring Boot.
+
+## Author
+
+Gleb Zapara
 
 ## Stack
 
@@ -10,7 +14,8 @@ University portal backend built with Spring Boot.
 - Spring Data JPA
 - PostgreSQL
 - Liquibase
-  - Cloudflare R2 (S3)
+- Thymeleaf
+- Cloudflare R2 (S3)
 
 ## Features
 
@@ -19,6 +24,8 @@ University portal backend built with Spring Boot.
 - Teacher management
 - Groups and departments
 - Subjects and lessons
+- Grade management
+- Schedule management
 - Image storage via Cloudflare R2
 
 ## License
