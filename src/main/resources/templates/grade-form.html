@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Grade</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 <body style="margin:0; padding:0;">
@@ -99,7 +99,13 @@
             font-size:18px;
             font-weight:700;
         ">
-            Create Grade
+            <span th:if="${gradeForm.id == null}">
+                Create Grade
+            </span>
+
+            <span th:if="${gradeForm.id != null}">
+                Edit Grade
+            </span>
         </div>
 
         <form th:action="@{/grades}"

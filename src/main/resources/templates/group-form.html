@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Group</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 
@@ -100,7 +100,13 @@
             font-size:18px;
             font-weight:700;
         ">
-            Create Group
+            <span th:if="${groupForm.id == null}">
+                Create Group
+            </span>
+
+            <span th:if="${groupForm.id != null}">
+                Edit Group
+            </span>
         </div>
 
         <form th:action="@{/groups}"

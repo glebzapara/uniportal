@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Student</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="icon" type="image/svg+xml" href="/images/favicon.ico">
 </head>
 
@@ -60,7 +60,13 @@
             font-size:18px;
             font-weight:700;
         ">
-            Create Student
+            <span th:if="${studentForm.id == null}">
+                Create Student
+            </span>
+
+            <span th:if="${studentForm.id != null}">
+                Edit Student
+            </span>
         </div>
 
         <form th:action="@{/students}"

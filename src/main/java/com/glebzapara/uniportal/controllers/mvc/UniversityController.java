@@ -79,6 +79,7 @@ public class UniversityController {
     @GetMapping("/admins/new")
     public String showCreateAdminForm(Model model) {
         model.addAttribute("adminForm", new Admin());
+        model.addAttribute("pageTitle", "Create Admin");
 
         return "admin-form";
     }
@@ -96,6 +97,7 @@ public class UniversityController {
         Admin admin = adminService.findById(id);
 
         model.addAttribute("adminForm", admin);
+        model.addAttribute("pageTitle", "Edit Admin");
 
         return "admin-form";
     }
@@ -118,6 +120,7 @@ public class UniversityController {
     public String showCreateStudentForm(Model model) {
         model.addAttribute("studentForm", new Student());
         model.addAttribute("groups", groupService.findAllGroups());
+        model.addAttribute("pageTitle", "Create Student");
 
         return "student-form";
     }
@@ -163,6 +166,7 @@ public class UniversityController {
 
         model.addAttribute("studentForm", student);
         model.addAttribute("groups", groupService.findAllGroups());
+        model.addAttribute("pageTitle", "Edit Student");
 
         return "student-form";
     }
@@ -189,6 +193,7 @@ public class UniversityController {
     public String showCreateTeacherForm(Model model) {
         model.addAttribute("teacherForm", new Teacher());
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Create Teacher");
 
         return "teacher-form";
     }
@@ -237,6 +242,7 @@ public class UniversityController {
 
         model.addAttribute("teacherForm", teacher);
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Edit Admin");
 
         return "teacher-form";
     }
@@ -299,6 +305,7 @@ public class UniversityController {
         model.addAttribute("groupForm", group);
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Create Group");
 
         return "group-form";
     }
@@ -318,6 +325,7 @@ public class UniversityController {
         model.addAttribute("groupForm", group);
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Edit Group");
 
         return "group-form";
     }
@@ -361,6 +369,7 @@ public class UniversityController {
     @GetMapping("/departments/new")
     public String showCreateDepartmentForm(@ModelAttribute Department department, Model model) {
         model.addAttribute("departmentForm", department);
+        model.addAttribute("pageTitle", "Create Department");
 
         return "department-form";
     }
@@ -377,6 +386,7 @@ public class UniversityController {
         Department department = departmentService.findById(id);
 
         model.addAttribute("departmentForm", department);
+        model.addAttribute("pageTitle", "Edit Department");
 
         return "department-form";
     }
@@ -393,6 +403,7 @@ public class UniversityController {
         model.addAttribute("subjectForm", new Subject());
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Create Subject");
 
         return "subject-form";
     }
@@ -456,6 +467,7 @@ public class UniversityController {
         model.addAttribute("subjectForm", subject);
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("pageTitle", "Edit Subject");
 
         return "subject-form";
     }
@@ -524,6 +536,7 @@ public class UniversityController {
         model.addAttribute("teachers", teacherService.findAllTeachers());
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("days", DayOfWeek.values());
+        model.addAttribute("pageTitle", "Create Lesson");
 
         return "lesson-form";
     }
@@ -547,6 +560,7 @@ public class UniversityController {
         model.addAttribute("teachers", teacherService.findAllTeachers());
         model.addAttribute("groups", groupService.findAllGroups());
         model.addAttribute("days", DayOfWeek.values());
+        model.addAttribute("pageTitle", "Edit Lesson");
 
         return "lesson-form";
     }
@@ -575,6 +589,7 @@ public class UniversityController {
         model.addAttribute("students", studentService.findAllStudents());
         model.addAttribute("subjects", subjectService.findAllSubjects());
         model.addAttribute("teachers", teacherService.findAllTeachers());
+        model.addAttribute("pageTitle", "Create Grade");
 
         return "grade-form";
     }
@@ -605,6 +620,7 @@ public class UniversityController {
         model.addAttribute("students", studentService.findAllStudents());
         model.addAttribute("subjects", subjectService.findAllSubjects());
         model.addAttribute("teachers", teacherService.findAllTeachers());
+        model.addAttribute("pageTitle", "Edit Grade");
 
         return "grade-form";
     }

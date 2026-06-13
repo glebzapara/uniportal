@@ -166,7 +166,7 @@
              th:styleappend="${isAdmin} ? 'grid-template-columns: 2fr 2fr 2fr 1fr 1.5fr;'
                 : 'grid-template-columns: 1fr 1fr 1fr;'">
 
-            <span th:text="${s.name}"></span>
+            <span style="color:#2562eb;" th:text="${s.name}"></span>
 
             <div th:if="${isAdmin}">
                 <span th:text="${s.group.name + ' (' + s.group.speciality + ') [' + s.group.number + ']'}"></span>

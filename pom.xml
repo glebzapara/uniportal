@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.glebzapara</groupId>
 	<artifactId>uniportal</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>uniportal</name>
 	<description>University portal</description>
 	<url/>
